@@ -1,0 +1,55 @@
+
+
+    .calendar-header {
+        text-align: center; 
+        margin: 30px 0;
+        font-size: 32px;
+        font-weight: bold;
+    }
+
+    .calendar-header a {
+        color: black;
+        text-decoration: none;
+        margin: 0 30px;
+    }
+
+    .calendar-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .calendar-table th {
+        height: 40px;
+        border-bottom: 1px solid #444;
+    }
+
+    .calendar-table td {
+        width: 14.2%;
+        height: 110px;
+        vertical-align: top;
+        padding: 10px;
+        border-bottom: 1px solid #333;
+    }
+    .today{
+    display:inline-flex;
+
+    width:30px;
+    height:30px;
+
+    justify-content:center;
+    align-items:center;
+
+    border-radius:50%;
+
+    background:rgb(7, 157, 7);
+    color:black;
+
+    font-weight:bold;
+    }
+    .sun {
+        color: red;
+    }
+
+    .sat {
+        color: blue;
+    }
