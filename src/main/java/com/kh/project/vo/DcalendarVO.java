@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Alias("dcal")
 public class DcalendarVO {
     
-    private int deptno, sabun;
-    private String day, title;
+    private int deptno, sabun, dcal_idx;
+    private String start_date, end_date, title;
 
 }

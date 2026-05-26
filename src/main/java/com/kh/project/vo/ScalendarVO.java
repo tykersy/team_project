@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Alias("scal")
 public class ScalendarVO {
     
-    private int sabun;
-    private String day, title;
+    private int sabun, scal_idx;
+    private String start_date, end_date, title;
 
 }
