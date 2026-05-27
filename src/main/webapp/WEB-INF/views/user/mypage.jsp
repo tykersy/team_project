@@ -6,12 +6,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title></title>
         <link rel="stylesheet" href="/css/user/mypage.css">
+        <link rel="stylesheet" href="/css/dashboard.css">
     </head>
     <body>
+        <jsp:include page="/WEB-INF/views/common/header.jsp" />
         <div class="container">
         <div class="page-title">마이페이지</div>
         <div class="page-sub">근로 정보 및 급여 내역을 확인하세요</div>
-        
+
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab(0)">📄 근로계약서</button>
             <button class="tab-btn" onclick="switchTab(1)">🕐 출 / 퇴근</button>
@@ -25,11 +27,11 @@
             <div class="card">
             <div class="card-title"><span class="dot"></span>계약 정보</div>
             <div class="info-grid">
-                <div class="info-item"><label>성명</label><div class="val">김민준</div></div>
-                <div class="info-item"><label>사번</label><div class="val mono">EMP-2024-0087</div></div>
+                <div class="info-item"><label>성명</label><div class="val">${info.saname}</div></div>
+                <div class="info-item"><label>사번</label><div class="val mono">${info.sabun}</div></div>
                 <div class="info-item"><label>소속 부서</label><div class="val">개발팀</div></div>
-                <div class="info-item"><label>직위</label><div class="val">주임</div></div>
-                <div class="info-item"><label>입사일</label><div class="val mono">2024. 03. 04</div></div>
+                <div class="info-item"><label>직위</label><div class="val">${info.sajob}</div></div>
+                <div class="info-item"><label>입사일</label><div class="val mono">${info.sahire}</div></div>
                 <div class="info-item"><label>계약 기간</label><div class="val mono">2024. 03. 04 ~ 2026. 03. 03</div></div>
                 <div class="info-item"><label>근무 형태</label><div class="val">정규직</div></div>
                 <div class="info-item">
@@ -116,7 +118,7 @@
             <div class="card">
             <div class="salary-hero">
                 <div class="month">2025년 5월 급여</div>
-                <div class="amount">3,380,000</div>
+                <div class="amount">${info.sapay}</div>
                 <div class="unit">원 (실수령액)</div>
             </div>
             <div class="salary-breakdown">
