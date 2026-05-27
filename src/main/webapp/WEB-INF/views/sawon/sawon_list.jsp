@@ -13,7 +13,8 @@
 
         <div>
             <input type="button" value="PDF다운로드"/>
-            <input type="button" value="+직원 추가하기"/>
+            <input type="button" value="+직원 추가하기"
+                onclick="location.href='sawonAdd'"/>
         </div>
 
         <table border="1">
