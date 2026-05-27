@@ -7,13 +7,15 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar_main.css"/>
     </head>
     <body>
+        <!--상단 바-->
         <div class="calendar-header">
             <a href="calendar_calendarmain?year=${prevYear}&month=${prevMonth}">◀</a>
-            ${year}.${month}
+            <a href="javascript:void(0)" class="head-ym" 
+                onclick="openDateBox()">${year}.${month}</a>
             <a href="calendar_calendarmain?year=${nextYear}&month=${nextMonth}">▶</a>
         </div>
         <div>
-            <table border="1" class="calendar-table">
+            <table border="1" align="center" class="calendar-table">
                 <thead>
                     <tr>
                         <th style="color: red;">일</th>
@@ -27,6 +29,7 @@
                 </thead>
                 <tbody>
                     <tr>
+                        <!--달력 앞부분 공백 채우기-->
                         <c:forEach begin="1" end="${startBlank}">
                             <td></td>
                         </c:forEach>
@@ -39,7 +42,6 @@
                                     <c:when test="${year == todayYear &&
                                                     month == todayMonth &&
                                                     day == todayDay}">
-
                                         <span class="today">${day}</span>
                                     </c:when>
                                     
@@ -61,10 +63,119 @@
                                 </tr><tr>
                             </c:if>
                         </c:forEach>
+                        <!--달력 뒷부분 공백 채우기-->
+                        <c:if test="${cellIndex % 7 != 0}">
+                            <c:forEach begin="1" end="${7 - (cellIndex % 7)}">
+                                <td class="empty-day"></td>
+                            </c:forEach>
+                        </c:if>
                     </tr>
                 </tbody>
             </table>
+
+            <!--일정 추가-->
+            <div >
+                <div class="bottom-menu" id="bottomMenu">
+                    <button onclick="location.href='dcal_insert.do?sabun=1'">
+                        <span>부서일정 추가</span>
+                    </button>
+
+                    <button onclick="location.href='scal_insert.do'">
+                        <span>개인일정 추가</span>
+                    </button>
+                </div>
+                <div>
+                    <button class="bottom-btn" onclick = "insertSchedule()" id="bottomBtn">
+                         + </button>
+                </div>
+            </div>
         </div>
+
+        <!-- 날짜 선택 팝업 -->
+        <div id="dateModal" class="modal">
+
+            <div class="modal-content">
+
+                <div class="modal-title">
+                    날짜 선택
+                </div>
+
+                <div class="select-wrap">
+
+                    <select id="year">
+                        <c:forEach begin="2020" end="2035" var="y">
+                            <option value="${y}"
+                                <c:if test="${y == year}">selected</c:if>>
+                                ${y}년
+                            </option>
+                        </c:forEach>
+                    </select>
+
+                    <select id="month">
+                        <c:forEach begin="1" end="12" var="m">
+                            <option value="${m}"
+                                <c:if test="${m == month}">selected</c:if>>
+                                ${m}월
+                            </option>
+                        </c:forEach>
+                    </select>
+
+                </div>
+                <div>
+                    <div class="btn-area">
+
+                        <button onclick="closeModal()">
+                            취소
+                        </button>
+
+                        <button onclick="moveDate()">
+                            확인
+                        </button>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <script>
+            function openDateBox(){
+                document.getElementById("dateModal")
+                        .style.display = "flex";
+            }
+
+            function closeModal(){
+                document.getElementById("dateModal")
+                        .style.display = "none";
+            }
+
+            function moveDate(){
+
+                let year =
+                document.getElementById("year").value;
+
+                let month =
+                document.getElementById("month").value;
+
+                location.href =
+                "calendar_calendarmain?year="+year+
+                "&month="+month;
+            }
+            function insertSchedule(){
+                const menu = document.getElementById("bottomMenu");
+                const btn = document.getElementById("bottomBtn");
+
+                menu.classList.toggle("active");
+
+                if(menu.classList.contains("active")){
+                    btn.innerText = "×";
+                }else{
+                    btn.innerText = "+";
+                }
+            }
+        </script>
+
     </body>
     
 </html>
