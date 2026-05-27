@@ -1,6 +1,7 @@
 package com.kh.project.controller;
 
 import java.util.HashMap;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.kh.project.dao.DeptDAO;
 import com.kh.project.dao.SawonDAO;
+
 import com.kh.project.vo.DeptVO;
+import com.kh.project.vo.DcalendarVO;
 import com.kh.project.vo.SawonVO;
 import com.kh.project.common.PwdSecurity;
 
@@ -38,6 +41,7 @@ public class SawonController {
         model.addAttribute("list", list);
         return "/sawon/sawon_list";
     }
+
 
     //사원 추가 폼
     @GetMapping("/sawonAdd")
@@ -68,6 +72,19 @@ public class SawonController {
         map.put("result", result);
 
         return map;
+    }
+
+
+    @GetMapping("/dcal_insert.do")
+    public String dcalendarForm(int sabun, Model model){
+
+        SawonVO vo = sawonDao.sawonView(sabun); 
+        LocalDate today = LocalDate.now();
+
+        model.addAttribute("today", today);
+        model.addAttribute("vo", vo);
+
+        return"calendar/calendar_dcal_insert_form";
     }
 
     

@@ -1,0 +1,70 @@
+:root {
+        --primary-navy: #1e272e;
+        --accent-blue: #0984e3;
+        --bg-light: #f5f6fa;
+        --text-dark: #2f3542;
+    }
+
+    body {
+        font-family: 'Pretendard', -apple-system, sans-serif;
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+        padding: 40px;
+        margin: 0;
+    }
+
+    h2 {
+        color: var(--primary-navy);
+        font-size: 24px;
+        margin-bottom: 30px;
+        border-left: 5px solid var(--primary-navy);
+        padding-left: 15px;
+    }
+
+    /* 컨트롤 바 (검색 & 부서필터) */
+    .controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+    }
+
+    /* 입력창 디자인 */
+    input[name="search_name"] {
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        width: 250px;
+        outline: none;
+    }
+
+    /* 공통 버튼 디자인 */
+    input[type="button"] {
+        cursor: pointer;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        background-color: var(--primary-navy);
+        color: white;
+        font-weight: 500;
+        transition: all 0.2s;
+        margin-right: 5px;
+    }
+
+    input[type="button"]:hover {
+        background-color: var(--accent-blue);
+        transform: translateY(-1px);
+    }
+
+    /* 캘린더 박스 */
+    #calendarbox {
+        height: 750px;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }

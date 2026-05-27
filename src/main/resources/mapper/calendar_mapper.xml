@@ -4,14 +4,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.project.dao.CalendarDAO">
 	
-	<select id = "selectDcal"
-            parameterType = "dcal">
-        select * from dcalendar
-    </select>
 
-	<select id = "selectScal"
-            parameterType = "scal">
-        select * from scalendar
-    </select>
 
 </mapper>

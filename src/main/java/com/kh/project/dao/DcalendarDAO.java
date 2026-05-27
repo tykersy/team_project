@@ -10,4 +10,6 @@ public interface DcalendarDAO {
     //부서별 일정 불러오기
     List<ScheduleDTO> selectDept( int deptno );
 
+    //입력받은 일정 등록
+    int insert(ScheduleDTO dto);
 }

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Alias("schedule")
 public class ScheduleDTO {
     
-    private int id, deptno;
-    private String dname, title, start, end, calendarId;
-
+    private int deptno;
+    private String dname, title, start, end, calendarId, category, id;
+    
 }

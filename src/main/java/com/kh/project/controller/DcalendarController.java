@@ -35,7 +35,7 @@ public class DcalendarController {
 
     }
 
-    @PostMapping("/dept_schedule.do")
+    @GetMapping("/dept_schedule.do")
     @ResponseBody
     public Map<String, Object> deptSchedule( int deptno ) {
         
@@ -43,9 +43,26 @@ public class DcalendarController {
         
         Map<String, Object> map = new HashMap<>();
         map.put("list", list); 
+        map.put("deptno", deptno);
 
         return map;
     }
     
+    //입력받은 일정 DB에 저장하기
+    @PostMapping("/insert_schedule.do")
+    @ResponseBody
+    public Map<String, String> insertSchedule( ScheduleDTO dto ){
+
+        Map<String, String> map = new HashMap<>();
+
+        int res = dcalendarDao.insert(dto); 
+
+        if(res > 0) {
+            map.put("status", "success");
+        } else {
+            map.put("status", "fail");
+        }
+
+    }
 
 }
