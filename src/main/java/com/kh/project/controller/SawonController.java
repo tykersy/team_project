@@ -1,5 +1,6 @@
 package com.kh.project.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -7,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.kh.project.dao.SawonDAO;
+import com.kh.project.vo.DcalendarVO;
 import com.kh.project.vo.SawonVO;
 
 import lombok.AllArgsConstructor;
@@ -30,6 +32,17 @@ public class SawonController {
         return "/sawon/sawon_list";
     }
 
+    @GetMapping("/dcal_insert.do")
+    public String dcalendarForm(int sabun, Model model){
+
+        SawonVO vo = sawonDao.sawonView(sabun); 
+        LocalDate today = LocalDate.now();
+
+        model.addAttribute("today", today);
+        model.addAttribute("vo", vo);
+
+        return"calendar/calendar_dcal_insert_form";
+    }
     
     
 }

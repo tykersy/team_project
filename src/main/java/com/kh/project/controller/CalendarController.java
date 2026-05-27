@@ -21,9 +21,6 @@ public class CalendarController {
     
     @GetMapping("/calendar_calendarmain")
     public String calendarMain(Integer year, Integer month, Model model){
-        
-        List<DcalendarVO> dcal = calendardao.selectDcal();
-        List<ScalendarVO> scal = calendardao.selectScal();
     
         LocalDate today = LocalDate.now();
 
@@ -38,9 +35,6 @@ public class CalendarController {
 
         LocalDate prev = firstDay.minusMonths(1);
         LocalDate next = firstDay.plusMonths(1);
-
-        model.addAttribute("dcal", dcal);
-        model.addAttribute("scal", scal);
 
         model.addAttribute("todayYear", today.getYear());
         model.addAttribute("todayMonth", today.getMonthValue());
@@ -58,5 +52,7 @@ public class CalendarController {
 
         return "calendar/calendar_main";
     }
+
+
 
 }
