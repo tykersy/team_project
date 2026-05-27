@@ -12,4 +12,7 @@ public interface SawonDAO {
     //사원별 정보 조회
     SawonVO sawonView( int sabun );
 
+    //사원 추가
+    int sawonInsert(SawonVO vo);
+
 } 

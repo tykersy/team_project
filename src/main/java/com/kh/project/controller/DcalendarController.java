@@ -10,13 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.kh.project.dao.DcalendarDAO;
 import com.kh.project.dao.DeptDAO;
-import com.kh.project.vo.DcalendarVO;
 import com.kh.project.vo.DeptVO;
 import com.kh.project.vo.ScheduleDTO;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 

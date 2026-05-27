@@ -14,5 +14,6 @@ public class SawonVO {
     
     private int sabun, deptno, sapay;
     private String saname, pwd, sajob, sahire, saemail, satel, saaddr;
+    private String sazipcode;
 
 }
