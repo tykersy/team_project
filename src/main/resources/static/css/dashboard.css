@@ -6,21 +6,17 @@
     height:70px;
     background:white;
     border-bottom:1px solid #E2E8F0;
-
     display:flex;
     justify-content:space-between;
     align-items:center;
-
     padding:0 32px;
 }
 
 .search-box input{
     width:300px;
     padding:12px 16px;
-
     border:none;
     border-radius:14px;
-
     background:#F1F5F9;
 }
 
@@ -33,17 +29,12 @@
 /* 관리자 버튼 */
 .admin-link{
     text-decoration:none;
-
     padding:10px 16px;
-
     border-radius:12px;
-
     background:#EFF6FF;
     color:#1D4ED8;
-
     font-size:14px;
     font-weight:600;
-
     transition:0.2s;
 }
 
@@ -54,10 +45,8 @@
 .profile{
     width:42px;
     height:42px;
-
     border-radius:50%;
     background:#CBD5E1;
-
     display:flex;
     justify-content:center;
     align-items:center;
@@ -70,27 +59,20 @@
 .attendance-card{
     background:white;
     border-radius:24px;
-
     padding:32px;
-
     display:flex;
     justify-content:space-between;
     align-items:center;
-
     margin-bottom:24px;
-
     border:1px solid #E2E8F0;
 }
 
 .check-btn{
     background:#1D4ED8;
     color:white;
-
     border:none;
-
     padding:16px 28px;
     border-radius:18px;
-
     cursor:pointer;
 }
 
@@ -98,15 +80,12 @@
     display:grid;
     grid-template-columns:repeat(4, 1fr);
     gap:20px;
-
     margin-bottom:24px;
 }
 
 .kpi-card{
     background:white;
-
     padding:28px;
-
     border-radius:24px;
     border:1px solid #E2E8F0;
 }
@@ -129,12 +108,9 @@
 
 .panel{
     background:white;
-
     height:320px;
-
     border-radius:24px;
     border:1px solid #E2E8F0;
-
     padding:24px;
 }
 
