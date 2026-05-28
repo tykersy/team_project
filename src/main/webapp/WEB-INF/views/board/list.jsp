@@ -44,7 +44,6 @@
                                 <td>${board.saname} (${board.sabun})</td>
                                 <td>${board.created}</td>
                             </tr>
-                        </c:forEach>
                         
                         <c:if test="${empty boardList}">
                             <tr>
