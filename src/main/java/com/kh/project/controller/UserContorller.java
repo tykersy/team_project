@@ -1,5 +1,7 @@
 package com.kh.project.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,14 +84,21 @@ public class UserContorller {
 
         //세션에 저장된 사번으로 유저 정보 조회
         int sabun = (int) session.getAttribute("user");
+        
         UserVO userInfo = userDao.userMyPage(sabun); // 사원 기본 정보
         List<UserVO> userTA = userDao.userTa(sabun); // 월 출/퇴근 조회
         Map<String,String> userTotalTA = userDao.userTotalTa(sabun); // 총 근무 시간, 일
 
+        //오늘 년/월을 구하여 포멧을 지정
+        LocalDate now = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월");
+        String today = now.format(formatter);
+
         model.addAttribute("info", userInfo);
         model.addAttribute("userTaList", userTA);
         model.addAttribute("userTotalTA", userTotalTA);
-   
+        model.addAttribute("today", today);
+
         return "/user/mypage";
     }
 

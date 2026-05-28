@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html lang="ko">
     <head>
@@ -67,7 +68,7 @@
         <div class="panel" id="panel-1">
         
             <div class="card">
-            <div class="card-title"><span class="dot"></span>이번 달 요약 (2025년 5월)</div>
+            <div class="card-title"><span class="dot"></span>이번 달 요약 (${today})</div>
             <div class="time-summary">
                 <div class="time-stat"><span class="num">${userTotalTA.total_work_time}</span><span class="lbl">총 근무시간 (h)</span></div>
                 <div class="time-stat"><span class="num">${userTotalTA.work_day}</span><span class="lbl">출근일수</span></div>
@@ -116,9 +117,9 @@
         
             <div class="card">
             <div class="salary-hero">
-                <div class="month">2025년 5월 급여</div>
-                <div class="amount">${info.sapay}</div>
-                <div class="unit">원 (실수령액)</div>
+                <div class="month">${today} 급여</div>
+                <div class="amount"><fmt:formatNumber value="${info.sapay}" pattern="#,###" /></div>
+                <div class="unit">만 원 (실수령액)</div>
             </div>
             <div class="salary-breakdown">
                 <div class="breakdown-row"><span class="name">기본급</span><span class="amt">3,200,000</span></div>

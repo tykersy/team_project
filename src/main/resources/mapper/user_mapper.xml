@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 TIME_FORMAT(checkout, '%H:%i') as checkout,
                 TIME_FORMAT(timediff(checkout, checkin), '%H시 %i분') as working_time
         from ta
-        where sabun=1 AND YEAR(day) = YEAR(NOW())
+        where sabun=#{sabun} AND YEAR(day) = YEAR(NOW())
                       AND MONTH(day) = MONTH(NOW())
         order by `day` desc
     </select>
