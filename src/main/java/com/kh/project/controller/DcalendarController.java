@@ -31,11 +31,11 @@ public class DcalendarController {
         List<DeptVO> dept_list = deptDao.selectAll();
 
         model.addAttribute("dept_list", dept_list);
-        return "/calendar/schedule_list";
+        return "/manager_calendar/schedule_list";
 
     }
 
-    @GetMapping("/dept_schedule.do")
+    @GetMapping("/schedule_deptSchedule.do")
     @ResponseBody
     public Map<String, Object> deptSchedule( int deptno ) {
         
@@ -49,7 +49,7 @@ public class DcalendarController {
     }
     
     //입력받은 일정 DB에 저장하기
-    @PostMapping("/insert_schedule.do")
+    @PostMapping("/schedule_insert.do")
     @ResponseBody
     public Map<String, String> insertSchedule( ScheduleDTO dto ){
 
@@ -64,6 +64,35 @@ public class DcalendarController {
         }
 
         return map;
+    }
+
+    //모든 부서 스케쥴 조회
+    @GetMapping("/schedule_all.do")
+    @ResponseBody
+    public Map<String, Object> allSchedule (){
+
+        List<ScheduleDTO> list = dcalendarDao.selectAll();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", list);
+
+        return map;
+
+    }
+
+    //부서명 검색
+    @GetMapping("/schedule_search.do")
+    @ResponseBody
+    public Map<String, List<DeptVO>> searchDept( String search_name ){
+
+        System.out.println(search_name);
+        List<DeptVO> dlist = deptDao.searchDept( search_name );
+
+        Map<String, List<DeptVO>> map = new HashMap<>();
+        map.put("dlist", dlist);
+
+        return map; 
+
     }
 
 }

@@ -23,20 +23,21 @@
             let calendar;
             // 부서번호를 저장할 변수
             let cur_deptno;
+            let isSearched = false; //부서명 검색 기능 사용 여부 확인
 
             window.onload = function() {
 
                 let box = document.getElementById("calendarbox"); //캘린더를 출력할 div
-                
+
                 //캘린더가 생성되어 있지 않은 경우 캘린더 생성
                 if(!calendar){
                 calendar = new tui.Calendar(box, {
 
-                    defaultView: 'month',
-                    useFormPopup: true,
-                    useDetailPopup: true,
+                    defaultView: 'month', //캘린더 방식
+                    useFormPopup: false, //기본 팝업 설정 끄기
+                    useDetailPopup: true, //스케쥴 디테일을 볼 수 있는 팝업
                     gridSelection: true,
-                    isReadOnly: true,
+                    isReadOnly: false,
                     theme: {
                         common: {
                             border: '1px solid #e5e5e5',
@@ -58,10 +59,15 @@
                     console.log("선택한 날짜 데이터:", eventData);
 
                     //유효성체크
-                    if (!currentDeptNo) {
+                    if (!cur_deptNo) {
                         alert("부서를 먼저 선택해주세요.");
                         return;
                     }
+
+                    //클릭한 날짜 데이터 가져오기
+                    //eventData.start와 end는 내부 객체라서 d.d.d 나 .toISOString()사용을 원칙으로 함
+                    const startData = eventData.start.toISOString();
+                    const endData = eventData.end.toISOString();
 
                     //데이터 서버로 보낼 데이터
                     const saveData = {
@@ -84,7 +90,7 @@
             //관리자가 스케쥴에 입력한 일정을 DB에 저장하는 함수
             function saveScheduleToDB(saveData){ //saveDAta == 관리자가 입력한 일정의 정보
 
-                fetch( "/insert_schedule.do", {
+                fetch( "/schedule_insert.do", {
 
                     method:'post',
                     headers: {"Content-Type": "application/json",},
@@ -106,14 +112,26 @@
 
             }
 
+            //부서 버튼을 클릭하면 실행되는 함수
             function dept_sawon( deptno ){
 
-                currentDeptNo = deptno;
+                //전역 변수에 클릭한 부서번호를 저장
+                cur_DeptNo = deptno;
+                //부서명 클릭시 캘린더출력 div 보여주기
+                if( isSearched ){
+                let calendarbox = document.getElementById("calendarbox");
+                calendarbox.style.display = '';
+                
+                isSearched = false;
+                }
 
-                fetch( "/dept_schedule.do?deptno="+deptno  )
+                fetch( "/schedule_deptSchedule.do?deptno="+deptno  )
                 .then( res => res.json() )
                 .then( data => {
                     
+                    //기존 부서의 스케쥴 캘린더를 초기화(비우기)
+                    calendar.clear();
+
                     //불러온 데이터를 캘린더 규격에 맞게 설정
                     const events = data.list.map( item => {
 
@@ -133,6 +151,89 @@
                 
 
             }
+
+            //모든부터 버튼 클릭 시 실행되는 함수
+            function allSchedule(){
+
+                //부서명을 검색한 적이 있다면 검색 결과를 출력했던 div가리기
+                let searchbox = document.getElementById("searchbox");
+                searchbox.style.display = 'none';
+
+                //부서명 클릭시 캘린더출력 div 보여주기
+                if( isSearched ){
+                let calendarbox = document.getElementById("calendarbox");
+                calendarbox.style.display = 'block';
+
+                isSearched = false;
+                }
+
+                fetch( "/schedule_all.do" )
+                .then( res => res.json() )
+                .then( data => {
+
+                    //기존 부서의 스케쥴 캘린더를 초기화(비우기)
+                    calendar.clear();
+
+                    const events = data.list.map( item => {
+
+                        return {
+                            id : item.id,
+                            calendarId : 'cal1',
+                            title : item.title,
+                            start : item.start,
+                            end : item.end,
+                            category : 'time'
+                        };
+
+                    } );
+                    //캘린더에 일정 입력
+                    calendar.createEvents(events);
+
+                } )
+
+            }
+
+            //부서명으로 부서 검색시 호출되는 함수
+            function search(f){
+
+                let search_name = f.search_name.value; //검색어
+                let calendarbox = document.getElementById("calendarbox"); //캘린더를 담는 div
+                let searchbox = document.getElementById("searchbox"); //검색 결과를 담을 div
+                let searchfor = document.getElementById("searchfor")
+
+                //유효성 체크
+                if( search_name == '' ){
+                    alert("검색할 부서명을 입력하세요")
+                    return;
+                }
+
+                isSearched = true;
+                calendarbox.style.display = 'none';
+                searchbox.style.display = 'block';
+
+                fetch( "/schedule_search.do?search_name="+search_name )
+                .then( res => res.json() )
+                .then( data => {
+
+                    console.log("서버가 보내준 데이터 확인:", data);
+
+                    if( data.length === 0 ){
+                        searchbox.innerHTML = "<p>검색 결과가 없습니다.</p>";
+                    }else{
+                        data.dlist.map(dept => {
+                            searchbox.innerHTML += 
+                                    `<input type="button" 
+                                        value="${dept.dname}" 
+                                        onclick="dept_sawon('${dept.deptno}')" 
+                                        style="margin-right: 5px;"/>
+                                    `;
+                        });
+                        
+                    }
+
+                } )
+
+            }
         </script>
     </head>
 
@@ -142,7 +243,8 @@
 
         <div class="controls">
         <div class="dept-filters">
-            <input type="button" value="전체부서" style="background-color: #57606f;" />
+            <input type="button" value="전체부서" style="background-color: #57606f;" 
+                    onclick="allSchedule()"/>
             <c:forEach var="dept" items="${dept_list}">
                 <input type="button" value="${dept.dname}" onclick="dept_sawon('${dept.deptno}')"/>
             </c:forEach>
@@ -150,13 +252,14 @@
 
         <div class="search-area">
             <form>
-                <input name="search_name" placeholder="사원명 검색..."/>
-                <input type="button" value="검색" onclick="send(this.form)"/>
+                <input name="search_name" placeholder="부서 검색"/>
+                <input type="button" value="검색" onclick="search(this.form)"/>
             </form>
         </div>
     </div>
 
     <div id="calendarbox"></div>
+    <div id="searchbox"></div>
         
     </body>
     

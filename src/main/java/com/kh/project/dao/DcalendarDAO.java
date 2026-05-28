@@ -12,4 +12,7 @@ public interface DcalendarDAO {
 
     //입력받은 일정 등록
     int insert(ScheduleDTO dto);
+
+    //전체 부서 스케쥴 조회
+    List<ScheduleDTO> selectAll();
 }
