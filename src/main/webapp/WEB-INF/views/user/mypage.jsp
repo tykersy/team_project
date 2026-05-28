@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
     <head>
@@ -12,7 +13,7 @@
         <jsp:include page="/WEB-INF/views/common/header.jsp" />
         <div class="container">
         <div class="page-title">마이페이지</div>
-        <div class="page-sub">근로 정보 및 급여 내역을 확인하세요</div>
+        <div class="page-sub"></div>
 
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab(0)">📄 근로계약서</button>
@@ -23,26 +24,16 @@
         
         <!-- ─────────────────────────────── TAB 1: 근로계약서 ─── -->
         <div class="panel active" id="panel-0">
-        
             <div class="card">
-            <div class="card-title"><span class="dot"></span>계약 정보</div>
-            <div class="info-grid">
-                <div class="info-item"><label>성명</label><div class="val">${info.saname}</div></div>
-                <div class="info-item"><label>사번</label><div class="val mono">${info.sabun}</div></div>
-                <div class="info-item"><label>소속 부서</label><div class="val">개발팀</div></div>
-                <div class="info-item"><label>직위</label><div class="val">${info.sajob}</div></div>
-                <div class="info-item"><label>입사일</label><div class="val mono">${info.sahire}</div></div>
-                <div class="info-item"><label>계약 기간</label><div class="val mono">2024. 03. 04 ~ 2026. 03. 03</div></div>
-                <div class="info-item"><label>근무 형태</label><div class="val">정규직</div></div>
-                <div class="info-item">
-                <label>계약 상태</label>
-                <div class="val">
-                    <span class="status-chip active-contract">
-                    <span class="pulse"></span>유효
-                    </span>
+                <div class="card-title"><span class="dot"></span>계약 정보</div>
+                <div class="info-grid">
+                    <div class="info-item"><label>성명</label><div class="val">${info.saname}</div></div>
+                    <div class="info-item"><label>사번</label><div class="val mono">${info.sabun}</div></div>
+                    <div class="info-item"><label>소속 부서</label><div class="val">${info.dname}</div></div>
+                    <div class="info-item"><label>직위</label><div class="val">${info.sajob}</div></div>
+                    <div class="info-item"><label>입사일</label><div class="val mono">${info.sahire}</div></div>
+                    <div class="info-item"><label>계약 기간</label><div class="val mono">2024. 03. 04 ~ 2026. 03. 03</div></div>
                 </div>
-                </div>
-            </div>
             </div>
         
             <div class="card">
@@ -78,8 +69,8 @@
             <div class="card">
             <div class="card-title"><span class="dot"></span>이번 달 요약 (2025년 5월)</div>
             <div class="time-summary">
-                <div class="time-stat"><span class="num">168.5</span><span class="lbl">총 근무시간 (h)</span></div>
-                <div class="time-stat"><span class="num">21</span><span class="lbl">출근일수</span></div>
+                <div class="time-stat"><span class="num">${userTotalTA.total_work_time}</span><span class="lbl">총 근무시간 (h)</span></div>
+                <div class="time-stat"><span class="num">${userTotalTA.work_day}</span><span class="lbl">출근일수</span></div>
                 <div class="time-stat"><span class="num">3.5</span><span class="lbl">초과 근무 (h)</span></div>
             </div>
             </div>
@@ -97,16 +88,24 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr><td class="label">05. 27 (월)</td><td>09:02</td><td>18:15</td><td>9h 13m</td><td><span class="tag normal">정상</span></td></tr>
-                <tr><td class="label">05. 26 (금)</td><td>09:00</td><td>19:30</td><td>10h 30m</td><td><span class="tag normal">정상</span></td></tr>
-                <tr><td class="label">05. 23 (목)</td><td>09:22</td><td>18:00</td><td>8h 38m</td><td><span class="tag late">지각</span></td></tr>
-                <tr><td class="label">05. 22 (수)</td><td>09:00</td><td>18:00</td><td>8h 00m</td><td><span class="tag normal">정상</span></td></tr>
-                <tr><td class="label">05. 21 (화)</td><td>09:00</td><td>18:00</td><td>8h 00m</td><td><span class="tag normal">정상</span></td></tr>
-                <tr><td class="label">05. 20 (월)</td><td>—</td><td>—</td><td>—</td><td><span class="tag absent">결근</span></td></tr>
-                <tr><td class="label">05. 17 (금)</td><td>08:50</td><td>17:55</td><td>9h 05m</td><td><span class="tag early">조기출근</span></td></tr>
-                <tr><td class="label">05. 16 (목)</td><td>09:00</td><td>18:00</td><td>8h 00m</td><td><span class="tag normal">정상</span></td></tr>
-                <tr><td class="label">05. 15 (수)</td><td>09:05</td><td>18:10</td><td>8h 55m</td><td><span class="tag normal">정상</span></td></tr>
-                <tr><td class="label">05. 14 (화)</td><td>09:00</td><td>18:00</td><td>8h 00m</td><td><span class="tag normal">정상</span></td></tr>
+                    <c:forEach var="taList" items="${userTaList}">
+                        <tr>
+                            <td class="label">${taList.day}</td>
+                            <td>${taList.checkin}</td>
+                            <td>${taList.checkout}</td>
+                            <td>${taList.working_time}</td>
+                            <td><span class="tag normal">정상</span></td>
+                        </tr>
+                    </c:forEach>
+                    <%-- <tr><td class="label">05. 26 (금)</td><td>09:00</td><td>19:30</td><td>10h 30m</td><td><span class="tag normal">정상</span></td></tr>
+                    <tr><td class="label">05. 23 (목)</td><td>09:22</td><td>18:00</td><td>8h 38m</td><td><span class="tag late">지각</span></td></tr>
+                    <tr><td class="label">05. 22 (수)</td><td>09:00</td><td>18:00</td><td>8h 00m</td><td><span class="tag normal">정상</span></td></tr>
+                    <tr><td class="label">05. 21 (화)</td><td>09:00</td><td>18:00</td><td>8h 00m</td><td><span class="tag normal">정상</span></td></tr>
+                    <tr><td class="label">05. 20 (월)</td><td>—</td><td>—</td><td>—</td><td><span class="tag absent">결근</span></td></tr>
+                    <tr><td class="label">05. 17 (금)</td><td>08:50</td><td>17:55</td><td>9h 05m</td><td><span class="tag early">조기출근</span></td></tr>
+                    <tr><td class="label">05. 16 (목)</td><td>09:00</td><td>18:00</td><td>8h 00m</td><td><span class="tag normal">정상</span></td></tr>
+                    <tr><td class="label">05. 15 (수)</td><td>09:05</td><td>18:10</td><td>8h 55m</td><td><span class="tag normal">정상</span></td></tr>
+                    <tr><td class="label">05. 14 (화)</td><td>09:00</td><td>18:00</td><td>8h 00m</td><td><span class="tag normal">정상</span></td></tr> --%>
                 </tbody>
             </table>
             </div>
