@@ -1,21 +1,25 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+
 <!DOCTYPE html>
 <html>
 
     <head>
+        <!-- sidebar css -->
+        <link rel="stylesheet" href="/css/manager/sidebar.css">
+        <link rel="stylesheet" href="/css/manager/main.css">
         <style>
             /* 캘린더 출력할 div의 사이즈 조정 */
             #calendarbox {
                 height:700px;
-                width:100%
+                width:80%
             }
         </style>
         <!-- toast ui 라이브러리 참조 & css참조 -->
         <meta charset="UTF-8">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/toastui-calendar.min.css" />
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/schedule_list.css"/>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manager/schedule_list.css"/>
         <script src="${pageContext.request.contextPath}/js/toastui-calendar.min.js"></script>
 
         <script>
@@ -214,29 +218,33 @@
     </head>
 
     <body>
+        <div class="manager-container">
+            <jsp:include page="/WEB-INF/views/manager_common/manager_sidebar.jsp"/>
+            <div class="main-content">
+            
+            <h2>근무일정</h2>
 
-        <h2>근무일정</h2>
+            <div class="controls">
+            <div class="dept-filters">
+                <input type="button" value="전체부서" style="background-color: #57606f;" 
+                        onclick="allSchedule()"/>
+                <c:forEach var="dept" items="${dept_list}">
+                    <input type="button" value="${dept.dname}" onclick="dept_sawon('${dept.deptno}')"/>
+                </c:forEach>
+            </div>
 
-        <div class="controls">
-        <div class="dept-filters">
-            <input type="button" value="전체부서" style="background-color: #57606f;" 
-                    onclick="allSchedule()"/>
-            <c:forEach var="dept" items="${dept_list}">
-                <input type="button" value="${dept.dname}" onclick="dept_sawon('${dept.deptno}')"/>
-            </c:forEach>
+            <div class="search-area">
+                <form>
+                    <input name="search_name" placeholder="부서 검색"/>
+                    <input type="button" value="검색" onclick="search(this.form)"/>
+                </form>
+            </div>
+            </div>
+
+            <div id="calendarbox"></div>
+            <div id="searchbox"></div>
+            </div>
         </div>
-
-        <div class="search-area">
-            <form>
-                <input name="search_name" placeholder="부서 검색"/>
-                <input type="button" value="검색" onclick="search(this.form)"/>
-            </form>
-        </div>
-    </div>
-
-    <div id="calendarbox"></div>
-    <div id="searchbox"></div>
-        
     </body>
     
 </html>

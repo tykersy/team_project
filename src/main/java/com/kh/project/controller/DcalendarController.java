@@ -26,7 +26,7 @@ public class DcalendarController {
     private final DcalendarDAO dcalendarDao;
     private final DeptDAO deptDao;
 
-    @GetMapping("/manager_calendar.do")
+    @GetMapping("/admin_calendar")
     public String calendarMain( Model model ){
 
         List<DeptVO> dept_list = deptDao.selectAll();

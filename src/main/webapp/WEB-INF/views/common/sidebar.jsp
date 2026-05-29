@@ -18,7 +18,7 @@
         </nav>
 
         <div class="admin-section">
-            <a href="/admin" class="admin-btn">⚙️관리자</a>
+            <a href="/admin_main.do" class="admin-btn">⚙️관리자</a>
         </div>
 
     </aside>
