@@ -67,6 +67,24 @@
 
                             <div class="panel">
                                 <h3>오늘 일정</h3>
+
+                                <div class="calendar-list" style="margin-top: 15px;">
+                                    <c:forEach var="s" items="${scheduleList}">
+                                        <div class="calendar-item" style="margin-bottom: 12px; padding: 5px 0;">
+                                            <span class="schedule-title"
+                                                style="font-weight: bold; color: #333;">${s.title}</span>
+                                            <span class="schedule-time"
+                                                style="float: right; color: #2563eb; font-size: 0.9rem;">${s.start_date}</span>
+                                            <hr style="border: 0.5px solid #f1f5f9; margin-top: 8px; margin-bottom: 0;">
+                                        </div>
+                                    </c:forEach>
+
+                                    <c:if test="${empty scheduleList}">
+                                        <p
+                                            style="color: #94a3b8; text-align: center; margin-top: 30px; font-size: 0.95rem;">
+                                            📢 예정된 부서 일정이 없습니다.</p>
+                                    </c:if>
+                                </div>
                             </div>
 
                             <div class="panel">

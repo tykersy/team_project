@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 // 연결할 DAO 부품들을 가져옵니다.
 import com.kh.project.dao.SawonDAO;
 import com.kh.project.dao.SleaveDAO;
-import com.kh.project.vo.BoardVO;
-import com.kh.project.dao.CalendarDAO;
+import com.kh.project.dao.DcalendarDAO; // 💡 CalendarDAO 대신 팀원이 만든 DcalendarDAO로 교체!
 import com.kh.project.dao.BoardDAO;
+import com.kh.project.vo.BoardVO;
+import com.kh.project.vo.ScheduleDTO; // 💡 팀원이 만든 ScheduleDTO 가져오기!
 
 @Controller
 public class DashboardController {
@@ -19,15 +20,14 @@ public class DashboardController {
     // 다른 DAO 부품들을 담아둘 변수 선언
     private final SawonDAO sawonDao;
     private final SleaveDAO sleaveDao;
-    private final CalendarDAO calendarDao;
+    private final DcalendarDAO dcalendarDao; // 💡 dcalendarDao로 변경
     private final BoardDAO boardDao;
 
-    // 생성자 파라미터로 부품들을 싹 다 받아서 연결 (의존성 주입)
-    // 스프링 부트가 실행될 때 이 파라미터들을 보고 자동으로 조립(연결)해 줍니다.
-    public DashboardController(SawonDAO sawonDao, SleaveDAO sleaveDao, CalendarDAO calendarDao, BoardDAO boardDao) {
+    // 생성자 파라미터도 dcalendarDao에 맞춰서 자동으로 조립되도록 변경했습니다.
+    public DashboardController(SawonDAO sawonDao, SleaveDAO sleaveDao, DcalendarDAO dcalendarDao, BoardDAO boardDao) {
         this.sawonDao = sawonDao;
         this.sleaveDao = sleaveDao;
-        this.calendarDao = calendarDao;
+        this.dcalendarDao = dcalendarDao;
         this.boardDao = boardDao;
     }
 
@@ -48,6 +48,7 @@ public class DashboardController {
         model.addAttribute("approval", approvalCount);
         model.addAttribute("totalHours", totalHours);
 
+        // 1. 공지사항 데이터 가져오기 및 디버깅 로그 출력       
         List<BoardVO> boardList = boardDao.getBoardList();
         System.out.println("========== 대시보드 공지사항 체크 ==========");
         if (boardList != null) {
@@ -61,7 +62,14 @@ public class DashboardController {
         System.out.println("=========================================");
 
         model.addAttribute("boardList", boardList);
-        // 5. 원래 리턴하던 jsp 경로 그대로 유지
+
+        // 2. 💡 [최종 추가] 팀원이 만든 부서별 일정 리스트 가져오기
+        // 임시로 10번 부서의 일정을 조회하게 파라미터를 세팅했습니다.
+        int testDeptNo = 10; 
+        // List<ScheduleDTO> scheduleList = dcalendarDao.selectDept(testDeptNo);
+        // model.addAttribute("scheduleList", scheduleList); // 💡 jsp 화면으로 배달!
+
+        // 원래 리턴하던 jsp 경로 그대로 유지
         return "dashboard/main";
     }
 }

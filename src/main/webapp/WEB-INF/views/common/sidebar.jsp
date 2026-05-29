@@ -12,7 +12,7 @@
             <a href="/dashboard" class="sidebar-item active">🏠 HOME</a>
             <a href="/org" class="sidebar-item">🏢 조직도</a>
             <a href="/board/list" class="sidebar-item">📢 공지사항</a>
-            <a href="/calendar" class="sidebar-item">📅 캘린더</a>
+            <a href="/calendar_calendarmain" class="sidebar-item">📅 캘린더</a>
             <a href="/attendance" class="sidebar-item">⏰ 근태관리</a>
             <a href="/mypage" class="sidebar-item">👤 마이페이지</a>
         </nav>
