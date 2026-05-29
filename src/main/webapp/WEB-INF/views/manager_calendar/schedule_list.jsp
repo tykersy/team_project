@@ -54,61 +54,34 @@
                 }) 
                 
                 //날짜 클릭 이벤트 생성
-                calendar.on( 'beforeCreateEvent', (eventData) => {
+                calendar.on( 'selectDateTime', (eventData) => {
 
                     console.log("선택한 날짜 데이터:", eventData);
 
                     //유효성체크
-                    if (!cur_deptNo) {
+                    if (!cur_deptno) {
                         alert("부서를 먼저 선택해주세요.");
                         return;
                     }
 
                     //클릭한 날짜 데이터 가져오기
-                    //eventData.start와 end는 내부 객체라서 d.d.d 나 .toISOString()사용을 원칙으로 함
-                    const startData = eventData.start.toISOString();
-                    const endData = eventData.end.toISOString();
+                    //eventData는 내부 객체라서 d.d.d 나 .toISOString()사용을 원칙으로 함
+                    //한국 시간(KST) 기준 안정적인 yyyy-MM-dd 추출 방식
+                    const offset = eventData.start.getTimezoneOffset() * 60000;
+                    const localDate = new Date(eventData.start.getTime() - offset);
+                    const clickedDate = localDate.toISOString().split('T')[0];
 
-                    //데이터 서버로 보낼 데이터
-                    const saveData = {
-                        deptno: cur_deptno,
-                        title: eventData.title,
-                        start: eventData.start.toISOString(),
-                        end: eventData.end.toISOString(),
-                        location: eventData.location || '',
-                        state: eventData.state || 'Busy'
-                    };
-
-                    //DB저장을 위한 함수 호출
-                    saveScheduleToDB(saveData);
+                    // Controller로 보낼 URL 생성 (파라미터 포함)
+                    
+                    const url = "/schedule_view.do?deptno="+cur_deptno
+                                +"&date="+clickedDate;
+                    
+                    //미니 팝업 띄우기
+                    window.open(url, 'scheduleDetailPopup', 
+                                    'width=400, height=700, scrollbars=yes, resizable=no');
                 } )
             
             }
-
-            }
-
-            //관리자가 스케쥴에 입력한 일정을 DB에 저장하는 함수
-            function saveScheduleToDB(saveData){ //saveDAta == 관리자가 입력한 일정의 정보
-
-                fetch( "/schedule_insert.do", {
-
-                    method:'post',
-                    headers: {"Content-Type": "application/json",},
-                    body: JSON.stringify(saveData) //saveData를 json형태로 변환
-
-                } ).then( res => res.json() )
-                   .then( data => {
-
-                    if( data.status === "success" ){
-                        alert("일정이 성공적으로 저장되었습니다")
-                        
-                        //일정 등록 성공 후 캘린더 갱신
-                        calendar.createEvents([saveData]);
-                    }else{
-                        alert("시스템 오류로 일정 등록에 실패하였습니다");
-                    }
-
-                   } )
 
             }
 
@@ -116,7 +89,7 @@
             function dept_sawon( deptno ){
 
                 //전역 변수에 클릭한 부서번호를 저장
-                cur_DeptNo = deptno;
+                cur_deptno = deptno;
                 //부서명 클릭시 캘린더출력 div 보여주기
                 if( isSearched ){
                 let calendarbox = document.getElementById("calendarbox");
@@ -154,6 +127,9 @@
 
             //모든부터 버튼 클릭 시 실행되는 함수
             function allSchedule(){
+
+                //전체부서 스케쥴을 클릭 했다면 전역변수 cur_deptno 0으로 설정
+                cur_deptno = 1;
 
                 //부서명을 검색한 적이 있다면 검색 결과를 출력했던 div가리기
                 let searchbox = document.getElementById("searchbox");

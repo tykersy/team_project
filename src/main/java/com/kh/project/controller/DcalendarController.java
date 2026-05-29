@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,24 +48,6 @@ public class DcalendarController {
 
         return map;
     }
-    
-    //입력받은 일정 DB에 저장하기
-    @PostMapping("/schedule_insert.do")
-    @ResponseBody
-    public Map<String, String> insertSchedule( ScheduleDTO dto ){
-
-        Map<String, String> map = new HashMap<>();
-
-        int res = dcalendarDao.insert(dto); 
-
-        if(res > 0) {
-            map.put("status", "success");
-        } else {
-            map.put("status", "fail");
-        }
-
-        return map;
-    }
 
     //모든 부서 스케쥴 조회
     @GetMapping("/schedule_all.do")
@@ -93,6 +76,40 @@ public class DcalendarController {
 
         return map; 
 
+    }
+
+    //일정 상세보기 팝업창
+    @GetMapping("/schedule_view.do")
+    public String toDetailView( int deptno, String date, Model model ){
+
+        List<ScheduleDTO> list;
+
+        //부서번호가 1일 때 ( 전체 부서 스케쥴 상세보기 )
+        if( deptno == 1 ){
+            list = dcalendarDao.detailViewAll(date);
+        }else{
+
+            //선택된 부서가 1개인 경우
+            //파라미터로 받은 부서번호, 해당날짜 map에 담아서 파라미터로 보내기
+            Map<String, Object> map = new HashMap<>();
+            map.put("deptno", deptno);
+            map.put("date", date);
+
+            list = dcalendarDao.detailView(map);
+
+            //jsp에서 부서명을 사용하기 위해 부서 번호로 부서정보 가져오기
+            DeptVO dept = deptDao.selectOne(deptno);
+            model.addAttribute("dept", dept);
+        }
+        
+       
+
+        //파라미터로 받은 부서정보와 날짜를 바인딩
+        model.addAttribute("deptno", deptno);
+        model.addAttribute("date", date);
+        model.addAttribute("list", list);
+
+        return "/manager_calendar/schedule_detail_view";
     }
 
 }

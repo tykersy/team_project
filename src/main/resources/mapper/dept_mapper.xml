@@ -9,12 +9,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select * from dept
     </select>
 
+    <!-- 부서이름 검색 -->
     <select id="searchDept"
             parameterType="String"
             resultType="dept">
         select dname, deptno from dept
-        where dname like '%' || #{search_name} || '%'
+        where dname like CONCAT('%',#{search_name},'%')
         order by deptno
+    </select>
+
+    <!-- 부서1개 정보 조회 -->
+    <select id="selectOne"
+            parameterType="int"
+            resultType="dept">
+        select * from dept
+        where deptno = #{deptno}
     </select>
     
 </mapper>

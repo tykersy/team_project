@@ -31,4 +31,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by c.start
     </select>
 
+    <!-- 부서&날짜별 스케쥴 상세보기 -->
+    <select id="detailView"
+            parameterType="java.util.Map"
+            resultType="schedule">
+        select c.id, d.dname, d.deptno, c.title, c.start, c.end 
+        from dcalendar c
+        join dept d on c.deptno = d.deptno
+        where c.deptno = #{deptno} and c.day like CONCAT('%', #{date}, '%')
+        order by c.start
+    </select>
+
+    <!-- 전체부서의 날짜별 일정 상세보기 -->
+    <select id="detailViewAll"
+            parameterType="String"
+            resultType="schedule">
+        select c.id, d.dname, d.deptno, c.title, c.start, c.end 
+        from dcalendar c
+        join dept d on c.deptno = d.deptno
+        where c.day like CONCAT('%', #{date}, '%')
+        order by c.start
+    </select>
+
 </mapper>

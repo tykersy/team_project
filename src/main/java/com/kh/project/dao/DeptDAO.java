@@ -14,4 +14,7 @@ public interface DeptDAO {
     //관리자 근무일정 - 부서명 검색
     List<DeptVO> searchDept(String search_name);
 
+    //관리자 근무일정 - 부서번호로 부서정보 불러오기
+    DeptVO selectOne(int deptno);
+
 }
