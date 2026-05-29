@@ -20,12 +20,8 @@
 
         <!-- 프로필 -->
         <div class="profile">
-        CEO
-        </div>
-        <!-- 프로필 로그인 한 사람 이름 반영
-        <div class="profile">
         ${loginMember.saname} ${loginMember.posi} 
-        </div> -->
+        </div>
 
     </div>
 
