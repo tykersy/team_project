@@ -1,0 +1,104 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #F8FAFC;
+    font-family: Pretendard, sans-serif;
+}
+
+.layout {
+    display: flex;
+}
+
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    background: #111827;
+    border-right: 1px solid #E2E8F0;
+    padding: 24px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* 상단 로고 영역 */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 40px;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    list-style: none; /* 혹시 모를 리스트 점 제거 */
+}
+
+/* ⭐ 핵심 수정: .sidebar-item 자체이거나 그 내부의 <a> 태그까지 스타일 강제 적용 */
+.sidebar-item, .sidebar-item a {
+    text-decoration: none !important; /* 밑줄 절대 금지 */
+    color: #ffffff;               
+    font-size: 15px;
+    font-weight: 500;
+    
+    display: flex;
+    align-items: center;
+    gap: 12px;                       /* 아이콘과 글자 사이 간격 */
+    
+    padding: 14px 18px;
+    border-radius: 16px;             /* 예시 이미지처럼 부드러운 라운딩 */
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+/* ⚡ 마우스 올렸을 때 (Hover) */
+.sidebar-item:hover {
+    background: rgba(255, 255, 255, 0.04); /* 아주 은은한 마우스 오버 효과 */
+}
+.sidebar-item:hover a {
+    color: rgba(255, 255, 255, 0.85); /* 글씨가 조금 더 또렷해짐 */
+}
+
+/* ⚡ 현재 활성화된 메뉴 (Active) */
+.sidebar-item.active {
+    background: rgba(255, 255, 255, 0.07); /* 고급스러운 반투명 면 분할 */
+}
+.sidebar-item.active a {
+    color: #60A5FA; /* 스마트한 느낌을 주는 연한 하늘색/블루 텍스트 */
+    font-weight: 600;
+}
+
+/* ⭐ 활성화된 메뉴 스타일 */
+.sidebar-item.active, .sidebar-item.active a {
+    background: #DBEAFE;             /* 조금 더 진한 하늘색 배경 */
+    color: #1D4ED8;                  /* 선명한 블루 글씨 */
+    font-weight: 600;
+}
+
+/* 하단 관리자/로그아웃 섹션 고정 */
+.admin-section {
+    margin-top: auto;
+}
+
+.admin-btn {
+    display: block;
+    text-decoration: none;
+    text-align: center;
+
+    background: #1E3A8A;
+    color: white;
+
+    padding: 14px;
+    border-radius: 16px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
