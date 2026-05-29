@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,9 @@ import com.kh.project.dao.SawonDAO;
 import com.kh.project.vo.DeptVO;
 import com.kh.project.vo.DcalendarVO;
 import com.kh.project.vo.SawonVO;
+
+import jakarta.servlet.http.HttpSession;
+
 import com.kh.project.common.PwdSecurity;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +29,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequiredArgsConstructor
 public class SawonController {
+
+    @Autowired
+    HttpSession session;
     
     //사원DAO
     private final SawonDAO sawonDao;
@@ -76,7 +83,9 @@ public class SawonController {
 
 
     @GetMapping("/dcal_insert.do")
-    public String dcalendarForm(int sabun, Model model){
+    public String dcalendarForm( Model model){
+
+        int sabun = (int)session.getAttribute("user");
 
         SawonVO vo = sawonDao.sawonView(sabun); 
         LocalDate today = LocalDate.now();
@@ -85,6 +94,20 @@ public class SawonController {
         model.addAttribute("vo", vo);
 
         return"calendar/calendar_dcal_insert_form";
+    }
+
+    @GetMapping("/scal_insert.do")
+    public String scalendarForm( Model model){
+
+        int sabun = (int)session.getAttribute("user");
+        
+        SawonVO vo = sawonDao.sawonView(sabun);
+        LocalDate today = LocalDate.now();
+
+        model.addAttribute("today", today);
+        model.addAttribute("vo", vo);
+
+        return"calendar/calendar_scal_insert_form";
     }
     
     

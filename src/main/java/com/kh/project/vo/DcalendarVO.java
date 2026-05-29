@@ -13,6 +13,10 @@ import lombok.NoArgsConstructor;
 public class DcalendarVO {
     
     private int deptno, sabun, dcal_idx;
-    private String start_date, end_date, title;
+    private String start_date, end_date, title, content;
+
+    //화면 출력용
+    private int viewStartDay;
+    private int viewEndDay;
 
 }

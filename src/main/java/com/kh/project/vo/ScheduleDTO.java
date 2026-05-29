@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 public class ScheduleDTO {
     
     private int deptno;
-    private String dname, title, start, end, calendarId, category, id;
+    private String dname, title, start, end, calendarId, category, id, location, state;
     
 }
