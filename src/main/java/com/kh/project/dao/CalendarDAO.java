@@ -7,6 +7,7 @@ import com.kh.project.vo.DcalendarVO;
 import com.kh.project.vo.ScalendarVO;
 
 public interface CalendarDAO {
+
     
     int insertDcal(DcalendarVO vo);
 
@@ -17,4 +18,5 @@ public interface CalendarDAO {
     List<DcalendarVO> selectDcalByDeptno(Map<String, Object> map);
 
     List<ScalendarVO> selectScalBySabun(Map<String, Object> map);
+
 } 
