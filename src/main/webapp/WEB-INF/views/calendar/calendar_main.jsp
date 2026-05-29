@@ -9,10 +9,10 @@
     <body>
         <!--상단 바-->
         <div class="calendar-header">
-            <a href="calendar_calendarmain?year=${prevYear}&month=${prevMonth}&sabun=${sabun}">◀</a>
+            <a href="calendar_calendarmain?year=${prevYear}&month=${prevMonth}">◀</a>
             <a href="javascript:void(0)" class="head-ym" 
                 onclick="openDateBox()">${year}.${month}</a>
-            <a href="calendar_calendarmain?year=${nextYear}&month=${nextMonth}&sabun=${sabun}">▶</a>
+            <a href="calendar_calendarmain?year=${nextYear}&month=${nextMonth}">▶</a>
         </div>
         <div>
             <table border="1" align="center" class="calendar-table">
@@ -105,11 +105,11 @@
             <!--일정 추가-->
             <div >
                 <div class="bottom-menu" id="bottomMenu">
-                    <button onclick="location.href='dcal_insert.do?sabun=${sabun}'">
+                    <button onclick="location.href='dcal_insert.do'">
                         <span>부서일정 추가</span>
                     </button>
 
-                    <button onclick="location.href='scal_insert.do?sabun=${sabun}'">
+                    <button onclick="location.href='scal_insert.do'">
                         <span>개인일정 추가</span>
                     </button>
                 </div>
@@ -189,7 +189,7 @@
 
                 location.href =
                 "calendar_calendarmain?year="+year+
-                "&month="+month+"&sabun=${sabun}";
+                "&month="+month;
             }
             function insertSchedule(){
                 const menu = document.getElementById("bottomMenu");

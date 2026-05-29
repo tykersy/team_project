@@ -44,7 +44,7 @@
 
                     if(data.status === "success"){
                         alert("일정이 저장되었습니다.");
-                        location.href = "calendar_calendarmain?sabun="+${vo.sabun};
+                        location.href = "calendar_calendarmain";
                     }else{
                         alert("저장 실패");
                     }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import com.kh.project.dao.CalendarDAO;
 import com.kh.project.vo.DcalendarVO;
 import com.kh.project.vo.ScalendarVO;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -22,9 +24,18 @@ import lombok.RequiredArgsConstructor;
 public class CalendarController {
 
     private final CalendarDAO calendardao;
+
+    @Autowired
+    HttpSession session;
     
     @GetMapping("/calendar_calendarmain")
-    public String calendarMain(Integer year, Integer month, int sabun, Model model){
+    public String calendarMain(Integer year, Integer month, Model model){
+
+        if(session.getAttribute("user") == null){
+            return "redirect:/login";
+        }
+
+        int sabun = (int)session.getAttribute("user");
     
         LocalDate today = LocalDate.now();
 
