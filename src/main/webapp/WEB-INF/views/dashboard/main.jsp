@@ -1,93 +1,102 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+        <!DOCTYPE html>
+        <html lang="ko">
 
-<!DOCTYPE html>
-<html lang="ko">
-    
-<head>
-<meta charset="UTF-8">
+        <head>
+            <meta charset="UTF-8">
 
-<title>Dashboard</title>
+            <title>Dashboard</title>
 
-<link rel="stylesheet" href="/css/sidebar.css">
-<link rel="stylesheet" href="/css/dashboard.css">
+            <link rel="stylesheet" href="/css/sidebar.css">
+            <link rel="stylesheet" href="/css/dashboard.css">
 
-</head>
+        </head>
 
-<body>
+        <body>
 
-<div class="layout">
+            <div class="layout">
 
-    <!-- Sidebar -->
-    <jsp:include page="/WEB-INF/views/common/sidebar.jsp" />
+                <jsp:include page="/WEB-INF/views/common/sidebar.jsp" />
 
-    <!-- Main -->
-    <main class="main-content">
+                <main class="main-content">
 
-        <!-- Header -->
-        <jsp:include page="/WEB-INF/views/common/header.jsp" />
+                    <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-        <!-- Dashboard Content -->
-        <div class="dashboard-container">
+                    <div class="dashboard-container">
 
-            <!-- 출퇴근 카드 -->
-            <section class="attendance-card">
+                        <section class="attendance-card">
 
-                <div>
-                    <h2>GOOD MORNING 👋</h2>
-                    <p>오늘도 좋은 하루 되세요.</p>
-                </div>
+                            <div>
+                                <h2>GOOD MORNING 👋</h2>
+                                <p>오늘도 좋은 하루 되세요.</p>
+                            </div>
 
-                <button class="check-btn">
-                    출근하기
-                </button>
+                            <button class="check-btn">
+                                출근하기
+                            </button>
 
-            </section>
+                        </section>
 
-            <!-- KPI 카드 -->
-            <section class="kpi-grid">
+                        <section class="kpi-grid">
 
-                <div class="kpi-card">
-                    <p>출근 인원</p>
-                    <h3>128</h3>
-                </div>
+                            <div class="kpi-card">
+                                <p>출근 인원</p>
+                                <h3>${attend}</h3>
+                            </div>
 
-                <div class="kpi-card">
-                    <p>휴가 중</p>
-                    <h3>12</h3>
-                </div>
+                            <div class="kpi-card">
+                                <p>휴가 중</p>
+                                <h3>${vacation}</h3>
+                            </div>
 
-                <div class="kpi-card">
-                    <p>승인 대기</p>
-                    <h3>7</h3>
-                </div>
+                            <div class="kpi-card">
+                                <p>승인 대기</p>
+                                <h3>${approval}</h3>
+                            </div>
 
-                <div class="kpi-card">
-                    <p>총 근무시간</p>
-                    <h3>1,284h</h3>
-                </div>
+                            <div class="kpi-card">
+                                <p>총 근무시간</p>
+                                <h3>${totalHours}</h3>
+                            </div>
 
-            </section>
+                        </section>
 
-            <!-- 하단 -->
-            <section class="bottom-grid">
+                        <section class="bottom-grid">
 
-                <div class="panel">
-                    <h3>오늘 일정</h3>
-                </div>
+                            <div class="panel">
+                                <h3>오늘 일정</h3>
+                            </div>
 
-                <div class="panel">
-                    <h3>공지사항</h3>
-                </div>
+                            <div class="panel">
+                                <h3>공지사항</h3>
 
-            </section>
+                                <div class="notice-list">
+                                    <c:forEach var="b" items="${boardList}">
+                                        <div class="notice-item" style="margin-bottom: 10px;">
+                                            <span class="notice-title" style="font-weight: bold;">${b.title}</span>
+                                            <span class="notice-date"
+                                                style="float: right; color: #888;">${b.created}</span>
+                                            <hr style="border: 0.5px solid #eee; margin-top: 5px;">
+                                        </div>
+                                    </c:forEach>
 
-        </div>
+                                    <c:if test="${empty boardList}">
+                                        <p style="color: #999; text-align: center; margin-top: 20px;">등록된 공지사항이 없습니다.
+                                        </p>
+                                    </c:if>
+                                </div>
+                            </div>
 
-    </main>
+                        </section>
 
-</div>
+                    </div>
 
-</body>
-</html>
+                </main>
 
+            </div>
+
+        </body>
+
+        </html>
