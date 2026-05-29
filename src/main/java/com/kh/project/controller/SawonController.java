@@ -87,6 +87,17 @@ public class SawonController {
         return"calendar/calendar_dcal_insert_form";
     }
 
+    @GetMapping("/scal_insert.do")
+    public String scalendarForm(int sabun, Model model){
+        SawonVO vo = sawonDao.sawonView(sabun);
+        LocalDate today = LocalDate.now();
+
+        model.addAttribute("today", today);
+        model.addAttribute("vo", vo);
+
+        return"calendar/calendar_scal_insert_form";
+    }
+
     
     
 }

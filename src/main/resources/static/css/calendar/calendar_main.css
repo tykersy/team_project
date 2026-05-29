@@ -250,3 +250,29 @@
 
         transition:0.2s;
     }
+    
+    .dcal-item{
+
+        margin-top:2px;
+
+        padding:2px 4px;
+
+        background:#dce8ff;
+
+        border-radius:4px;
+
+        font-size:11px;
+    }
+
+    .scal-item{
+
+        margin-top:2px;
+
+        padding:2px 4px;
+
+        background:#dff7df;
+
+        border-radius:4px;
+
+        font-size:11px;
+    }
