@@ -13,6 +13,10 @@ import lombok.NoArgsConstructor;
 public class ScalendarVO {
     
     private int sabun, scal_idx;
-    private String start_date, end_date, title;
+    private String start_date, end_date, title, content;
+
+    //화면 출력용
+    private int viewStartDay;
+    private int viewEndDay;
 
 }

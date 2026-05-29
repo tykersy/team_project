@@ -101,8 +101,6 @@ public class DcalendarController {
             DeptVO dept = deptDao.selectOne(deptno);
             model.addAttribute("dept", dept);
         }
-        
-       
 
         //파라미터로 받은 부서정보와 날짜를 바인딩
         model.addAttribute("deptno", deptno);
@@ -110,6 +108,7 @@ public class DcalendarController {
         model.addAttribute("list", list);
 
         return "/manager_calendar/schedule_detail_view";
+
     }
 
 }
