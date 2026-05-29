@@ -4,7 +4,7 @@
 <html>
 
     <head>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar_main.css"/>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar/calendar_main.css"/>
     </head>
     <body>
         <!--상단 바-->
@@ -38,6 +38,7 @@
                             <c:set var="cellIndex" value="${startBlank + day}" />
 
                             <td>
+                                <div class="day-number">
                                 <c:choose>
                                     <c:when test="${year == todayYear &&
                                                     month == todayMonth &&
@@ -57,6 +58,34 @@
                                         ${day}
                                     </c:otherwise>
                                 </c:choose>
+                                </div>
+                                <!-- 부서 일정 -->
+                                <c:forEach var="dvo" items="${dcalList}">
+
+                                    <c:if test="${day >= dvo.viewStartDay &&
+                                                day <= dvo.viewEndDay}">
+
+                                        <div class="dcal-item">
+                                            ${dvo.title}
+                                        </div>
+
+                                    </c:if>
+
+                                </c:forEach>
+
+                                <!-- 개인 일정 -->
+                                <c:forEach var="svo" items="${scalList}">
+
+                                    <c:if test="${day >= svo.viewStartDay &&
+                                                day <= svo.viewEndDay}">
+
+                                        <div class="scal-item">
+                                            ${svo.title}
+                                        </div>
+
+                                    </c:if>
+
+                                </c:forEach>
                             </td>
 
                             <c:if test="${cellIndex % 7 == 0}">
@@ -76,7 +105,7 @@
             <!--일정 추가-->
             <div >
                 <div class="bottom-menu" id="bottomMenu">
-                    <button onclick="location.href='dcal_insert.do?sabun=1'">
+                    <button onclick="location.href='dcal_insert.do'">
                         <span>부서일정 추가</span>
                     </button>
 
