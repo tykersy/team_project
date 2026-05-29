@@ -44,14 +44,11 @@
                                 <td>${board.saname} (${board.sabun})</td>
                                 <td>${board.created}</td>
                             </tr>
-                        </c:forEach>
-                        
-                        <c:if test="${empty boardList}">
+                        </c:forEach> <c:if test="${empty boardList}">
                             <tr>
                                 <td colspan="4" style="text-align: center; color: #888;">등록된 공지사항이 없습니다.</td>
                             </tr>
-                        </c:if>
-                    </tbody>
+                        </c:if> </tbody>
                 </table>
             </div>
         </div>
