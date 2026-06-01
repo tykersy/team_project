@@ -7,8 +7,8 @@
 
     <head>
         <!-- sidebar css -->
-        <link rel="stylesheet" href="/css/manager/sidebar.css">
-        <link rel="stylesheet" href="/css/manager/main.css">
+        <link rel="stylesheet" href="/css/admin/sidebar.css">
+        <link rel="stylesheet" href="/css/admin/main.css">
         <style>
             /* 캘린더 출력할 div의 사이즈 조정 */
             #calendarbox {
@@ -19,7 +19,7 @@
         <!-- toast ui 라이브러리 참조 & css참조 -->
         <meta charset="UTF-8">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/toastui-calendar.min.css" />
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manager/schedule_list.css"/>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/schedule_list.css"/>
         <script src="${pageContext.request.contextPath}/js/toastui-calendar.min.js"></script>
 
         <script>
@@ -116,8 +116,8 @@
                             id : item.id,
                             calendarId : 'cal1',
                             title : item.title,
-                            start : item.start,
-                            end : item.end,
+                            start : item.start_date,
+                            end : item.end_date,
                             category : 'time'
                         };
 
@@ -160,8 +160,8 @@
                             id : item.id,
                             calendarId : 'cal1',
                             title : item.title,
-                            start : item.start,
-                            end : item.end,
+                            start : item.start_date,
+                            end : item.end_date,
                             category : 'time'
                         };
 
@@ -219,7 +219,7 @@
 
     <body>
         <div class="manager-container">
-            <jsp:include page="/WEB-INF/views/manager_common/manager_sidebar.jsp"/>
+            <jsp:include page="/WEB-INF/views/admin_common/admin_sidebar.jsp"/>
             <div class="main-content">
             
             <h2>근무일정</h2>

@@ -65,7 +65,12 @@
                                     <c:if test="${day >= dvo.viewStartDay &&
                                                 day <= dvo.viewEndDay}">
 
-                                        <div class="dcal-item">
+                                        <div class="dcal-item"
+                                             onclick="openDcalDetail(
+                                                '${dvo.title}',
+                                                '${dvo.start_date}',
+                                                '${dvo.end_date}'
+                                            )">
                                             ${dvo.title}
                                         </div>
 
@@ -79,7 +84,12 @@
                                     <c:if test="${day >= svo.viewStartDay &&
                                                 day <= svo.viewEndDay}">
 
-                                        <div class="scal-item">
+                                        <div class="scal-item"
+                                             onclick="openScalDetail(
+                                                '${svo.title}',
+                                                '${svo.start_date}',
+                                                '${svo.end_date}'
+                                            )">
                                             ${svo.title}
                                         </div>
 
@@ -167,6 +177,43 @@
             </div>
 
         </div>
+        
+    <!--일정 상세보기 modal-->
+        <div id="detailModal" class="detail-modal">
+
+            <div class="detail-content">
+
+                <div class="detail-title">
+                    일정
+                </div>
+
+                <table class="detail-table">
+                    <tr>
+                        <th>일정</th>
+                        <td id="detailTitle"></td>
+                    </tr>
+
+                    <tr>
+                        <th>시작일</th>
+                        <td id="detailStart"></td>
+                    </tr>
+
+                    <tr>
+                        <th>종료일</th>
+                        <td id="detailEnd"></td>
+                    </tr>
+                </table>
+
+                <div class="detail-btn-area">
+                    <button type="button" 
+                            onclick="closeDetailModal()">
+                        닫기
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
 
         <script>
             function openDateBox(){
@@ -203,6 +250,33 @@
                     btn.innerText = "+";
                 }
             }
+
+            function openDcalDetail(title,start,end){
+
+                document.getElementById("detailTitle").innerText = title;
+                document.getElementById("detailStart").innerText = start;
+                document.getElementById("detailEnd").innerText = end;
+
+                document.getElementById("detailModal")
+                        .style.display = "flex";
+            }
+
+            function openScalDetail(title,start,end){
+
+                document.getElementById("detailTitle").innerText = title;
+                document.getElementById("detailStart").innerText = start;
+                document.getElementById("detailEnd").innerText = end;
+
+                document.getElementById("detailModal")
+                        .style.display = "flex";
+            }
+
+            function closeDetailModal(){
+
+                document.getElementById("detailModal")
+                        .style.display = "none";
+            }
+
         </script>
 
     </body>

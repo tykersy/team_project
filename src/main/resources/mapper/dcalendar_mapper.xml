@@ -8,49 +8,49 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectDept"
             parameterType="int"
             resultType="schedule">
-        select c.id, d.dname, d.deptno, c.title, c.start, c.end 
+        select c.id, d.dname, d.deptno, c.title, c.start_date, c.end_date 
         from dcalendar c
         join dept d on c.deptno = d.deptno
         where c.deptno = #{deptno}
-        order by c.start
+        order by c.start_date
     </select>
 
     <!-- 입력받은 일정 DB에 저장 -->
     <insert id="insert"
             parameterType="schedule">
-        insert into dcalendar ( id, deptno, title, start, end )
-        values ( "C0015", #{deptno}, #{title}, #{start}, #{end} )
+        insert into dcalendar ( id, deptno, title, start_date, end_date )
+        values ( "C0015", #{deptno}, #{title}, #{start_date}, #{end_date} )
     </insert>
 
     <!-- 전체 부서 스케쥴 확인하기 -->
     <select id="selectAll"
             resultType="schedule">
-        select c.id, d.dname, d.deptno, c.title, c.start, c.end 
+        select c.id, d.dname, d.deptno, c.title, c.start_date, c.end_date 
         from dcalendar c
         join dept d on c.deptno = d.deptno
-        order by c.start
+        order by c.start_date
     </select>
 
     <!-- 부서&날짜별 스케쥴 상세보기 -->
     <select id="detailView"
             parameterType="java.util.Map"
             resultType="schedule">
-        select c.id, d.dname, d.deptno, c.title, c.start, c.end 
+        select c.id, d.dname, d.deptno, c.title, c.start_date, c.end_date 
         from dcalendar c
         join dept d on c.deptno = d.deptno
-        where c.deptno = #{deptno} and c.day like CONCAT('%', #{date}, '%')
-        order by c.start
+        where c.deptno = #{deptno} and c.start_date like CONCAT('%', #{date}, '%')
+        order by c.start_date
     </select>
 
     <!-- 전체부서의 날짜별 일정 상세보기 -->
     <select id="detailViewAll"
             parameterType="String"
             resultType="schedule">
-        select c.id, d.dname, d.deptno, c.title, c.start, c.end 
+        select c.id, d.dname, d.deptno, c.title, c.start_date, c.end_date 
         from dcalendar c
         join dept d on c.deptno = d.deptno
-        where c.day like CONCAT('%', #{date}, '%')
-        order by c.start
+        where c.start_date like CONCAT('%', #{date}, '%')
+        order by c.start_date
     </select>
 
 </mapper>
