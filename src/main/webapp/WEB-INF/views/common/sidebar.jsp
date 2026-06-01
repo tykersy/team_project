@@ -10,7 +10,7 @@
 
         <nav class="sidebar-menu">
             <a href="/dashboard" class="sidebar-item active">HOME</a>
-            <a href="/org" class="sidebar-item">조직도</a>
+            <a href="/orgChart" class="sidebar-item">조직도</a>
             <a href="/board/list" class="sidebar-item">공지사항</a>
             <a href="/calendar_calendarmain" class="sidebar-item">캘린더</a>
             <a href="/ta_main.do" class="sidebar-item">근태관리</a>

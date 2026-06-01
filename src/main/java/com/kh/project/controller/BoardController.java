@@ -35,7 +35,6 @@ public class BoardController {
     // 2.공지사항 글쓰기 페이지로 이동 
     @GetMapping("/write")
     public String writeForm() {
-        // WEB-INF/views/notice/write.jsp 화면을 보여줍니다.
         return "board/write";
     }
 

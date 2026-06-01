@@ -26,4 +26,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where deptno = #{deptno}
     </select>
     
+    <!-- 조직도 정보 조회 -->
+    <select id="getDeptOrgChart" resultType="map">
+        SELECT 
+            d.deptno AS deptNo,
+            d.dname AS deptName,
+            s.sabun AS sabun,
+            s.saname AS saname,
+            s.sajob AS sajob
+        FROM dept d
+        LEFT JOIN sawon s ON d.deptno = s.deptno
+        ORDER BY d.deptno, s.sabun
+    </select>
+    
 </mapper>

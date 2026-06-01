@@ -27,7 +27,7 @@ public class BoardDAO {
 
     // 게시글 작성
     public void insertBoard(BoardVO board) {
-        // XML에 있는 id="insertBoard" 쿼리에 가방(board)을 실어서 보냄
+        // XML에 있는 id="insertBoard" 쿼리에 board를 실어서 보냄
         sqlSession.insert(NAMESPACE + "insertBoard", board);
     }
 }

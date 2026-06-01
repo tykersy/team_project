@@ -1,14 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%-- 💡 컨트롤러 대신 JSP에서 직접 사번으로 정보를 불러오기 위한 자바 클래스들 --%>
 <%@ page import="com.kh.project.vo.SawonVO" %>
 <%@ page import="com.kh.project.dao.UserDAO" %>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
 <%@ page import="org.springframework.web.context.WebApplicationContext" %>
 
 <%
-    // 1. 세션에서 컨트롤러가 저장한 사번("user")이 있는지 꺼내봅니다.
+    // 1. 세션에서 컨트롤러가 저장한 사번("user")이 있는지 꺼내보기
     Object sessionUser = session.getAttribute("user");
     SawonVO loginMember = null;
 
@@ -17,14 +16,14 @@
             // 세션에 든 사번을 숫자로 변환
             int sabun = Integer.parseInt(sessionUser.toString());
             
-            // 2. 스프링 내부에서 팀원이 만든 userDAO 기능을 강제로 가져옵니다.
+            // 2. 스프링 내부에서 팀원이 만든 userDAO 기능을 강제로 가져옴
             WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
             UserDAO userDao = wac.getBean(UserDAO.class);
             
-            // 3. 사번을 넣어서 해당 사원의 전체 정보(이름, 직급 등)를 실시간으로 가져옵니다!
+            // 3. 사번을 넣어서 해당 사원의 전체 정보(이름, 직급 등)를 실시간으로 가져옴
             loginMember = userDao.selectUser(sabun);
             
-            // 4. 조회한 사원 정보를 JSP 화면에서 쓸 수 있도록 등록합니다.
+            // 4. 조회한 사원 정보를 JSP 화면에서 쓸 수 있도록 등록
             pageContext.setAttribute("loginMember", loginMember);
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,11 +58,9 @@
 
         <div class="header-profile-box">
             
-            <%-- 💡 위에서 불러온 loginMember 정보가 성공적으로 조회되었을 때 --%>
             <c:choose>
                 <c:when test="${not empty loginMember}">
                     <span class="profile-text" style="font-size: 0.95rem; font-weight: 500; color: #1e293b;">
-                        <%-- SawonVO 변수명인 saname(이름)과 sajob(직급)으로 화면에 출력합니다 --%>
                         ${loginMember.saname} ${loginMember.sajob}
                     </span>
                     <div class="profile-circle" style="width: 36px; height: 36px; border-radius: 50%; background-color: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 1px solid #cbd5e1;">
@@ -72,7 +69,6 @@
                 </c:when>
                 
                 <c:otherwise>
-                    <%-- 로그인이 안 되어있거나 사번 정보가 없을 때 --%>
                     <span class="profile-text" style="font-size: 0.95rem; color: #94a3b8; font-weight: 500;">
                         로그인 필요
                     </span>
