@@ -15,18 +15,5 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SleaveController {
     
-    private final SleaveDAO sleaveDao;
-    private final SawonDAO sawonDao;
-
-    //사원별 연차 관리 페이지
-    @GetMapping("/sleave/arange.do")
-    public String sawonLeave( Model model , int sabun ){
-
-        SleaveVO vo = sleaveDao.sawonLeave(sabun);
-        SawonVO sawon = sawonDao.sawonView(sabun);
-        model.addAttribute("vo", vo);
-        model.addAttribute("sawon", sawon);
-        return "/sleave/sawon_leave";
-    }    
 
 }

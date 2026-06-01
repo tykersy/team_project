@@ -13,8 +13,8 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <!-- sidebar css -->
-        <link rel="stylesheet" href="/css/manager/sidebar.css">
-        <link rel="stylesheet" href="/css/manager/main.css">
+        <link rel="stylesheet" href="/css/admin/sidebar.css">
+        <link rel="stylesheet" href="/css/admin/main.css">
         <style>
             /* 캘린더 출력할 div의 사이즈 조정 */
             #calendarbox {
@@ -76,7 +76,7 @@
 
     <body>
         <div class="manager-container">
-            <jsp:include page="/WEB-INF/views/manager_common/manager_sidebar.jsp"/>
+            <jsp:include page="/WEB-INF/views/admin_common/admin_sidebar.jsp"/>
             <div class="main-content">
             
                 <div class="card-row">

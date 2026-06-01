@@ -32,7 +32,7 @@ public class DcalendarController {
         List<DeptVO> dept_list = deptDao.selectAll();
 
         model.addAttribute("dept_list", dept_list);
-        return "/manager_calendar/schedule_list";
+        return "/admin_calendar/schedule_list";
 
     }
 
@@ -107,7 +107,7 @@ public class DcalendarController {
         model.addAttribute("date", date);
         model.addAttribute("list", list);
 
-        return "/manager_calendar/schedule_detail_view";
+        return "/admin_calendar/schedule_detail_view";
 
     }
 
