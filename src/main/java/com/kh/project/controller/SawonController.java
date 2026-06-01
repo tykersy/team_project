@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.kh.project.dao.DeptDAO;
 import com.kh.project.dao.SawonDAO;
-
+import com.kh.project.dao.SleaveDAO;
 import com.kh.project.vo.DeptVO;
 import com.kh.project.vo.DcalendarVO;
 import com.kh.project.vo.SawonVO;
+import com.kh.project.vo.SleaveVO;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -39,9 +40,11 @@ public class SawonController {
     private final DeptDAO deptDao;
     //암호화 컴포넌트
     private final PwdSecurity pwdSecurity;
+    //연차DAO
+    private final SleaveDAO sleaveDao;
 
     //전체 사원 목록
-    @GetMapping("/sleave.do")
+    @GetMapping("/sawon_list.do")
     public String sawonList( Model model ) {
         
         List<SawonVO> list = sawonDao.sawonList();
@@ -111,4 +114,15 @@ public class SawonController {
     }
     
     
+    //사원별 정보 열람 페이지
+    @GetMapping("/sawon_view.do")
+    public String sawonLeave( Model model , int sabun ){
+
+        SleaveVO vo = sleaveDao.sawonLeave(sabun);
+        SawonVO sawon = sawonDao.sawonView(sabun);
+        model.addAttribute("vo", vo);
+        model.addAttribute("sawon", sawon);
+        return "/sawon/sawon_view";
+    }    
+
 }

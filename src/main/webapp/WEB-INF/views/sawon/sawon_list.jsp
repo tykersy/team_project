@@ -5,48 +5,54 @@
 <html>
 
     <head>
-
+        <link rel="stylesheet" href="/css/admin/sawon_list.css"/>
+        <link rel="stylesheet" href="css/admin/sidebar.css" />
     </head>
 
     <body>
-        <h2>직원 관리 페이지</h2>
+        <div class="manager-container">
+            <jsp:include page="/WEB-INF/views/admin_common/admin_sidebar.jsp"/>
+            <div class="container">
+            <h2>직원 관리 페이지</h2>
 
-        <div>
-            <input type="button" value="PDF다운로드"/>
-            <input type="button" value="+직원 추가하기"
-                onclick="location.href='sawonAdd'"/>
-        </div>
+            <div class="btn-group">
+                <input type="button" value="PDF다운로드"/>
+                <input type="button" value="+직원 추가하기"
+                    onclick="location.href='sawonAdd'"/>
+            </div>
 
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>사원번호</th>
-                    <th>사원명</th>
-                    <th>부서번호</th>
-                    <th>직급</th>
-                    <th>입사일</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <c:forEach var="vo" items="${list}">
+            <table border="1">
+                <thead>
                     <tr>
-                        <td>${vo.sabun}</td>
-                        <td>
-                            <c:if test="${ vo.sabun ne '1' }">
-                                <a href="/sleave/arange.do?sabun=${vo.sabun}">${vo.saname}</a>
-                            </c:if>
-                            <c:if test="${ vo.sabun eq '1'}">
-                                ${vo.saname}
-                            </c:if>
-                        </td>
-                        <td>${vo.deptno}</td>
-                        <td>${vo.sajob}</td>
-                        <td>${vo.sahire}</td>
+                        <th>사원번호</th>
+                        <th>사원명</th>
+                        <th>부서번호</th>
+                        <th>직급</th>
+                        <th>입사일</th>
                     </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+                </thead>
+
+                <tbody>
+                    <c:forEach var="vo" items="${list}">
+                        <tr>
+                            <td>${vo.sabun}</td>
+                            <td>
+                                <c:if test="${ vo.sabun ne '1' }">
+                                    <a href="/sawon_view.do?sabun=${vo.sabun}">${vo.saname}</a>
+                                </c:if>
+                                <c:if test="${ vo.sabun eq '1'}">
+                                    <span class="admin-text">${vo.saname}</span>
+                                </c:if>
+                            </td>
+                            <td>${vo.deptno}</td>
+                            <td>${vo.sajob}</td>
+                            <td>${vo.sahire}</td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+            </div>
+        </div>
     </body>
     
 </html>

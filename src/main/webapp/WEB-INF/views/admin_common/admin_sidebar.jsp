@@ -9,8 +9,8 @@
         </div>
 
         <nav class="sidebar-menu">
-            <a href="" class="sidebar-item active">HOME</a>
-            <a href="" class="sidebar-item">사원 관리</a>
+            <a href="/admin_main.do" class="sidebar-item active">HOME</a>
+            <a href="/sawon_list.do" class="sidebar-item">사원 관리</a>
             <a href="" class="sidebar-item">근태/연차</a>
             <a href="/admin_calendar" class="sidebar-item">캘린더</a>
             <a href="" class="sidebar-item">전자 계약</a>
