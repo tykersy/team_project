@@ -17,7 +17,7 @@
             <a href="/org" class="sidebar-item ${fn:contains(uri, '/org') ? 'active' : ''}" >조직도</a>
             <a href="/board/list" class="sidebar-item ${fn:contains(uri, '/board/list') ? 'active' : ''}">공지사항</a>
             <a href="/calendar_calendarmain" class="sidebar-item ${fn:contains(uri, '/calendar_calendarmain') ? 'active' : ''}" >캘린더</a>
-            <a href="/attendance" class="sidebar-item ${fn:contains(uri, '/attendance') ? 'active' : ''}" >근태관리</a>
+            <a href="/ta_main.do" class="sidebar-item ${fn:contains(uri, '/attendance') ? 'active' : ''}" >근태관리</a>
             <a href="/mypage" class="sidebar-item ${fn:contains(uri, '/mypage') ? 'active' : ''}">마이페이지</a>
 
         </nav>
