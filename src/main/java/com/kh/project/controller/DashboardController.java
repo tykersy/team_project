@@ -6,13 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model; // 💡 데이터를 jsp로 보내기 위해 필요!
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.kh.project.dao.BoardDAO;
+import com.kh.project.dao.DcalendarDAO; // 💡 CalendarDAO 대신 팀원이 만든 DcalendarDAO로 교체!
 // 연결할 DAO 부품들을 가져옵니다.
 import com.kh.project.dao.SawonDAO;
 import com.kh.project.dao.SleaveDAO;
-import com.kh.project.dao.DcalendarDAO; // 💡 CalendarDAO 대신 팀원이 만든 DcalendarDAO로 교체!
-import com.kh.project.dao.BoardDAO;
 import com.kh.project.vo.BoardVO;
-import com.kh.project.vo.ScheduleDTO; // 💡 팀원이 만든 ScheduleDTO 가져오기!
 
 @Controller
 public class DashboardController {
