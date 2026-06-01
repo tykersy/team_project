@@ -39,7 +39,7 @@ public class UserContorller {
     //로그인 폼
     @GetMapping("/login")
     public String loginForm(){
-        return "/user/login";
+        return "user/login";
     }
 
     //로그인
@@ -77,7 +77,7 @@ public class UserContorller {
     @GetMapping("/mypage")
     public String mypage(Model model){
         
-        //로그인되지 않은 회원이 마이페이지 접근시 로그인 창으로 이동
+        //로그인되지 않거나 세션이 만료된 회원이 마이페이지 접근시 로그인 창으로 이동
         if(session.getAttribute("user") == null){
             return "redirect:/login";
         }
@@ -99,7 +99,51 @@ public class UserContorller {
         model.addAttribute("userTotalTA", userTotalTA);
         model.addAttribute("today", today);
 
-        return "/user/mypage";
+        return "user/mypage";
+    }
+
+    @PostMapping("/mypage/changePw")
+    @ResponseBody
+    public Map<String, String> changePw(String newPw){
+        Map<String,String> map = new HashMap<>();
+        String result = "notLogin";
+
+        //로그인되지 않거나 세션이 만료된 회원이 마이페이지 접근시 로그인 창으로 이동
+        if(session.getAttribute("user") == null){
+            map.put("result", result);
+            return map;
+        }
+
+        //세션에 저장된 사번으로 유저 정보 조회
+        int sabun = (int) session.getAttribute("user");
+
+        //변경할 비밀번호 암호화
+        String currPwd = pwdSecurity.pwdEncoding(newPw);
+
+        UserVO vo = new UserVO();
+        vo.setSabun(sabun);
+        vo.setPwd(currPwd);
+
+        int resultInt = userDao.changePW(vo);
+
+        if(resultInt == 0){ //비밀번호 변경 실패
+            result = "failure";
+        }else{ // 비밀번호 변경 성공
+            result = "success";
+        }
+
+        map.put("result", result);
+
+        return map;
+
+    }
+
+    //로그아웃
+    @GetMapping("/logout")
+    public String logout(){
+        session.removeAttribute("user");
+
+        return "redirect:/dashboard";
     }
 
 

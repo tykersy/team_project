@@ -20,5 +20,8 @@ public interface UserDAO {
     // 총 출근시간 및 출근 일 수 조회
     Map<String, String> userTotalTa(int sabun);
 
+    //비밀번호 변경
+    int changePW(UserVO vo);
+
 
 }

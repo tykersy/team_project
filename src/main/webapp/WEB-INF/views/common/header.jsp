@@ -66,20 +66,27 @@
                     <div class="profile-circle" style="width: 36px; height: 36px; border-radius: 50%; background-color: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 1px solid #cbd5e1;">
                         🧑‍💻
                     </div>
+
+                    <a href="#" onclick="openModal('로그아웃','정말 로그아웃하시겠습니까?', function(){ location.href='/logout' } )" class="admin-link">
+                        로그아웃
+                    </a>
                 </c:when>
                 
                 <c:otherwise>
-                    <span class="profile-text" style="font-size: 0.95rem; color: #94a3b8; font-weight: 500;">
-                        로그인 필요
-                    </span>
-                    <div class="profile-circle" style="width: 36px; height: 36px; border-radius: 50%; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #cbd5e1;">
-                        👤
-                    </div>
+
+                    <%-- 로그인이 안 되어있거나 사번 정보가 없을 때 --%>
+                    <a href="/login" class="login_href" style="display: contents">
+                        <span class="profile-text" style="font-size: 0.95rem; color: #94a3b8; font-weight: 500;">
+                            로그인 필요
+                        </span>
+                        <div class="profile-circle" style="width: 36px; height: 36px; border-radius: 50%; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #cbd5e1;">
+                            👤
+                        </div>
+                    </a>
+
                 </c:otherwise>
             </c:choose>
-            
         </div>
-
     </div>
-
+    <jsp:include page="/WEB-INF/views/common/modal.jsp" />
 </header>

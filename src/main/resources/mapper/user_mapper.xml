@@ -32,14 +32,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!-- 마이페이지 월 총근무시간 & 근무일 조회 -->
     <select id="userTotalTa" parameterType="int" resultType="java.util.Map">
         SELECT  COUNT(checkin) AS work_day,
-            ROUND(
-                SUM(
-                    TIME_TO_SEC(
-                        TIMEDIFF(checkout, checkin)
-                    ) / 3600
-                ),
-                1
-            ) AS total_work_time
+        ROUND(
+            COALESCE(
+                SUM(TIME_TO_SEC(TIMEDIFF(checkout, checkin)) / 3600),
+                0
+            ),
+            1
+        ) AS total_work_time
         FROM ta
         WHERE sabun = #{sabun}
         AND checkin IS NOT NULL
@@ -47,5 +46,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         AND YEAR(day) = YEAR(NOW())
         AND MONTH(day) = MONTH(NOW());
     </select>
+
+    <!-- 비밀번호 변경 -->
+    <update id="changePW" parameterType="user">
+        update sawon set pwd=#{pwd} where sabun=#{sabun}
+    </update>
 
 </mapper>

@@ -61,7 +61,7 @@ public class SawonController {
         List<DeptVO> dept = deptDao.selectAll();
         model.addAttribute("dept", dept);
 
-        return "/sawon/sawon_add";
+        return "sawon/sawon_add";
     }
 
     //사원 추가

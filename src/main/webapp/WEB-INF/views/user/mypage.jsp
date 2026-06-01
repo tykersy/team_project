@@ -9,21 +9,26 @@
         <title></title>
         <link rel="stylesheet" href="/css/user/mypage.css">
         <link rel="stylesheet" href="/css/dashboard.css">
+        <link rel="stylesheet" href="/css/sidebar.css">
     </head>
     <body>
+        <div class="layout">
+        <jsp:include page="/WEB-INF/views/common/sidebar.jsp" />
+        <main class="main-content">
         <jsp:include page="/WEB-INF/views/common/header.jsp" />
+        
         <div class="container">
         <div class="page-title">마이페이지</div>
         <div class="page-sub"></div>
 
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab(0)">📄 근로계약서</button>
-            <button class="tab-btn" onclick="switchTab(1)">🕐 출 / 퇴근</button>
-            <button class="tab-btn" onclick="switchTab(2)">💰 급여</button>
-            <button class="tab-btn" onclick="switchTab(3)">📊 근태현황</button>
+            <button class="tab-btn active" onclick="switchTab(0)"> 내 프로필 </button>
+            <button class="tab-btn" onclick="switchTab(1)"> 출 / 퇴근</button>
+            <button class="tab-btn" onclick="switchTab(2)"> 급여</button>
+            <button class="tab-btn" onclick="switchTab(3)"> 근태현황</button>
         </div>
         
-        <!-- ─────────────────────────────── TAB 1: 근로계약서 ─── -->
+        <!-- ─────────────────────────────── TAB 1: 내프로필 ─── -->
         <div class="panel active" id="panel-0">
             <div class="card">
                 <div class="card-title"><span class="dot"></span>계약 정보</div>
@@ -44,23 +49,23 @@
                 <div class="info-item"><label>근무 요일</label><div class="val">월 ~ 금</div></div>
                 <div class="info-item"><label>출근 시간</label><div class="val mono">09:00</div></div>
                 <div class="info-item"><label>퇴근 시간</label><div class="val mono">18:00</div></div>
-                <div class="info-item"><label>기본급</label><div class="val mono">3,200,000 원</div></div>
-                <div class="info-item"><label>연봉</label><div class="val mono">38,400,000 원</div></div>
+                <div class="info-item"><label>기본급</label><div class="val mono"><fmt:formatNumber value="${info.sapay}" pattern="#,###" /> 원</div></div>
+                <div class="info-item"><label>연봉</label><div class="val mono"><fmt:formatNumber value="${info.sapay*12}" pattern="#,###" /> 원</div></div>
             </div>
             </div>
         
+            
+
             <div class="card">
-            <div class="card-title"><span class="dot"></span>계약서 문서</div>
-            <div class="contract-doc">
-                <div class="doc-info">
-                <div class="doc-icon">📋</div>
-                <div>
-                    <div class="doc-name">근로계약서_김민준_2024.pdf</div>
-                    <div class="doc-date">서명일 2024. 03. 02 &nbsp;·&nbsp; 전자서명 완료</div>
+                <div class="card-title"><span class="dot"></span>보안</div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>비밀번호</label>
+                        <div class="val">
+                            <a href="#" class="pw-edit-link" onclick="openPwModal(); return false;">수정</a>
+                        </div>
+                    </div>
                 </div>
-                </div>
-                <button class="btn-outline">다운로드</button>
-            </div>
             </div>
         </div>
         
@@ -119,7 +124,7 @@
             <div class="salary-hero">
                 <div class="month">${today} 급여</div>
                 <div class="amount"><fmt:formatNumber value="${info.sapay}" pattern="#,###" /></div>
-                <div class="unit">만 원 (실수령액)</div>
+                <div class="unit"> 원 (실수령액)</div>
             </div>
             <div class="salary-breakdown">
                 <div class="breakdown-row"><span class="name">기본급</span><span class="amt">3,200,000</span></div>
@@ -245,8 +250,10 @@
             </table>
             </div>
         </div>
-        
         </div>
+        </main>
+        </div>
+        
         
         <script>
             function switchTab(idx) { // 마이페이지 탭 전환을 위한 스크립트
@@ -258,5 +265,6 @@
                 });
             }
         </script>
+    <%@ include file="passwordModal.jsp" %> <%-- 비밀번호 변경을 위한 모달 --%>
     </body>
 </html>
