@@ -42,26 +42,30 @@ body {
     list-style: none; /* 혹시 모를 리스트 점 제거 */
 }
 
-/* ⭐ 핵심 수정: .sidebar-item 자체이거나 그 내부의 <a> 태그까지 스타일 강제 적용 */
-.sidebar-item, .sidebar-item a {
-    text-decoration: none !important; /* 밑줄 절대 금지 */
-    color: #ffffff;               
+.sidebar-item {
+    text-decoration: none !important;
+    color: #ffffff;      
     font-size: 15px;
     font-weight: 500;
     
     display: flex;
     align-items: center;
-    gap: 12px;                       /* 아이콘과 글자 사이 간격 */
+    gap: 12px;                    
     
     padding: 14px 18px;
-    border-radius: 16px;             /* 예시 이미지처럼 부드러운 라운딩 */
+    border-radius: 16px;            
     transition: 0.2s;
     cursor: pointer;
 }
 
+a.sidebar-item {
+    color: #ffffff;
+}
+
 /* ⚡ 마우스 올렸을 때 (Hover) */
-.sidebar-item:hover {
-    background: rgba(255, 255, 255, 0.04); /* 아주 은은한 마우스 오버 효과 */
+.sidebar-item:hover, .dropdown:hover .sidebar-item {
+    background: rgba(255, 255, 255, 0.04);
+    color: #ffffff;
 }
 .sidebar-item:hover a {
     color: rgba(255, 255, 255, 0.85); /* 글씨가 조금 더 또렷해짐 */
@@ -69,7 +73,9 @@ body {
 
 /* ⚡ 현재 활성화된 메뉴 (Active) */
 .sidebar-item.active {
-    background: rgba(255, 255, 255, 0.07); /* 고급스러운 반투명 면 분할 */
+    background: #1E40AF; /* 다크모드에 어울리는 딥블루 */
+    color: #ffffff;
+    font-weight: 600;
 }
 .sidebar-item.active a {
     color: #60A5FA; /* 스마트한 느낌을 주는 연한 하늘색/블루 텍스트 */
@@ -81,6 +87,47 @@ body {
     background: #DBEAFE;             /* 조금 더 진한 하늘색 배경 */
     color: #1D4ED8;                  /* 선명한 블루 글씨 */
     font-weight: 600;
+}
+
+.menu-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 서브메뉴 기본 상태: 숨김 및 높이 0 */
+.submenu {
+    list-style: none;
+    padding-left: 20px; /* 대메뉴보다 안쪽으로 들여쓰기 */
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+/* 서브메뉴 내부의 링크 스타일 */
+.submenu li a {
+    display: block;
+    padding: 10px 18px;
+    color: #9CA3AF; /* 평소에는 약간 흐린 회색 */
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 12px;
+    transition: 0.2s;
+}
+
+/* 서브메뉴 마우스 오버 시 */
+.submenu li a:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #60A5FA; /* 하이라이트 블루 */
+}
+
+/* ⭐ 마우스 올렸을 때 서브메뉴 열림 처리 */
+.dropdown:hover .submenu {
+    max-height: 300px; /* 서브메뉴가 다 열릴 수 있는 충분한 높이 지정 */
+    opacity: 1;
+    margin-top: 4px;
+    margin-bottom: 8px;
 }
 
 /* 하단 관리자/로그아웃 섹션 고정 */

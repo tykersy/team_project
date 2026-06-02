@@ -8,7 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectDept"
             parameterType="int"
             resultType="schedule">
-        select c.id, d.dname, d.deptno, c.title, c.start_date, c.end_date 
+        select c.id, d.dname, d.deptno, c.title, c.start_date, c.end_date
         from dcalendar c
         join dept d on c.deptno = d.deptno
         where c.deptno = #{deptno}
@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!-- 전체 부서 스케쥴 확인하기 -->
     <select id="selectAll"
             resultType="schedule">
-        select c.id, d.dname, d.deptno, c.title, c.start_date, c.end_date 
+        select c.id, d.dname, d.deptno, c.title, c.start_date, c.end_date
         from dcalendar c
         join dept d on c.deptno = d.deptno
         order by c.start_date
@@ -35,7 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="detailView"
             parameterType="java.util.Map"
             resultType="schedule">
-        select c.id, d.dname, d.deptno, c.title, c.start_date, c.end_date 
+        select c.id, d.dname, d.deptno, c.title, c.start_date, c.end_date
         from dcalendar c
         join dept d on c.deptno = d.deptno
         where c.deptno = #{deptno} and c.start_date like CONCAT('%', #{date}, '%')
@@ -46,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="detailViewAll"
             parameterType="String"
             resultType="schedule">
-        select c.id, d.dname, d.deptno, c.title, c.start_date, c.end_date 
+        select c.id, d.dname, d.deptno, c.title, c.start_date, c.end_date
         from dcalendar c
         join dept d on c.deptno = d.deptno
         where c.start_date like CONCAT('%', #{date}, '%')
