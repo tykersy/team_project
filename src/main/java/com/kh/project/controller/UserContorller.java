@@ -174,9 +174,12 @@ public class UserContorller {
 
         logVo.setSabun(sabun);
 
-        int result = sleaveDAO.leaveApplyInsert(logVo);
+        //sleaveLog 테이블 반영
+        int resultSleave = sleaveDAO.sleave_logApplyInsert(logVo);
+        //sleave 테이블 반영
+        int resultSleave_log = sleaveDAO.sleaveApplyUpdate(logVo);
 
-        if(result == 0){ // 신청 실패
+        if(resultSleave == 0 && resultSleave_log == 0){ // 신청 실패
             map.put("result", "failure");
         }else{ // 신청 성공
             map.put("result", "success");

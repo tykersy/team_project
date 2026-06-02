@@ -16,6 +16,9 @@ public interface SleaveDAO {
     List<SleaveLogVO> sleaveLogSelect(int sabun);
 
     //사원 연차 사용 신청
-    int leaveApplyInsert(SleaveLogVO vo);
+    int sleave_logApplyInsert(SleaveLogVO vo);
+
+    //사원 연차 사용
+    int sleaveApplyUpdate(SleaveLogVO vo);
 
 }
