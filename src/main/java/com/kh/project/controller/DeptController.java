@@ -30,7 +30,7 @@ public class DeptController {
     } 
     
     // 조직도 화면을 보여주는 컨트롤러 메서드
-    @GetMapping("/orgChart")
+    @GetMapping("/org_chart")
     public String showOrgChart(Model model) {
         // DB에서 부서별 사원 맵 리스트 가져오기
         List<Map<String, Object>> orgList = deptdao.getDeptOrgChart();
