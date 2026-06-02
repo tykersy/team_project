@@ -5,9 +5,12 @@
 
     <head>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar/calendar_main.css"/>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
     </head>
     <body>
         <!--상단 바-->
+        <jsp:include page="/WEB-INF/views/common/sidebar.jsp" />
+        <div class="main-content">
         <div class="calendar-header">
             <a href="calendar_calendarmain?year=${prevYear}&month=${prevMonth}">◀</a>
             <a href="javascript:void(0)" class="head-ym" 
@@ -15,7 +18,7 @@
             <a href="calendar_calendarmain?year=${nextYear}&month=${nextMonth}">▶</a>
         </div>
         <div>
-            <table border="1" align="center" class="calendar-table">
+            <table class="calendar-table">
                 <thead>
                     <tr>
                         <th style="color: red;">일</th>
@@ -67,9 +70,11 @@
 
                                         <div class="dcal-item"
                                              onclick="openDcalDetail(
+                                                '${dvo.dcal_idx}',
                                                 '${dvo.title}',
                                                 '${dvo.start_date}',
-                                                '${dvo.end_date}'
+                                                '${dvo.end_date}',
+                                                '${dvo.sabun}'
                                             )">
                                             ${dvo.title}
                                         </div>
@@ -86,9 +91,11 @@
 
                                         <div class="scal-item"
                                              onclick="openScalDetail(
+                                                '${svo.scal_idx}',
                                                 '${svo.title}',
                                                 '${svo.start_date}',
-                                                '${svo.end_date}'
+                                                '${svo.end_date}',
+                                                '${svo.sabun}'
                                             )">
                                             ${svo.title}
                                         </div>
@@ -111,6 +118,7 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
 
             <!--일정 추가-->
             <div >
@@ -161,7 +169,7 @@
 
                 </div>
                 <div>
-                    <div class="btn-area">
+                    <div class="cal-btn-area">
 
                         <button onclick="closeModal()">
                             취소
@@ -183,6 +191,7 @@
 
             <div class="detail-content">
 
+                <input type="button" class="close-btn" value="X" onclick="closeDetailModal()" />
                 <div class="detail-title">
                     일정
                 </div>
@@ -205,10 +214,8 @@
                 </table>
 
                 <div class="detail-btn-area">
-                    <button type="button" 
-                            onclick="closeDetailModal()">
-                        닫기
-                    </button>
+                    <button type="button" id="modifyBtn">수정</button>
+                    <button type="button" id="deleteBtn">삭제</button>
                 </div>
 
             </div>
@@ -243,6 +250,7 @@
                 const btn = document.getElementById("bottomBtn");
 
                 menu.classList.toggle("active");
+                btn.classList.toggle("open");
 
                 if(menu.classList.contains("active")){
                     btn.innerText = "×";
@@ -251,21 +259,41 @@
                 }
             }
 
-            function openDcalDetail(title,start,end){
+            function openDcalDetail(idx,title,start,end,writerSabun){
 
                 document.getElementById("detailTitle").innerText = title;
-                document.getElementById("detailStart").innerText = start;
-                document.getElementById("detailEnd").innerText = end;
+                document.getElementById("detailStart").innerText = start.substring(0, 10);
+                document.getElementById("detailEnd").innerText = end.substring(0, 10);
+
+                const loginSabun = ${sabun};
+
+                if(Number(writerSabun) === Number(loginSabun)){
+                    document.getElementById("modifyBtn").style.display = "inline-block";
+                    document.getElementById("deleteBtn").style.display = "inline-block";
+                }else{
+                    document.getElementById("modifyBtn").style.display = "none";
+                    document.getElementById("deleteBtn").style.display = "none";
+                }
 
                 document.getElementById("detailModal")
                         .style.display = "flex";
             }
 
-            function openScalDetail(title,start,end){
+            function openScalDetail(idx,title,start,end,writerSabun){
 
                 document.getElementById("detailTitle").innerText = title;
-                document.getElementById("detailStart").innerText = start;
-                document.getElementById("detailEnd").innerText = end;
+                document.getElementById("detailStart").innerText = start.substring(0, 10);
+                document.getElementById("detailEnd").innerText = end.substring(0, 10);
+
+                const loginSabun = ${sabun};
+
+                if(Number(writerSabun) === Number(loginSabun)){
+                    document.getElementById("modifyBtn").style.display = "inline-block";
+                    document.getElementById("deleteBtn").style.display = "inline-block";
+                }else{
+                    document.getElementById("modifyBtn").style.display = "none";
+                    document.getElementById("deleteBtn").style.display = "none";
+                }
 
                 document.getElementById("detailModal")
                         .style.display = "flex";

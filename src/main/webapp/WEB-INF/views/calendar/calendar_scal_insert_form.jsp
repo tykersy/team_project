@@ -4,6 +4,10 @@
 <html>
 
     <head>
+
+         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
+         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar/scal_insert.css">
+
         <script>
             function send(f){
 
@@ -53,48 +57,53 @@
         </script>
     </head>
     <body>
-        <form>
-            <div align="center">
-                <button type = "button" onclick ="history.back()">x</button>
-                <span>개인 일정</span>
-                <button type="button" onclick = "send(this.form)">저장</button>
-            </div>
-            <div>
+        <jsp:include page="/WEB-INF/views/common/sidebar.jsp" />
+        <div CLASS="schedule-page">
+            <form>
+                <div class="form-box">
+                    <div class="form-header">
+                        <button type = "button" onclick ="history.back()">x</button>
+                        <span>개인 일정</span>
+                        <button type="button" onclick = "send(this.form)">추가</button>
+                    </div>
+                    <div>
 
-                <table border="1" align="center">
-                    <tr>
-                        <th>일정</th>
-                        <td colspan="3">
-                            <input name = "title" placeholder="일정을 입력하세요" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            <span>사번</span>
-                        </th>
-                        <td colspan="3">
-                            <input name= "sabun" value="${vo.sabun}" readonly />
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>시작</th>
-                        <td>
-                            <input type="date" name= "start_date" value="${today}"/>
-                        </td>
-                        <th>종료</th>
-                        <td>
-                            <input type="date" name= "end_date" value = "${today}"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>내용</th>
-                        <td colspan="3">
-                            <input name = "content" placeholder="설명" />
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </form>
+                        <table class="schedule-table">
+                            <tr>
+                                <th>일정</th>
+                                <td colspan="3">
+                                    <input name = "title" placeholder="일정을 입력하세요" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <span>사번</span>
+                                </th>
+                                <td colspan="3">
+                                    <input name= "sabun" value="${vo.sabun}" readonly />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>시작</th>
+                                <td>
+                                    <input type="date" name= "start_date" value="${today}"/>
+                                </td>
+                                <th>종료</th>
+                                <td>
+                                    <input type="date" name= "end_date" value = "${today}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>내용</th>
+                                <td colspan="3">
+                                    <input name = "content" placeholder="설명" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
     </body>
     
 </html>

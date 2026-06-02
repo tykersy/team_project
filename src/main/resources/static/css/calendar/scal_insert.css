@@ -1,0 +1,59 @@
+.schedule-page {
+    position: absolute;
+    left: 320px;
+    top: 40px;
+    right: 40px;
+}
+
+.form-box {
+    width: 760px;
+    background: white;
+    padding: 35px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.schedule-table th,
+.schedule-table td {
+    padding: 15px;
+    border: 1px solid #ddd;
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.form-header span {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.form-header button {
+    height: 44px;
+    min-width: 54px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.form-header button:last-child {
+    background: #4a67ff;
+    color: white;
+}
+
+.schedule-table input {
+    width: 100%;
+    height: 38px;
+    padding: 0 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+}
