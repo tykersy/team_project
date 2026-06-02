@@ -26,6 +26,7 @@
             <button class="tab-btn" onclick="switchTab(1)"> 출 / 퇴근</button>
             <button class="tab-btn" onclick="switchTab(2)"> 급여</button>
             <button class="tab-btn" onclick="switchTab(3)"> 근태현황</button>
+            <button class="tab-btn" onclick="switchTab(4)"> 연차</button>
         </div>
         
         <!-- ─────────────────────────────── TAB 1: 내프로필 ─── -->
@@ -156,6 +157,8 @@
         
         <!-- ─────────────────────────────── TAB 4: 근태현황 ─── -->
         <div class="panel" id="panel-3">
+
+            
         
             <div class="card">
             <div class="card-title"><span class="dot"></span>이번 달 근태 요약</div>
@@ -250,12 +253,104 @@
             </table>
             </div>
         </div>
+
+            <!-- 5 연차 탭 -->
+
+            <div class="panel" id="panel-4">
+
+                <!-- 연차 잔여 현황 카드 -->
+                <div class="card">
+                    <div class="card-title"><span class="dot"></span>사용 가능 연차 현황</div>
+                    <div class="leave-summary">
+                        <div class="leave-stat">
+                            <div class="leave-icon annual">📅</div>
+                            <div class="leave-lbl">연차</div>
+                            <div class="leave-num">${sleave.annual} 일</div>
+                        </div>
+                        <div class="leave-stat">
+                            <div class="leave-icon mc">🏥</div>
+                            <div class="leave-lbl">병가</div>
+                            <div class="leave-num">${sleave.mc} 일</div>
+                        </div>
+                        <div class="leave-stat">
+                            <div class="leave-icon health">💊</div>
+                            <div class="leave-lbl">보건</div>
+                            <div class="leave-num">${sleave.health} 일</div>
+                        </div>
+                        <div class="leave-stat">
+                            <div class="leave-icon etc">📋</div>
+                            <div class="leave-lbl">기타</div>
+                            <div class="leave-num">${sleave.etc} 일</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 연차 신청 버튼 -->
+                <div class="card">
+                    <div class="card-title"><span class="dot"></span>연차 신청</div>
+                    <div style="text-align:right; margin-bottom: 12px;">
+                        <button class="btn-apply" onclick="openLeaveModal()">+ 연차 신청</button>
+                    </div>
+
+                    <!-- 신청 이력 테이블 -->
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>신청일</th>
+                                <th>종류</th>
+                                <th>사용일자</th>
+                                <th>일수</th>
+                                <th>사유</th>
+                                <th>상태</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:choose>
+                                <c:when test="${empty leaveLogList}">
+                                    <tr><td colspan="6" style="text-align:center; color:#888;">신청 내역이 없습니다.</td></tr>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:forEach var="log" items="${leaveLogList}">
+                                        <tr>
+                                            <td class="label"><fmt:formatDate value="${log.created_at}" pattern="MM. dd"/></td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${log.leave_type eq 'annual'}">연차</c:when>
+                                                    <c:when test="${log.leave_type eq 'mc'}">병가</c:when>
+                                                    <c:when test="${log.leave_type eq 'health'}">보건</c:when>
+                                                    <c:otherwise>기타</c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td>${log.use_date}</td>
+                                            <td>${log.use_days} 일</td>
+                                            <td>${log.reason}</td>
+                                            <td>
+                                                <c:if test="${log.approve}" >
+                                                    <span class="tag normal">승인완료</span>
+                                                </c:if>
+                                                <c:if test="${not log.approve}" >
+                                                    <span class="tag absent">승인중</span>
+                                                </c:if>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:otherwise>
+                            </c:choose>
+                        </tbody>
+                    </table>
+
+                    
+
+                </div>
+            </div>
+
         </div>
         </main>
         </div>
         
         
         <script>
+
             function switchTab(idx) { // 마이페이지 탭 전환을 위한 스크립트
                 document.querySelectorAll('.tab-btn').forEach((b, i) => {
                     b.classList.toggle('active', i === idx);
@@ -264,7 +359,9 @@
                     p.classList.toggle('active', i === idx);
                 });
             }
+
         </script>
     <%@ include file="passwordModal.jsp" %> <%-- 비밀번호 변경을 위한 모달 --%>
+    <%@ include file="leaveModal.jsp" %> <%-- 연차 신청을 위한 모달 --%>
     </body>
 </html>
