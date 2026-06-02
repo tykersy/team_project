@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.project.dao.SleaveDAO">
+
+    <!-- 사원 연차 사용 조회 -->
+    <select id="sleaveLogSelect" parameterType="int" resultType="sleavelog" >
+        select * from sleave_log where sabun=#{sabun}
+    </select>
+
+    <!-- 사원 연차 insert -->
+    <insert id="leaveApplyInsert" parameterType="sleavelog">
+        insert into sleave_log
+        values(null, #{sabun}, #{leave_type}, #{use_date}, #{use_days}, #{reason}, now(), DEFAULT);
+    </insert>
+
+</mapper>

@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kh.project.dao.SleaveDAO;
 import com.kh.project.dao.UserDAO;
 import com.kh.project.vo.SawonVO;
+import com.kh.project.vo.SleaveLogVO;
+import com.kh.project.vo.SleaveVO;
 import com.kh.project.vo.UserVO;
 
 import jakarta.servlet.http.HttpSession;
@@ -29,6 +32,8 @@ public class UserContorller {
 
     //userDAO
     private final UserDAO userDao;
+    //sleaveDAO
+    private final SleaveDAO sleaveDAO;
     //암호화 복호화
     private final PwdSecurity pwdSecurity;
 
@@ -88,6 +93,8 @@ public class UserContorller {
         UserVO userInfo = userDao.userMyPage(sabun); // 사원 기본 정보
         List<UserVO> userTA = userDao.userTa(sabun); // 월 출/퇴근 조회
         Map<String,String> userTotalTA = userDao.userTotalTa(sabun); // 총 근무 시간, 일
+        SleaveVO userSleave = sleaveDAO.sawonLeave(sabun); // 사원 연차 조회
+        List<SleaveLogVO> userSleaveLog = sleaveDAO.sleaveLogSelect(sabun); //사원 연차 사용 조회
 
         //오늘 년/월을 구하여 포멧을 지정
         LocalDate now = LocalDate.now();
@@ -98,6 +105,9 @@ public class UserContorller {
         model.addAttribute("userTaList", userTA);
         model.addAttribute("userTotalTA", userTotalTA);
         model.addAttribute("today", today);
+        model.addAttribute("sleave", userSleave);
+        model.addAttribute("leaveLogList", userSleaveLog);
+        
 
         return "user/mypage";
     }
@@ -144,6 +154,36 @@ public class UserContorller {
         session.removeAttribute("user");
 
         return "redirect:/dashboard";
+    }
+
+    // 연차 신청
+    @PostMapping("/mypage/leaveApply")
+    @ResponseBody
+    public Map<String, String> userLeaveApply(SleaveLogVO logVo){
+        Map<String, String> map = new HashMap<>();
+        String resultStr = "login";
+
+        //로그인되지 않거나 세션이 만료된 회원이 마이페이지 접근시 로그인 창으로 이동
+        if(session.getAttribute("user") == null){
+            map.put("result", resultStr);
+            return map;
+        }
+
+        //세션에 저장된 사번불러오기
+        int sabun = (int) session.getAttribute("user");
+
+        logVo.setSabun(sabun);
+
+        int result = sleaveDAO.leaveApplyInsert(logVo);
+
+        if(result == 0){ // 신청 실패
+            map.put("result", "failure");
+        }else{ // 신청 성공
+            map.put("result", "success");
+        }
+
+        return map;
+
     }
 
 

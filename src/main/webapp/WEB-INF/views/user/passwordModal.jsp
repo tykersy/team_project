@@ -10,7 +10,7 @@
       <button class="pw-close" onclick="closePwModal()" aria-label="닫기">&#x2715;</button>
     </div>
 
-    <form name="pwForm" onsubmit="submitPwChange(event)" novalidate>
+    <form name="pwForm">
 
       <div class="pw-modal-body">
 

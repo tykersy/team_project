@@ -9,4 +9,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select * from sleave where sabun = #{sabun}
     </select>
 
+    <!-- 사원 추가 하며 기본 연차 추가 -->
+    <insert id="sleaveInsert" parameterType="sleave">
+        insert into sleave values (#{sabun}, 15.0, 0, 0, 0);
+    </insert>
+
 </mapper>
