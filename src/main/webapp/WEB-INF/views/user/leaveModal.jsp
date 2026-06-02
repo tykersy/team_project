@@ -57,7 +57,7 @@
             let totalDay = 0; // 휴가일 수
 
             function submitLeave(f){
-
+                let use_days = f.use_days.value;
 
                 if(use_days == 0 || !feasibility){
                     alert("내용을 확인해주세요.");
@@ -143,11 +143,12 @@
                     return;
                 }
 
-                total = (isHalf ? 0.5 : days);
-                use_days.value = total;
-                result.textContent  =  total + ' 일';
+                totalDay = (isHalf ? 0.5 : days);
+                use_days.value = totalDay;
+                result.textContent  =  totalDay + ' 일';
                 result.style.color  = 'var(--accent)';
                 feasibility = true;
                 
             }
+            
 </script>
