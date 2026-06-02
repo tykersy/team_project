@@ -13,7 +13,7 @@
             /* 캘린더 출력할 div의 사이즈 조정 */
             #calendarbox {
                 height:700px;
-                width:80%
+                width:90%
             }
         </style>
         <!-- toast ui 라이브러리 참조 & css참조 -->
@@ -42,6 +42,50 @@
                     useDetailPopup: true, //스케쥴 디테일을 볼 수 있는 팝업
                     gridSelection: true,
                     isReadOnly: false,
+                    calendars: [ //부서별로 색깔 다르게 표시
+                        {
+                            id: 1,
+                            name: '사장',
+                            backgroundColor: '#111827', // 연한 블루
+                            borderColor: '#000000',
+                            color: '#FFFFFF'
+                        },
+                        {
+                            id: 10,
+                            name: '인사팀',
+                            backgroundColor: '#3B82F6', // 연한 블루
+                            borderColor: '#DBEAFE',
+                            color: '#FFFFFF'
+                        },
+                        {
+                            id: 20,
+                            name: '경영팀',
+                            backgroundColor: '#10B981', // 연한 그린
+                            borderColor: '#D1FAE5',
+                            color: '#FFFFFF'
+                        },
+                        {
+                            id: 30,
+                            name: '마케팅팀',
+                            backgroundColor: '#FF0000', // 연한 레드
+                            borderColor: '#FFE4E6',
+                            color: '#FFFFFF'
+                        },
+                        {
+                            id: 40,
+                            name: '보안팀',
+                            backgroundColor: '#7C3AED', // 연한 퍼플
+                            borderColor: '#F5F3FF',
+                            color: '#FFFFFF'
+                        },
+                        {
+                            id: 50,
+                            name: '개발팀',
+                            backgroundColor: '#FF8C00', // 연한 그레이
+                            borderColor: '#E06C00',
+                            color: '#FFFFFF'
+                        }
+                    ],
                     theme: {
                         common: {
                             border: '1px solid #e5e5e5',
@@ -82,10 +126,12 @@
                     
                     //미니 팝업 띄우기
                     window.open(url, 'scheduleDetailPopup', 
-                                    'width=400, height=700, scrollbars=yes, resizable=no');
+                                    'width=600, height=700, scrollbars=yes, resizable=no');
                 } )
             
             }
+
+            allSchedule();
 
             }
 
@@ -114,7 +160,7 @@
 
                         return {
                             id : item.id,
-                            calendarId : 'cal1',
+                            calendarId : item.deptno,
                             title : item.title,
                             start : item.start_date,
                             end : item.end_date,
@@ -129,10 +175,10 @@
 
             }
 
-            //모든부터 버튼 클릭 시 실행되는 함수
+            //모든부서 버튼 클릭 시 실행되는 함수
             function allSchedule(){
 
-                //전체부서 스케쥴을 클릭 했다면 전역변수 cur_deptno 0으로 설정
+                //전체부서 스케쥴을 클릭 했다면 전역변수 cur_deptno 1으로 설정
                 cur_deptno = 1;
 
                 //부서명을 검색한 적이 있다면 검색 결과를 출력했던 div가리기
@@ -158,7 +204,7 @@
 
                         return {
                             id : item.id,
-                            calendarId : 'cal1',
+                            calendarId : item.deptno,
                             title : item.title,
                             start : item.start_date,
                             end : item.end_date,
@@ -179,7 +225,6 @@
                 let search_name = f.search_name.value; //검색어
                 let calendarbox = document.getElementById("calendarbox"); //캘린더를 담는 div
                 let searchbox = document.getElementById("searchbox"); //검색 결과를 담을 div
-                let searchfor = document.getElementById("searchfor")
 
                 //유효성 체크
                 if( search_name == '' ){
@@ -191,22 +236,34 @@
                 calendarbox.style.display = 'none';
                 searchbox.style.display = 'block';
 
+                searchbox.innerHTML = "" //기존 검색결과 초기화
+
                 fetch( "/schedule_search.do?search_name="+search_name )
                 .then( res => res.json() )
                 .then( data => {
 
                     console.log("서버가 보내준 데이터 확인:", data);
 
-                    if( data.length === 0 ){
-                        searchbox.innerHTML = "<p>검색 결과가 없습니다.</p>";
+                    // 결과가 비어있거나 dlist가 없는 경우 예외 처리
+                    if( !data || !data.dlist || data.dlist.length === 0 ){
+                        searchbox.innerHTML = 
+                            '<div class="no-result-box"><strong>'+
+                            search_name+'</strong><p>에 대한검색 결과가 없습니다.</p></div>'
+                            
                     }else{
-                        data.dlist.map(dept => {
+
+                        searchbox.innerHTML = `
+                            <div class="search-result-header">
+                                '<strong>${search_name}</strong>' 검색 결과 (총 ${data.dlist.length}건)
+                            </div>
+                            <div class="search-card-grid">`;
+
+                        data.dlist.map( dept => {
+                            
+                            console.log(dept.dname)
                             searchbox.innerHTML += 
-                                    `<input type="button" 
-                                        value="${dept.dname}" 
-                                        onclick="dept_sawon('${dept.deptno}')" 
-                                        style="margin-right: 5px;"/>
-                                    `;
+                                    '<div class="dept-search-card"><input type="button" value="'+dept.dname+
+                                        '" onclick="dept_sawon(\'' + dept.deptno + '\')" style="margin: 20px 50px;"/>';
                         });
                         
                     }
@@ -241,6 +298,14 @@
             </div>
             </div>
 
+            <div class="calendar-legend">
+                <span class="legend-item"><i class="dot admin"></i>CEO</span>
+                <span class="legend-item"><i class="dot hr"></i>인사팀</span>
+                <span class="legend-item"><i class="dot mg"></i>경영팀</span>
+                <span class="legend-item"><i class="dot mkt"></i>마케팅팀</span>
+                <span class="legend-item"><i class="dot sec"></i>보안팀</span>
+                <span class="legend-item"><i class="dot dev"></i>개발팀</span>
+            </div>
             <div id="calendarbox"></div>
             <div id="searchbox"></div>
             </div>
