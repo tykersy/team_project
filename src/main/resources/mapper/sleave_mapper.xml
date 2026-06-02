@@ -14,4 +14,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into sleave values (#{sabun}, 15.0, 0, 0, 0);
     </insert>
 
+    <!-- 연차 사용 -->
+    <update id="sleaveApplyUpdate" parameterType="sleavelog">
+        update sleave
+        <set>
+            <choose>
+                <when test="leave_type eq 'annual'">
+                    annual = annual - #{use_days}
+                </when>
+                <when test="leave_type eq 'mc'">
+                    mc = mc - #{use_days}
+                </when>
+                <when test="leave_type eq 'health'">
+                    health = health - #{use_days}
+                </when>
+                <when test="leave_type eq 'etc'">
+                    etc = etc - #{user_days}
+                </when>
+            </choose>
+        </set>
+        where sabun=#{sabun}
+    </update>
+
 </mapper>
