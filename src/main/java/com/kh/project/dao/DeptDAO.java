@@ -18,4 +18,5 @@ public interface DeptDAO {
     
     //조직도 관련 정보
     List<Map<String, Object>> getDeptOrgChart();
+    
 }

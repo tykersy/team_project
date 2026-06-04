@@ -123,6 +123,35 @@ public class SawonController {
         model.addAttribute("vo", vo);
         model.addAttribute("sawon", sawon);
         return "/sawon/sawon_view";
-    }    
+    }
+
+    //사원 삭제
+    @GetMapping("/admin_sawon_delete")
+    @ResponseBody
+    public Map<String, Integer> sawonDelete( int sabun ){
+
+        int res = sawonDao.sawonDelete(sabun);
+
+        Map<String, Integer> map = new HashMap<>(); 
+        map.put("result", res);
+
+        return map;
+    }
+
+    //사원 정보 수정
+    @GetMapping("/admin_sawon_modify")
+    public String sawonModify( Model model , int sabun){
+
+        //수정할 사원 정보 불러오기 (사원 상세보기를 위한 sawonView함수 재활용)
+        SawonVO sawon = sawonDao.sawonView(sabun);
+        //부서 선택을 위한 부서목록
+        List<DeptVO> deptList = deptDao.selectAll();
+        
+        //바인딩 및 포워딩
+        model.addAttribute("sawon", sawon);
+        model.addAttribute("deptList", deptList);
+        return "/sawon/sawon_modify_form";
+
+    }
 
 }
