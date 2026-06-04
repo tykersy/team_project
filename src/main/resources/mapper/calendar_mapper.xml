@@ -4,14 +4,41 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.project.dao.CalendarDAO">
 	
-	<select id = "selectDcal"
-            parameterType = "dcal">
-        select * from dcalendar
-    </select>
+        <insert id="insertDcal"
+                parameterType="dcal">
+            insert into dcalendar (  deptno, sabun, title, start_date, end_date, content )
+            values ( #{deptno}, #{sabun}, #{title}, #{start_date}, #{end_date}, #{content} )
+        </insert>
 
-	<select id = "selectScal"
-            parameterType = "scal">
-        select * from scalendar
-    </select>
+        <insert id="insertScal"
+                parameterType="scal">
+            insert into scalendar ( sabun, title, start_date, end_date, content )
+            values ( #{sabun}, #{title}, #{start_date}, #{end_date}, #{content} )
+        </insert>
+
+        <select id="selectDeptnoBySabun"
+                parameterType="int"
+                resultType="int">
+            SELECT deptno FROM sawon
+            WHERE sabun = #{sabun}
+        </select>
+
+        <select id="selectDcalByDeptno"
+                parameterType="map"
+                resultType="dcal">
+                SELECT * FROM dcalendar
+                WHERE deptno = #{deptno}
+                AND start_date &lt;= #{monthEnd}
+                AND end_date &gt;= #{monthStart}
+        </select>
+
+        <select id="selectScalBySabun"
+                parameterType="map"
+                resultType="scal">
+            SELECT * FROM scalendar
+            WHERE sabun = #{sabun}
+            AND start_date &lt;= #{monthEnd}
+            AND end_date &gt;= #{monthStart}
+        </select>
 
 </mapper>
