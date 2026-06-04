@@ -10,6 +10,9 @@
         <link rel="stylesheet" href="/css/user/mypage.css">
         <link rel="stylesheet" href="/css/dashboard.css">
         <link rel="stylesheet" href="/css/sidebar.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/toastui-calendar.min.css" />
+        <script src="${pageContext.request.contextPath}/js/toastui-calendar.min.js"></script>
+        
     </head>
     <body>
         <div class="layout">
@@ -78,7 +81,7 @@
             <div class="time-summary">
                 <div class="time-stat"><span class="num">${userTotalTA.total_work_time}</span><span class="lbl">총 근무시간 (h)</span></div>
                 <div class="time-stat"><span class="num">${userTotalTA.work_day}</span><span class="lbl">출근일수</span></div>
-                <div class="time-stat"><span class="num">3.5</span><span class="lbl">초과 근무 (h)</span></div>
+                <div class="time-stat"><span class="num">${userTotalTA.overtime}</span><span class="lbl">초과 근무 (h)</span></div>
             </div>
             </div>
         
@@ -101,7 +104,15 @@
                             <td>${taList.checkin}</td>
                             <td>${taList.checkout}</td>
                             <td>${taList.working_time}</td>
-                            <td><span class="tag normal">정상</span></td>
+                            <td>
+                                <span class="tag ${taList.status}">
+                                    <c:choose>
+                                        <c:when test="${taList.status eq 'late'}">지각</c:when>
+                                        <c:when test="${taList.status eq 'normal'}">정상</c:when>
+                                        <c:otherwise>기타</c:otherwise>
+                                    </c:choose>
+                                </span>
+                            </td>
                         </tr>
                     </c:forEach>
                     <%-- <tr><td class="label">05. 26 (금)</td><td>09:00</td><td>19:30</td><td>10h 30m</td><td><span class="tag normal">정상</span></td></tr>
@@ -171,70 +182,27 @@
             </div>
         
             <div class="card mini-cal">
-            <div class="card-title"><span class="dot"></span>근태 캘린더</div>
-            <div class="cal-header">
-                <div class="cal-title">2025년 5월</div>
-                <div class="cal-nav">
-                <button>‹</button>
-                <button>›</button>
+                <div class="card-title"><span class="dot"></span>근태 캘린더</div>
+
+                <%-- 네비게이션 --%>
+                <div class="cal-header">
+                    <div class="cal-title" id="calTitle"></div>
+                    <div class="cal-nav">
+                        <button onclick="calPrev()">‹</button>
+                        <button onclick="calNext()">›</button>
+                    </div>
                 </div>
-            </div>
-            <div class="cal-grid">
-                <div class="cal-day-head">일</div>
-                <div class="cal-day-head">월</div>
-                <div class="cal-day-head">화</div>
-                <div class="cal-day-head">수</div>
-                <div class="cal-day-head">목</div>
-                <div class="cal-day-head">금</div>
-                <div class="cal-day-head">토</div>
-        
-                <!-- Week 1: May 1 = Thursday -->
-                <div class="cal-day empty"></div>
-                <div class="cal-day empty"></div>
-                <div class="cal-day empty"></div>
-                <div class="cal-day empty"></div>
-                <div class="cal-day work">1</div>
-                <div class="cal-day work">2</div>
-                <div class="cal-day off">3</div>
-                <!-- Week 2 -->
-                <div class="cal-day off">4</div>
-                <div class="cal-day work">5</div>
-                <div class="cal-day work">6</div>
-                <div class="cal-day work">7</div>
-                <div class="cal-day work">8</div>
-                <div class="cal-day work">9</div>
-                <div class="cal-day off">10</div>
-                <!-- Week 3 -->
-                <div class="cal-day off">11</div>
-                <div class="cal-day work">12</div>
-                <div class="cal-day work">13</div>
-                <div class="cal-day work">14</div>
-                <div class="cal-day work">15</div>
-                <div class="cal-day work">16</div>
-                <div class="cal-day off">17</div>
-                <!-- Week 4 -->
-                <div class="cal-day off">18</div>
-                <div class="cal-day absent-day">19</div>
-                <div class="cal-day absent-day">20</div>
-                <div class="cal-day work">21</div>
-                <div class="cal-day late-day">22</div>
-                <div class="cal-day work">23</div>
-                <div class="cal-day off">24</div>
-                <!-- Week 5 -->
-                <div class="cal-day off">25</div>
-                <div class="cal-day work">26</div>
-                <div class="cal-day today">27</div>
-                <div class="cal-day off">28</div>
-                <div class="cal-day off">29</div>
-                <div class="cal-day off">30</div>
-                <div class="cal-day off">31</div>
-            </div>
-            <div class="legend">
-                <div class="legend-item"><div class="legend-dot" style="background:rgba(34,197,94,0.4)"></div>정상출근</div>
-                <div class="legend-item"><div class="legend-dot" style="background:rgba(245,158,11,0.4)"></div>지각</div>
-                <div class="legend-item"><div class="legend-dot" style="background:rgba(239,68,68,0.3)"></div>결근</div>
-                <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>오늘</div>
-            </div>
+
+                <%-- TUI Calendar 컨테이너 --%>
+                <div id="tuiCal" style="height:580px;"></div>
+
+                <%-- 범례 --%>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-dot" style="background:rgba(34,197,94,0.5)"></div>정상출근</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:rgba(245,158,11,0.5)"></div>지각</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:rgba(239,68,68,0.4)"></div>결근</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:rgba(99,102,241,0.5)"></div>휴가</div>
+                </div>
             </div>
         
             <div class="card">
@@ -244,11 +212,16 @@
                 <tr><th>월</th><th>정상</th><th>지각</th><th>결근</th><th>조기출근</th><th>총 근무(h)</th></tr>
                 </thead>
                 <tbody>
-                <tr><td class="label">1월</td><td>21</td><td>1</td><td>0</td><td>2</td><td>170.5</td></tr>
-                <tr><td class="label">2월</td><td>19</td><td>0</td><td>0</td><td>3</td><td>158.0</td></tr>
-                <tr><td class="label">3월</td><td>20</td><td>2</td><td>1</td><td>0</td><td>162.5</td></tr>
-                <tr><td class="label">4월</td><td>22</td><td>0</td><td>0</td><td>1</td><td>176.0</td></tr>
-                <tr><td class="label">5월</td><td>21</td><td>2</td><td>1</td><td>3</td><td>168.5</td></tr>
+                <c:forEach var="monthTA" items="${yearlyTA}" >
+                    <tr>
+                        <td class="label">${monthTA.month}월</td>
+                        <td>${monthTA.normalCount}</td>
+                        <td>${monthTA.lateCount}</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>${monthTA.totalWorkTime}</td>
+                    </tr>
+                </c:forEach>
                 </tbody>
             </table>
             </div>
@@ -349,9 +322,12 @@
         </div>
         
         
-        <script>
+        <%@ include file="passwordModal.jsp" %>
+        <%@ include file="leaveModal.jsp" %>
 
-            function switchTab(idx) { // 마이페이지 탭 전환을 위한 스크립트
+        <script>
+            // ── 탭 전환 ──
+            function switchTab(idx) {
                 document.querySelectorAll('.tab-btn').forEach((b, i) => {
                     b.classList.toggle('active', i === idx);
                 });
@@ -360,8 +336,73 @@
                 });
             }
 
+            const taData = JSON.parse('${taJson}');
+            console.log(taData);
+
+            // status → 라벨/색상
+            const styleMap = {
+                normal : { title: '정상출근', bg: 'rgba(34,197,94,0.25)',  border: '#16a34a' },
+                late   : { title: '지각',    bg: 'rgba(245,158,11,0.25)', border: '#d97706' },
+                absent : { title: '결근',    bg: 'rgba(239,68,68,0.2)',   border: '#dc2626' },
+                leave  : { title: '휴가',    bg: 'rgba(99,102,241,0.2)',  border: '#6366f1' },
+                half   : { title: '반차',    bg: 'rgba(99,102,241,0.12)', border: '#a5b4fc' }
+            };
+
+            // TUI Calendar 초기화
+            const calendar = new tui.Calendar('#tuiCal', {
+                defaultView   : 'month',
+                isReadOnly    : true,
+                usageStatistics: false,
+                month: {
+                    dayNames      : ['일', '월', '화', '수', '목', '금', '토'],
+                    startDayOfWeek: 0,
+                    isAlways6Weeks: false
+                },
+                theme: {
+                    month: {
+                        // 주말 색상
+                        holiday : { color: '#dc2626' },
+                        saturday: { color: '#6366f1' },
+                        // 오늘 날짜 강조
+                        today   : { color: '#2563eb' }
+                    }
+                },
+                // 상단 기본 툴바 숨김 (직접 만든 버튼 사용)
+                calendars: [{ id: 'attend', name: '근태' }]
+            });
+
+            // 이벤트 생성
+            const events = taData.map((item, idx) => {
+                const s = styleMap[item.status] ?? styleMap['normal'];
+                return {
+                    id           : String(idx),
+                    calendarId   : 'attend',
+                    title        : s.title,
+                    start        : item.date,
+                    
+                    isAllDay     : true,
+                    category     : 'allday',
+                    backgroundColor : s.bg,
+                    borderColor     : s.border,
+                    color           : s.border,   // 텍스트 색
+                    isReadOnly   : true
+                };
+            });
+
+            calendar.createEvents(events);
+
+            // 제목 업데이트 함수
+            function updateTitle() {
+                const d = calendar.getDate();
+                document.getElementById('calTitle').textContent =
+                    d.getFullYear() + '년 ' + (d.getMonth() + 1) + '월';
+            }
+
+            // 네비게이션
+            function calPrev() { calendar.prev(); updateTitle(); }
+            function calNext() { calendar.next(); updateTitle(); }
+
+            updateTitle();
         </script>
-    <%@ include file="passwordModal.jsp" %> <%-- 비밀번호 변경을 위한 모달 --%>
-    <%@ include file="leaveModal.jsp" %> <%-- 연차 신청을 위한 모달 --%>
     </body>
 </html>
