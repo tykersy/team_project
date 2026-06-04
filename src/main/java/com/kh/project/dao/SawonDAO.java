@@ -15,4 +15,6 @@ public interface SawonDAO {
     //사원 추가
     int sawonInsert(SawonVO vo);
 
+    //사원 삭제
+    int sawonDelete( int sabun );
 } 
