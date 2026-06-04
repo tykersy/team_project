@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.project.dao.SleaveDAO;
 import com.kh.project.dao.UserDAO;
+import com.kh.project.vo.CalendarDayVO;
 import com.kh.project.vo.SawonVO;
 import com.kh.project.vo.SleaveLogVO;
 import com.kh.project.vo.SleaveVO;
@@ -22,9 +24,11 @@ import com.kh.project.vo.UserVO;
 
 import jakarta.servlet.http.HttpSession;
 
+import com.kh.project.common.Calendar;
 import com.kh.project.common.PwdSecurity;
 
 import lombok.RequiredArgsConstructor;
+import tools.jackson.databind.ObjectMapper;
 
 @Controller
 @RequiredArgsConstructor
@@ -36,6 +40,8 @@ public class UserContorller {
     private final SleaveDAO sleaveDAO;
     //암호화 복호화
     private final PwdSecurity pwdSecurity;
+    //캘린더
+    private final Calendar calendar;
 
     //세션으로 로그인 유무 확인 
     @Autowired
@@ -80,7 +86,7 @@ public class UserContorller {
 
     //마이페이지
     @GetMapping("/mypage")
-    public String mypage(Model model){
+    public String mypage(Model model) throws Exception{
         
         //로그인되지 않거나 세션이 만료된 회원이 마이페이지 접근시 로그인 창으로 이동
         if(session.getAttribute("user") == null){
@@ -101,12 +107,40 @@ public class UserContorller {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월");
         String today = now.format(formatter);
 
+        List<CalendarDayVO> calList = calendar.getCalendar(
+            sabun, now.getYear(), now.getMonthValue()
+        );
+
+         // ── taJson 변환 (핵심 추가 부분) ──
+        List<Map<String, String>> taJson = calList.stream()
+        .filter(d -> !d.getStatus().equals("off") && !d.getStatus().equals("future"))
+        .map(d -> {
+            Map<String, String> m = new HashMap<>();
+            m.put("date", String.format("%d-%02d-%02d",
+                now.getYear(), now.getMonthValue(), d.getDay()));
+            m.put("status", d.getStatus());
+            return m;
+        })
+        .collect(Collectors.toList());
+
+        ObjectMapper mapper = new ObjectMapper();
+
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("sabun", sabun);
+        map.put("year", now.getYear());
+
+        List<Map<String,Object>> yearlyTa = userDao.getYearlyTa(map);
+
         model.addAttribute("info", userInfo);
         model.addAttribute("userTaList", userTA);
         model.addAttribute("userTotalTA", userTotalTA);
         model.addAttribute("today", today);
         model.addAttribute("sleave", userSleave);
         model.addAttribute("leaveLogList", userSleaveLog);
+        model.addAttribute("yearlyTA", yearlyTa);
+        model.addAttribute("taJson",
+    new ObjectMapper().writeValueAsString(taJson));
         
 
         return "user/mypage";
@@ -179,12 +213,13 @@ public class UserContorller {
         //sleave 테이블 반영
         int resultSleave_log = sleaveDAO.sleaveApplyUpdate(logVo);
 
-        if(resultSleave == 0 && resultSleave_log == 0){ // 신청 실패
+        if(resultSleave == 0 || resultSleave_log == 0){ // 신청 실패
             map.put("result", "failure");
         }else{ // 신청 성공
             map.put("result", "success");
         }
 
+        
         return map;
 
     }
