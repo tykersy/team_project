@@ -7,6 +7,33 @@
     <head>
         <link rel="stylesheet" href="/css/admin/sawon_list.css"/>
         <link rel="stylesheet" href="css/admin/sidebar.css" />
+
+        <script>
+            //사원 퇴사 처리
+            function del(sabun, saname){
+
+                //재확인
+                if( !confirm(saname+"님을 퇴사처리 하시겠습니까?") ){
+                    return;
+                }
+
+                //단순 사원 삭제는 getMapping
+                fetch( "/admin_sawon_delete?sabun="+sabun )
+                .then( res => res.json() )
+                .then( data => {
+
+                    if( data.result == 1 ){
+                        alert( "정상적으로 삭제되었습니다" )
+                        location.href="/sawon_list.do"
+                        return;
+                    }
+
+                    alert( "삭제가 정상적으로 이루어지지 않았습니다. 다시 시도하세요" )
+
+                } )
+                
+            }
+        </script>
     </head>
 
     <body>
@@ -17,7 +44,7 @@
 
             <div class="btn-group">
                 <input type="button" value="PDF다운로드"/>
-                <input type="button" value="+직원 추가하기"
+                <input type="button" value="+사원 추가하기"
                     onclick="location.href='sawonAdd'"/>
             </div>
 
@@ -29,6 +56,7 @@
                         <th>부서번호</th>
                         <th>직급</th>
                         <th>입사일</th>
+                        <th>비고</th>
                     </tr>
                 </thead>
 
@@ -47,6 +75,12 @@
                             <td>${vo.deptno}</td>
                             <td>${vo.sajob}</td>
                             <td>${vo.sahire}</td>
+                            <td>
+                                <input type="button" value="수정" 
+                                    onclick="location.href='/admin_sawon_modify?sabun=${vo.sabun}'"/>
+                                <input type="button" value="퇴사" 
+                                    onclick="del('${vo.sabun}', '${vo.saname}')"/>
+                            </td>
                         </tr>
                     </c:forEach>
                 </tbody>
