@@ -29,5 +29,13 @@ public class DeptController {
         return "dept/org_chart"; 
     }
 
+    //관리자-부서/조직 관리 메인페이지
+    @GetMapping("/admin_dept_main")
+    public String adminDeptMain(){
+
+        //부서별 인원 조회
+        Map<Object> dMemberCount = deptdao.memberCount();
+
+    }
 
 }
