@@ -99,6 +99,15 @@ public class CalendarController {
             );
         }
 
+        LocalDate prevMonth = firstDay.minusMonths(1);
+        int prevLastDay = prevMonth.lengthOfMonth();
+
+        int totalCell = startBlank + lastDay;
+        int endBlank = totalCell % 7 == 0 ? 0 : 7 - (totalCell % 7);
+
+        model.addAttribute("prevLastDay", prevLastDay);
+        model.addAttribute("endBlank", endBlank);
+
         model.addAttribute("sabun", sabun);
         model.addAttribute("deptno", deptno);
         model.addAttribute("dcalList", dcalList);
@@ -155,6 +164,91 @@ public class CalendarController {
 
         return map; 
 
+    }
+
+    @PostMapping("/delete_schedule.do")
+    @ResponseBody
+    public Map<String, Object> deleteSchedule(int idx, String type){
+
+        Map<String, Object> map = new HashMap<>();
+
+        int loginSabun = (int) session.getAttribute("user");
+
+        int writerSabun = 0;
+
+        if(type.equals("dcal")){
+            writerSabun = calendardao.selectDcalWriter(idx);
+        }else{
+            writerSabun = calendardao.selectScalWriter(idx);
+        }
+
+        if(loginSabun != writerSabun){
+            map.put("status", "forbidden");
+            return map;
+        }
+
+        int res = 0;
+
+        if(type.equals("dcal")){
+            res = calendardao.deleteDcal(idx);
+        }else{
+            res = calendardao.deleteScal(idx);
+        }
+
+        map.put("status", res > 0 ? "success" : "fail");
+
+        return map;
+    }
+
+    @GetMapping("/schedule_modify.do")
+    public String modifyForm(int idx,
+                            String type,
+                            Model model){
+
+        if(type.equals("dcal")){
+
+            DcalendarVO vo =
+                calendardao.selectOneDcal(idx);
+
+            model.addAttribute("vo", vo);
+
+            return "calendar/dcal_modify_form";
+        }
+
+        ScalendarVO vo =
+            calendardao.selectOneScal(idx);
+
+        model.addAttribute("vo", vo);
+
+        return "calendar/scal_modify_form";
+    }
+
+    @PostMapping("/update_dschedule.do")
+    @ResponseBody
+    public Map<String,Object> updateDschedule(DcalendarVO vo){
+
+        Map<String,Object> map = new HashMap<>();
+
+        int res = calendardao.updateDcal(vo);
+
+        map.put("status",
+                res > 0 ? "success" : "fail");
+
+        return map;
+    }
+
+    @PostMapping("/update_sschedule.do")
+    @ResponseBody
+    public Map<String,Object> updateSschedule(ScalendarVO vo){
+
+        Map<String,Object> map = new HashMap<>();
+
+        int res = calendardao.updateScal(vo);
+
+        map.put("status",
+                res > 0 ? "success" : "fail");
+
+        return map;
     }
 
 }

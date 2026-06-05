@@ -21,5 +21,21 @@ public interface CalendarDAO {
     List<ScalendarVO> selectScalBySabun(Map<String, Object> map);
 
     List<CalendarVO> selectDept(int deptNo); 
+
+    int selectDcalWriter(int dcal_idx);
+
+    int selectScalWriter(int scal_idx);
+
+    int deleteDcal(int dcal_idx);
+
+    int deleteScal(int scal_idx);
+
+    DcalendarVO selectOneDcal(int dcal_idx);
+
+    ScalendarVO selectOneScal(int scal_idx);   
+    
+    int updateDcal(DcalendarVO vo);
+
+    int updateScal(ScalendarVO vo);
     
 } 
