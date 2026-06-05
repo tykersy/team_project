@@ -125,7 +125,6 @@ public class UserContorller {
 
         ObjectMapper mapper = new ObjectMapper();
 
-
         Map<String, Object> map = new HashMap<>();
         map.put("sabun", sabun);
         map.put("year", now.getYear());
@@ -139,8 +138,7 @@ public class UserContorller {
         model.addAttribute("sleave", userSleave);
         model.addAttribute("leaveLogList", userSleaveLog);
         model.addAttribute("yearlyTA", yearlyTa);
-        model.addAttribute("taJson",
-    new ObjectMapper().writeValueAsString(taJson));
+        model.addAttribute("taJson", mapper.writeValueAsString(taJson));
         
 
         return "user/mypage";

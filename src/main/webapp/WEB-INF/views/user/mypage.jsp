@@ -168,16 +168,13 @@
         
         <!-- ─────────────────────────────── TAB 4: 근태현황 ─── -->
         <div class="panel" id="panel-3">
-
-            
-        
             <div class="card">
             <div class="card-title"><span class="dot"></span>이번 달 근태 요약</div>
             <div class="attend-grid">
-                <div class="attend-stat"><span class="n green">21</span><span class="lbl">정상 출근</span></div>
-                <div class="attend-stat"><span class="n yellow">2</span><span class="lbl">지각</span></div>
-                <div class="attend-stat"><span class="n red">1</span><span class="lbl">결근</span></div>
-                <div class="attend-stat"><span class="n blue">3</span><span class="lbl">조기 출근</span></div>
+                <div class="attend-stat"><span class="n green">${yearlyTA[0].normalCount}</span><span class="lbl">정상 출근</span></div>
+                <div class="attend-stat"><span class="n yellow">${yearlyTA[0].lateCount}</span><span class="lbl">지각</span></div>
+                <div class="attend-stat"><span class="n red">0</span><span class="lbl">결근</span></div>
+                <div class="attend-stat"><span class="n blue">0</span><span class="lbl">조기 출근</span></div>
             </div>
             </div>
         
@@ -468,9 +465,6 @@
                 td.style.cssText = 'height:76px;border:1px solid #f0f0f0;background:#fafafa;';
                 return td;
             }
-
-            function calPrev() {}
-            function calNext() {}
 
             renderCal();
         </script>
