@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.project.dao.DeptDAO">
+	
+    <!-- 전체 부서 정보 조회 -->
+	<select id = "selectAll" parameterType="dept">
+        select * from dept
+    </select>
+
+    <!-- 부서이름 검색 -->
+    <select id="searchDept"
+            parameterType="String"
+            resultType="dept">
+        select dname, deptno from dept
+        where dname like CONCAT('%',#{search_name},'%')
+        order by deptno
+    </select>
+
+    <!-- 부서1개 정보 조회 -->
+    <select id="selectOne"
+            parameterType="int"
+            resultType="dept">
+        select * from dept
+        where deptno = #{deptno}
+    </select>
+    
+    <!-- 조직도 정보 조회 -->
+    <select id="getDeptOrgChart" resultType="map">
+        SELECT 
+            d.deptno AS deptNo,
+            d.dname AS deptName,
+            s.sabun AS sabun,
+            s.saname AS saname,
+            s.sajob AS sajob
+        FROM dept d
+        LEFT JOIN sawon s ON d.deptno = s.deptno
+        ORDER BY d.deptno, s.sabun
+    </select>
+
+    <!-- 부서별 인원 조회 -->
+    <select id="memberCount"
+            resultType="java.util.Map">
+        select d.dname, count(s.sabun) cnt
+        from dept d
+        left join sawon s
+        on d.deptno = s.deptno
+        group by d.dname
+    </select>
+
+</mapper>

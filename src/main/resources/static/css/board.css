@@ -1,0 +1,63 @@
+/* 공지사항 */
+.board-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.board-table th, .board-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ededed;
+}
+
+.board-table th {
+    background-color: #2a57d1;
+    color: white;
+}
+
+/* 글쓰기 버튼 */
+.write-btn {
+    float: right;
+    background-color: #2a57d1;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* 글쓰기 폼 스타일 */
+.write-form-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.write-form-table th {
+    width: 15%;
+    padding: 15px;
+    background-color: #3b5bdb; 
+    color: white;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.write-form-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.write-form-table input[type="text"], 
+.write-form-table textarea {
+    width: 98%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
