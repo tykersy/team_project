@@ -42,7 +42,65 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </select>
 
         <select id="selectDept" parameterType="int" resultType="com.kh.project.vo.CalendarVO">
-        SELECT * FROM calendar WHERE deptno = #{deptno}
+            SELECT * FROM calendar WHERE deptno = #{deptno}
         </select>
+
+        <select id="selectDcalWriter" parameterType="int" resultType="int">
+            SELECT sabun FROM dcalendar WHERE dcal_idx = #{dcal_idx}
+        </select>
+
+        <select id="selectScalWriter" parameterType="int" resultType="int">
+            SELECT sabun FROM scalendar WHERE scal_idx = #{scal_idx}
+        </select>
+
+        <delete id="deleteDcal" parameterType="int">
+            DELETE FROM dcalendar WHERE dcal_idx = #{dcal_idx}
+        </delete>
+
+        <delete id="deleteScal" parameterType="int">
+            DELETE FROM scalendar WHERE scal_idx = #{scal_idx}
+        </delete>
+
+        <select id="selectOneDcal"
+                parameterType="int"
+                resultType="dcal">
+
+            SELECT * FROM dcalendar
+            WHERE dcal_idx = #{dcal_idx}
+
+        </select>
+
+        <select id="selectOneScal"
+                parameterType="int"
+                resultType="scal">
+
+            SELECT * FROM scalendar
+            WHERE scal_idx = #{scal_idx}
+
+        </select>
+
+        <update id="updateDcal"
+                parameterType="dcal">
+
+            UPDATE dcalendar
+            SET title = #{title},
+                start_date = #{start_date},
+                end_date = #{end_date},
+                content = #{content}
+            WHERE dcal_idx = #{dcal_idx}
+
+        </update>
+
+        <update id="updateScal"
+                parameterType="scal">
+
+            UPDATE scalendar
+            SET title = #{title},
+                start_date = #{start_date},
+                end_date = #{end_date},
+                content = #{content}
+            WHERE scal_idx = #{scal_idx}
+
+        </update>
 
 </mapper>

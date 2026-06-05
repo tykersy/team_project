@@ -13,7 +13,6 @@
                 function send(f) {
 
                     let title = f.title.value.trim();
-                    let deptno = f.deptno.value;
                     let sabun = f.sabun.value;
                     let startdate = f.start_date.value;
                     let enddate = f.end_date.value;
@@ -40,7 +39,7 @@
 
                     let formData = new FormData(f);
 
-                    fetch("insert_dschedule.do", {
+                    fetch("update_sschedule.do", {
                         method: "POST",
                         body: formData
                     })
@@ -64,13 +63,14 @@
                 <jsp:include page="/WEB-INF/views/common/sidebar.jsp" />
                 <div class="main-content">
                     <jsp:include page="/WEB-INF/views/common/header.jsp" />
-                    <div class="schedule-page">
+                    <div CLASS="schedule-page">
                         <form>
                             <div class="form-box">
+                                <input type="hidden" name="scal_idx" value="${vo.scal_idx}" />
                                 <div class="form-header">
                                     <button type="button" onclick="history.back()">X</button>
-                                    <span>부서 일정</span>
-                                    <button type="button" onclick="send(this.form)">추가</button>
+                                    <span>개인 일정</span>
+                                    <button type="button" onclick="send(this.form)">수정</button>
                                 </div>
                                 <div>
 
@@ -78,37 +78,33 @@
                                         <tr>
                                             <th>일정</th>
                                             <td colspan="3">
-                                                <input name="title" placeholder="일정을 입력하세요" />
+                                                <input name="title" value="${vo.title}" placeholder="일정을 입력하세요" />
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>
-                                                <span>부서번호</span>
-                                            </th>
-                                            <td>
-                                                <input name="deptno" value="${vo.deptno}" readonly />
-                                            </td>
-                                            <th>
                                                 <span>사번</span>
                                             </th>
-                                            <td>
+                                            <td colspan="3">
                                                 <input name="sabun" value="${vo.sabun}" readonly />
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>시작</th>
                                             <td>
-                                                <input type="date" name="start_date" value="${today}" />
+                                                <input type="date" name="start_date"
+                                                    value="${vo.start_date.substring(0,10)}" />
                                             </td>
                                             <th>종료</th>
                                             <td>
-                                                <input type="date" name="end_date" value="${today}" />
+                                                <input type="date" name="end_date"
+                                                    value="${vo.end_date.substring(0,10)}" />
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>내용</th>
                                             <td colspan="3">
-                                                <input name="content" placeholder="설명" />
+                                                <input name="content" placeholder="설명" value="${vo.content}" />
                                             </td>
                                         </tr>
                                     </table>

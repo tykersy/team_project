@@ -40,7 +40,7 @@
 
                     let formData = new FormData(f);
 
-                    fetch("insert_dschedule.do", {
+                    fetch("update_dschedule.do", {
                         method: "POST",
                         body: formData
                     })
@@ -67,10 +67,11 @@
                     <div class="schedule-page">
                         <form>
                             <div class="form-box">
+                                <input type="hidden" name="dcal_idx" value="${vo.dcal_idx}" />
                                 <div class="form-header">
                                     <button type="button" onclick="history.back()">X</button>
                                     <span>부서 일정</span>
-                                    <button type="button" onclick="send(this.form)">추가</button>
+                                    <button type="button" onclick="send(this.form)">수정</button>
                                 </div>
                                 <div>
 
@@ -78,7 +79,7 @@
                                         <tr>
                                             <th>일정</th>
                                             <td colspan="3">
-                                                <input name="title" placeholder="일정을 입력하세요" />
+                                                <input name="title" placeholder="일정을 입력하세요" value="${vo.title}" />
                                             </td>
                                         </tr>
                                         <tr>
@@ -98,17 +99,19 @@
                                         <tr>
                                             <th>시작</th>
                                             <td>
-                                                <input type="date" name="start_date" value="${today}" />
+                                                <input type="date" name="start_date"
+                                                    value="${vo.start_date.substring(0,10)}" />
                                             </td>
                                             <th>종료</th>
                                             <td>
-                                                <input type="date" name="end_date" value="${today}" />
+                                                <input type="date" name="end_date"
+                                                    value="${vo.end_date.substring(0,10)}" />
                                             </td>
                                         </tr>
                                         <tr>
                                             <th>내용</th>
                                             <td colspan="3">
-                                                <input name="content" placeholder="설명" />
+                                                <input name="content" placeholder="설명" value="${vo.content}" />
                                             </td>
                                         </tr>
                                     </table>
