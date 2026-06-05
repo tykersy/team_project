@@ -168,16 +168,13 @@
         
         <!-- ─────────────────────────────── TAB 4: 근태현황 ─── -->
         <div class="panel" id="panel-3">
-
-            
-        
             <div class="card">
             <div class="card-title"><span class="dot"></span>이번 달 근태 요약</div>
             <div class="attend-grid">
-                <div class="attend-stat"><span class="n green">21</span><span class="lbl">정상 출근</span></div>
-                <div class="attend-stat"><span class="n yellow">2</span><span class="lbl">지각</span></div>
-                <div class="attend-stat"><span class="n red">1</span><span class="lbl">결근</span></div>
-                <div class="attend-stat"><span class="n blue">3</span><span class="lbl">조기 출근</span></div>
+                <div class="attend-stat"><span class="n green">${yearlyTA[0].normalCount}</span><span class="lbl">정상 출근</span></div>
+                <div class="attend-stat"><span class="n yellow">${yearlyTA[0].lateCount}</span><span class="lbl">지각</span></div>
+                <div class="attend-stat"><span class="n red">0</span><span class="lbl">결근</span></div>
+                <div class="attend-stat"><span class="n blue">0</span><span class="lbl">조기 출근</span></div>
             </div>
             </div>
         
@@ -187,10 +184,6 @@
                 <%-- 네비게이션 --%>
                 <div class="cal-header">
                     <div class="cal-title" id="calTitle"></div>
-                    <div class="cal-nav">
-                        <button onclick="calPrev()">‹</button>
-                        <button onclick="calNext()">›</button>
-                    </div>
                 </div>
 
                 <%-- TUI Calendar 컨테이너 --%>
@@ -337,72 +330,143 @@
             }
 
             const taData = JSON.parse('${taJson}');
-            console.log(taData);
 
-            // status → 라벨/색상
             const styleMap = {
-                normal : { title: '정상출근', bg: 'rgba(34,197,94,0.25)',  border: '#16a34a' },
-                late   : { title: '지각',    bg: 'rgba(245,158,11,0.25)', border: '#d97706' },
-                absent : { title: '결근',    bg: 'rgba(239,68,68,0.2)',   border: '#dc2626' },
-                leave  : { title: '휴가',    bg: 'rgba(99,102,241,0.2)',  border: '#6366f1' },
-                half   : { title: '반차',    bg: 'rgba(99,102,241,0.12)', border: '#a5b4fc' }
+                normal : { label: '정상출근', bg: 'rgba(34,197,94,0.15)',  border: '#16a34a', text: '#15803d' },
+                late   : { label: '지각',    bg: 'rgba(245,158,11,0.15)', border: '#d97706', text: '#b45309' },
+                absent : { label: '결근',    bg: 'rgba(239,68,68,0.12)',  border: '#dc2626', text: '#b91c1c' },
+                leave  : { label: '휴가',    bg: 'rgba(99,102,241,0.15)', border: '#6366f1', text: '#4338ca' },
+                half   : { label: '반차',    bg: 'rgba(99,102,241,0.10)', border: '#a5b4fc', text: '#6366f1' }
             };
 
-            // TUI Calendar 초기화
-            const calendar = new tui.Calendar('#tuiCal', {
-                defaultView   : 'month',
-                isReadOnly    : true,
-                usageStatistics: false,
-                month: {
-                    dayNames      : ['일', '월', '화', '수', '목', '금', '토'],
-                    startDayOfWeek: 0,
-                    isAlways6Weeks: false
-                },
-                theme: {
-                    month: {
-                        // 주말 색상
-                        holiday : { color: '#dc2626' },
-                        saturday: { color: '#6366f1' },
-                        // 오늘 날짜 강조
-                        today   : { color: '#2563eb' }
-                    }
-                },
-                // 상단 기본 툴바 숨김 (직접 만든 버튼 사용)
-                calendars: [{ id: 'attend', name: '근태' }]
-            });
+            const taMap = {};
+            taData.forEach(function(item) { taMap[item.date] = item.status; });
 
-            // 이벤트 생성
-            const events = taData.map((item, idx) => {
-                const s = styleMap[item.status] ?? styleMap['normal'];
-                return {
-                    id           : String(idx),
-                    calendarId   : 'attend',
-                    title        : s.title,
-                    start        : item.date,
-                    
-                    isAllDay     : true,
-                    category     : 'allday',
-                    backgroundColor : s.bg,
-                    borderColor     : s.border,
-                    color           : s.border,   // 텍스트 색
-                    isReadOnly   : true
-                };
-            });
+            const now          = new Date();
+            const currentYear  = now.getFullYear();
+            const currentMonth = now.getMonth();
 
-            calendar.createEvents(events);
+            function pad(n) { return String(n).padStart(2, '0'); }
 
-            // 제목 업데이트 함수
-            function updateTitle() {
-                const d = calendar.getDate();
+            function renderCal() {
                 document.getElementById('calTitle').textContent =
-                    d.getFullYear() + '년 ' + (d.getMonth() + 1) + '월';
+                    currentYear + '년 ' + (currentMonth + 1) + '월';
+
+                const container = document.getElementById('tuiCal');
+                container.innerHTML = '';
+
+                const table = document.createElement('table');
+                table.style.cssText = 'width:100%; border-collapse:collapse; table-layout:fixed;';
+
+                // 요일 헤더
+                const thead = document.createElement('thead');
+                const headRow = document.createElement('tr');
+                ['일','월','화','수','목','금','토'].forEach(function(d, i) {
+                    const th = document.createElement('th');
+                    th.textContent = d;
+                    var color = (i === 0) ? '#dc2626' : (i === 6) ? '#6366f1' : '#6b7280';
+                    th.style.cssText =
+                        'padding:10px 0;' +
+                        'font-size:12px;' +
+                        'font-weight:600;' +
+                        'color:' + color + ';' +
+                        'text-align:center;' +
+                        'border-bottom:2px solid #e5e7eb;';
+                    headRow.appendChild(th);
+                });
+                thead.appendChild(headRow);
+                table.appendChild(thead);
+
+                const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+                const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+                const tbody = document.createElement('tbody');
+                let day = 1;
+                let row = document.createElement('tr');
+
+                for (let i = 0; i < firstDay; i++) {
+                    row.appendChild(makeEmptyCell());
+                }
+
+                while (day <= lastDate) {
+                    if (row.children.length === 7) {
+                        tbody.appendChild(row);
+                        row = document.createElement('tr');
+                    }
+
+                    const dateStr = currentYear + '-' + pad(currentMonth + 1) + '-' + pad(day);
+                    const status  = taMap[dateStr];
+                    const s       = status ? styleMap[status] : null;
+                    const dow     = (firstDay + day - 1) % 7;
+                    const isToday = now.getDate() === day;
+
+                    const td = document.createElement('td');
+                    td.style.cssText =
+                        'height:76px;' +
+                        'vertical-align:top;' +
+                        'padding:6px;' +
+                        'border:1px solid #f0f0f0;' +
+                        'background:' + (s ? s.bg : 'transparent') + ';' +
+                        (s ? 'border-left:3px solid ' + s.border + ';' : '');
+
+                    // 날짜 숫자
+                    const dateNum = document.createElement('div');
+                    dateNum.textContent = day;
+                    var numColor;
+                    if (isToday)       numColor = '#fff';
+                    else if (dow === 0) numColor = '#dc2626';
+                    else if (dow === 6) numColor = '#6366f1';
+                    else if (s)         numColor = s.text;
+                    else                numColor = '#374151';
+
+                    dateNum.style.cssText =
+                        'font-size:13px;' +
+                        'font-weight:' + (isToday ? '800' : '500') + ';' +
+                        'color:' + numColor + ';' +
+                        'width:24px;height:24px;' +
+                        'line-height:24px;' +
+                        'text-align:center;' +
+                        'border-radius:50%;' +
+                        'background:' + (isToday ? '#2563eb' : 'transparent') + ';' +
+                        'margin-bottom:5px;';
+                    td.appendChild(dateNum);
+
+                    // 상태 배지
+                    if (s) {
+                        const badge = document.createElement('div');
+                        badge.textContent = s.label;
+                        badge.style.cssText =
+                            'font-size:11px;' +
+                            'font-weight:600;' +
+                            'color:' + s.text + ';' +
+                            'background:white;' +
+                            'border:1px solid ' + s.border + ';' +
+                            'border-radius:4px;' +
+                            'padding:2px 5px;' +
+                            'display:inline-block;' +
+                            'white-space:nowrap;';
+                        td.appendChild(badge);
+                    }
+
+                    row.appendChild(td);
+                    day++;
+                }
+
+                while (row.children.length < 7) {
+                    row.appendChild(makeEmptyCell());
+                }
+                tbody.appendChild(row);
+                table.appendChild(tbody);
+                container.appendChild(table);
             }
 
-            // 네비게이션
-            function calPrev() { calendar.prev(); updateTitle(); }
-            function calNext() { calendar.next(); updateTitle(); }
+            function makeEmptyCell() {
+                const td = document.createElement('td');
+                td.style.cssText = 'height:76px;border:1px solid #f0f0f0;background:#fafafa;';
+                return td;
+            }
 
-            updateTitle();
+            renderCal();
         </script>
     </body>
 </html>

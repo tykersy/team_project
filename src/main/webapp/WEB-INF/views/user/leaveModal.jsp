@@ -8,7 +8,7 @@
 
                                 <div class="modal-field">
                                     <label>휴가 종류</label>
-                                    <select name="leave_type">
+                                    <select name="leave_type" id="leave_type">
                                         <option value="annual">연차</option>
                                         <option value="mc">병가</option>
                                         <option value="health">보건휴가</option>
@@ -41,7 +41,7 @@
 
                                 <div class="modal-field">
                                     <label>사유</label>
-                                    <textarea name="reason" style="resize:none" rows="3" placeholder="사유를 입력하세요 (선택)" ></textarea>
+                                    <textarea id="reason" name="reason" style="resize:none" rows="3" placeholder="사유를 입력하세요 (선택)" ></textarea>
                                 </div>
 
                                 <div class="modal-actions">
@@ -77,6 +77,12 @@
                             alert("신청이 완료되었습니다.");
                             location.href="/mypage";
                             return;
+                        }else if(data.result == "fail"){
+                            alert("신청한 연차의 일수가 부족합니다.");
+                            return;
+                        }else if(data.result == "overlap"){
+                            alert("이미 신청한 휴가가 존재합니다.");
+                            return;
                         }else{
                             alert("오류가 발생했습니다.");
                             return;
@@ -89,14 +95,18 @@
             // ── 연차 모달 ──
             function openLeaveModal() {
                 document.getElementById('leaveModal').style.display = 'flex';
+                document.getElementById("leaveStart").value = "";
+                document.getElementById("leaveEnd").value = "";
+                document.getElementById("use_days").value = 0;
+                document.getElementById("calcResult").textContent = "— 일";
+                document.getElementById("leave_type").options[0].selected = true;
+                document.getElementById("leaveHalf").options[0].selected = true;
+                document.getElementById("reason").value= "";
             }
             function closeLeaveModal() {
                 document.getElementById('leaveModal').style.display = 'none';
+                
             }
-
-            
-
-            
 
             // 사용 일수 자동 계산
             function calcDays() {
