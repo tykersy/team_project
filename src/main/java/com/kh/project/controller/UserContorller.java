@@ -206,18 +206,56 @@ public class UserContorller {
 
         logVo.setSabun(sabun);
 
-        //sleaveLog 테이블 반영
-        int resultSleave = sleaveDAO.sleave_logApplyInsert(logVo);
-        //sleave 테이블 반영
-        int resultSleave_log = sleaveDAO.sleaveApplyUpdate(logVo);
+        //연차 신청 가능 판단을 위한 조회
+        SleaveVO leaveVO = sleaveDAO.sawonLeave(sabun);
+        List<SleaveLogVO> leaveLogList = sleaveDAO.sleaveLogSelect(sabun);
+        LocalDate startDate = logVo.getUse_date();
+        LocalDate endDate = startDate.plusDays(
+                logVo.getUse_days() == 0.5 ? 0 : (long)logVo.getUse_days());
 
-        if(resultSleave == 0 || resultSleave_log == 0){ // 신청 실패
-            map.put("result", "failure");
-        }else{ // 신청 성공
-            map.put("result", "success");
+        for(SleaveLogVO leavelog : leaveLogList){
+            LocalDate existStart = leavelog.getUse_date();
+            LocalDate existEnd   = existStart.plusDays(
+                leavelog.getUse_days() == 0.5 ? 0 : (long) leavelog.getUse_days() - 1
+            );
+            // 겹침 조건: 신청시작 <= 기존종료 AND 신청종료 >= 기존시작
+            if (!startDate.isAfter(existEnd) && !endDate.isBefore(existStart)) {
+                map.put("result", "overlap");  // 날짜 중복
+                return map;
+            }
         }
 
-        
+        boolean leaveBool = false;
+        switch (logVo.getLeave_type()) {
+            case "annual": //연차 개수가 1개 이상이면 leaveBool를 true 로 만들어 연차 신청 가능
+                if(leaveVO.getAnnual() >= logVo.getUse_days()) leaveBool = true;
+                break;
+            case "mc":
+                if(leaveVO.getMc() >= logVo.getUse_days()) leaveBool = true;
+                break;
+            case "health":
+                if(leaveVO.getHealth() >= logVo.getUse_days()) leaveBool = true;
+                break;
+            case "etc":
+                if(leaveVO.getEtc() >= logVo.getUse_days()) leaveBool = true;
+                break;
+        }
+
+        if(leaveBool){
+            //sleave 테이블 반영
+            int resultSleave = sleaveDAO.sleave_logApplyInsert(logVo);
+            //sleaveLog 테이블 반영
+            int resultSleave_log = sleaveDAO.sleaveApplyUpdate(logVo);
+
+            if(resultSleave_log == 0 && resultSleave == 0){ // 신청 실패
+                map.put("result", "failure");
+            }else{ // 신청 성공
+                map.put("result", "success");
+            }
+        }else{
+            map.put("result", "fail"); //연차 개수 부족
+        }
+
         return map;
 
     }

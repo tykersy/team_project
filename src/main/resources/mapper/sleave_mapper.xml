@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     health = health - #{use_days}
                 </when>
                 <when test="leave_type eq 'etc'">
-                    etc = etc - #{user_days}
+                    etc = etc - #{use_days}
                 </when>
             </choose>
         </set>
