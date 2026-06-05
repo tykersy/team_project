@@ -341,27 +341,11 @@
     transition: all 0.15s;
   }
   .cal-nav button:hover { border-color: var(--accent); color: var(--accent); }
-  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  
   .cal-day-head {
     text-align: center; font-size: 11px; color: var(--text-dim);
     padding: 4px; font-weight: 600;
   }
-  .cal-day {
-    aspect-ratio: 1;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; border-radius: 6px; cursor: default;
-    position: relative;
-  }
-  .cal-day.empty { }
-  .cal-day.work { background: rgba(34,197,94,0.12); color: var(--green); }
-  .cal-day.late-day { background: rgba(245,158,11,0.12); color: var(--yellow); }
-  .cal-day.off { color: var(--text-dim); }
-  .cal-day.today {
-    background: var(--accent);
-    color: #fff;
-    font-weight: 700;
-  }
-  .cal-day.absent-day { background: rgba(239,68,68,0.1); color: var(--red); }
  
   /* legend */
   .legend { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
@@ -581,4 +565,125 @@
 .pw-edit-link:hover {
   background: var(--accent);
   color: #fff;
+}
+
+/* ── 연차 잔여 현황 ── */
+.leave-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+.leave-stat {
+    background: var(--bg-sub, #f9fafb);
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
+    border: 1px solid var(--border, #e5e7eb);
+}
+.leave-icon  { font-size: 1.6rem; margin-bottom: 6px; }
+.leave-num   { font-size: 2rem; font-weight: 800; color: var(--text); }
+.leave-lbl   { font-size: 0.8rem; color: #888; margin-bottom: 10px; }
+
+
+/* ── 신청 버튼 ── */
+.btn-apply {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-weight: 600;
+}
+.btn-apply:hover { opacity: 0.85; }
+
+/* ── 연차 모달 ── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.modal-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px;
+    width: 420px;
+    max-width: 95vw;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+}
+.modal-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+.modal-field {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.modal-field label {
+    font-size: 0.82rem;
+    color: #666;
+    font-weight: 600;
+}
+.modal-field input,
+.modal-field select,
+.modal-field textarea {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border 0.2s;
+}
+.modal-field input:focus,
+.modal-field select:focus,
+.modal-field textarea:focus { border-color: var(--accent); }
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+.btn-cancel {
+    background: #f3f4f6;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 20px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.btn-submit {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 20px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.btn-submit:hover { opacity: 0.85; }
+
+/* 반응형 */
+@media (max-width: 600px) {
+    .leave-summary { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* TUI Calendar 기본 UI 정리 */
+.toastui-calendar-month-daygrid { border: none; }
+
+/* + more 버튼 완전 숨김 */
+.toastui-calendar-month-more-events,
+.toastui-calendar-see-more-container { display: none !important; }
+
+/* 날짜 셀 기본 스타일 */
+.toastui-calendar-daygrid-cell {
+    transition: background-color 0.2s;
 }

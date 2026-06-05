@@ -16,4 +16,5 @@ public class UserVO {
     private String sazipcode;
     private String dname;
     private String day, checkin, checkout, working_time;
+    private String status;
 }

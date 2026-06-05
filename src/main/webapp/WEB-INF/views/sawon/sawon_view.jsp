@@ -34,8 +34,8 @@
                         <td><span class="leave-count badge-annual">${vo.annual} 일</span></td>
                     </tr>
                     <tr>
-                        <th>무급휴가</th>
-                        <td><span class="leave-count badge-unpaid">${vo.unpaid} 일</span></td>
+                        <th>기타휴가</th>
+                        <td><span class="leave-count badge-unpaid">${vo.etc} 일</span></td>
                     </tr>
                     <tr>
                         <th>병가</th>

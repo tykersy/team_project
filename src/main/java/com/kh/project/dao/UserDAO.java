@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.kh.project.vo.SawonVO;
+import com.kh.project.vo.TAVO;
 import com.kh.project.vo.UserVO;
 
 public interface UserDAO {
@@ -19,6 +20,12 @@ public interface UserDAO {
 
     // 총 출근시간 및 출근 일 수 조회
     Map<String, String> userTotalTa(int sabun);
+
+    // 마이페이지 근태 현황 조회
+    List<Map<String, Object>> getYearlyTa(Map<String, Object> map);
+
+    //
+   List<TAVO> getMonthlyTA(int sabun, int year, int month);
 
     //비밀번호 변경
     int changePW(UserVO vo);

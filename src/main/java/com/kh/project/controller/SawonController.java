@@ -83,9 +83,12 @@ public class SawonController {
 
         //db에 추가 됐으면 1 아니라면 0
         int result = sawonDao.sawonInsert(vo);
+        //사원 추가시 기본 연차 데이터 추가
+        int resultSleave = sleaveDao.sleaveInsert(vo.getSabun());
 
         Map<String, Integer> map = new HashMap<>();
         map.put("result", result);
+        map.put("resultSleave", resultSleave);
 
         return map;
     }
