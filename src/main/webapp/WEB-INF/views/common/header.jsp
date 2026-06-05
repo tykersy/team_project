@@ -38,13 +38,30 @@
         gap: 10px !important;           /* ⚡ 글자와 동그라미 사이 간격 10px */
         white-space: nowrap !important; /* ⚡ 글자가 절대로 밑으로 안 깨지게 한 줄로 고정! */
     }
+
+    /* 헤더 전체를 감싸는 컨테이너 */
+    .header {
+        display: flex;
+        justify-content: space-between; /* 헤더 좌우 끝으로 배치 */
+        align-items: center;
+        padding: 0 40px;
+        height: 70px;
+    }
+
+    /* 우측 영역 (알림, 관리자, 로그아웃 버튼 포함) */
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-left: auto; 
+    }
 </style>
 
 <header class="header">
 
-    <div class="search-box">
+    <!-- <div class="search-box">
         <input type="text" placeholder="검색" />
-    </div>
+    </div> -->
 
     <div class="header-right">
 
@@ -52,9 +69,11 @@
             🔔
         </button>
 
+      <c:if test="${loginMember.sajob == '관리자' || loginMember.sajob == 'CEO'}">
         <a href="/admin" class="admin-link">
-            관리자
+          관리자
         </a>
+      </c:if>
 
         <div class="header-profile-box">
             

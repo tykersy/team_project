@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @Alias("sleave")
 public class SleaveVO {
     
-    private int sabun, annual, unpaid, mc, health;
+    private int sabun, annual, etc, mc, health;
 
 }

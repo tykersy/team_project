@@ -33,6 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         )
     </insert>
 
+<<<<<<< HEAD
     <!-- 사원삭제 -->
     <delete id="sawonDelete"
             parameterType="int">
@@ -54,5 +55,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                          sazipcode = #{sazipcode}
         where sabun = #{sabun}
     </update>
+=======
+    
+>>>>>>> 7d761aff298e053281bdbe31964f057bdb71f06e
 
 </mapper>

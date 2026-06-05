@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,15 +14,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kh.project.dao.SleaveDAO;
 import com.kh.project.dao.UserDAO;
+import com.kh.project.vo.CalendarDayVO;
 import com.kh.project.vo.SawonVO;
+import com.kh.project.vo.SleaveLogVO;
+import com.kh.project.vo.SleaveVO;
 import com.kh.project.vo.UserVO;
 
 import jakarta.servlet.http.HttpSession;
 
+import com.kh.project.common.Calendar;
 import com.kh.project.common.PwdSecurity;
 
 import lombok.RequiredArgsConstructor;
+import tools.jackson.databind.ObjectMapper;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,8 +36,12 @@ public class UserContorller {
 
     //userDAO
     private final UserDAO userDao;
+    //sleaveDAO
+    private final SleaveDAO sleaveDAO;
     //암호화 복호화
     private final PwdSecurity pwdSecurity;
+    //캘린더
+    private final Calendar calendar;
 
     //세션으로 로그인 유무 확인 
     @Autowired
@@ -75,7 +86,7 @@ public class UserContorller {
 
     //마이페이지
     @GetMapping("/mypage")
-    public String mypage(Model model){
+    public String mypage(Model model) throws Exception{
         
         //로그인되지 않거나 세션이 만료된 회원이 마이페이지 접근시 로그인 창으로 이동
         if(session.getAttribute("user") == null){
@@ -88,16 +99,49 @@ public class UserContorller {
         UserVO userInfo = userDao.userMyPage(sabun); // 사원 기본 정보
         List<UserVO> userTA = userDao.userTa(sabun); // 월 출/퇴근 조회
         Map<String,String> userTotalTA = userDao.userTotalTa(sabun); // 총 근무 시간, 일
+        SleaveVO userSleave = sleaveDAO.sawonLeave(sabun); // 사원 연차 조회
+        List<SleaveLogVO> userSleaveLog = sleaveDAO.sleaveLogSelect(sabun); //사원 연차 사용 조회
 
         //오늘 년/월을 구하여 포멧을 지정
         LocalDate now = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월");
         String today = now.format(formatter);
 
+        List<CalendarDayVO> calList = calendar.getCalendar(
+            sabun, now.getYear(), now.getMonthValue()
+        );
+
+         // ── taJson 변환 (핵심 추가 부분) ──
+        List<Map<String, String>> taJson = calList.stream()
+        .filter(d -> !d.getStatus().equals("off") && !d.getStatus().equals("future"))
+        .map(d -> {
+            Map<String, String> m = new HashMap<>();
+            m.put("date", String.format("%d-%02d-%02d",
+                now.getYear(), now.getMonthValue(), d.getDay()));
+            m.put("status", d.getStatus());
+            return m;
+        })
+        .collect(Collectors.toList());
+
+        ObjectMapper mapper = new ObjectMapper();
+
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("sabun", sabun);
+        map.put("year", now.getYear());
+
+        List<Map<String,Object>> yearlyTa = userDao.getYearlyTa(map);
+
         model.addAttribute("info", userInfo);
         model.addAttribute("userTaList", userTA);
         model.addAttribute("userTotalTA", userTotalTA);
         model.addAttribute("today", today);
+        model.addAttribute("sleave", userSleave);
+        model.addAttribute("leaveLogList", userSleaveLog);
+        model.addAttribute("yearlyTA", yearlyTa);
+        model.addAttribute("taJson",
+    new ObjectMapper().writeValueAsString(taJson));
+        
 
         return "user/mypage";
     }
@@ -144,6 +188,40 @@ public class UserContorller {
         session.removeAttribute("user");
 
         return "redirect:/dashboard";
+    }
+
+    // 연차 신청
+    @PostMapping("/mypage/leaveApply")
+    @ResponseBody
+    public Map<String, String> userLeaveApply(SleaveLogVO logVo){
+        Map<String, String> map = new HashMap<>();
+        String resultStr = "login";
+
+        //로그인되지 않거나 세션이 만료된 회원이 마이페이지 접근시 로그인 창으로 이동
+        if(session.getAttribute("user") == null){
+            map.put("result", resultStr);
+            return map;
+        }
+
+        //세션에 저장된 사번불러오기
+        int sabun = (int) session.getAttribute("user");
+
+        logVo.setSabun(sabun);
+
+        //sleaveLog 테이블 반영
+        int resultSleave = sleaveDAO.sleave_logApplyInsert(logVo);
+        //sleave 테이블 반영
+        int resultSleave_log = sleaveDAO.sleaveApplyUpdate(logVo);
+
+        if(resultSleave == 0 || resultSleave_log == 0){ // 신청 실패
+            map.put("result", "failure");
+        }else{ // 신청 성공
+            map.put("result", "success");
+        }
+
+        
+        return map;
+
     }
 
 

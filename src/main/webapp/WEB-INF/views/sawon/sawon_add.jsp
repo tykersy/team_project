@@ -67,7 +67,7 @@
                     .then(data => {
                         if(data.result == 1){
                             alert("등록이 완료되었습니다.");
-                            location.href = "/sleave.do";
+                            location.href = "/sawon_list.do";
                         }else{
                             alert("등록이 실패했습니다.");
                             return;
