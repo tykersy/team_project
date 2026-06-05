@@ -1,0 +1,253 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg:         #f0f4f9;
+  --surface:    #ffffff;
+  --surface2:   #f7f9fc;
+  --border:     #dde3ee;
+  --accent:     #2563eb;
+  --accent2:    #7c3aed;
+  --text:       #1a202c;
+  --text-muted: #64748b;
+  --text-dim:   #a0aec0;
+  --radius:     14px;
+  --radius-sm:  8px;
+}
+
+/* ── Reset ── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── Body ── */
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 24px;
+
+  background-image:
+    linear-gradient(rgba(37, 99, 235, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 99, 235, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ── 로고 ── */
+body::before {
+  content: 'Linked';
+  position: fixed;
+  top: 28px;
+  left: 32px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ── 페이지 제목 h2 ── */
+h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 24px;
+  margin-top: 16px;
+  text-align: center;
+  position: relative;
+}
+
+h2::after {
+  content: '신규 사원 정보를 입력하세요';
+  display: block;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-top: 6px;
+  letter-spacing: 0.3px;
+}
+
+/* ── Form 카드 ── */
+form {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px 44px;
+  width: 100%;
+  max-width: 560px;
+  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.08), 0 2px 8px rgba(0,0,0,0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+form::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+}
+
+/* ── Table ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+tr { display: block; margin-bottom: 16px; }
+tr:last-child { margin-bottom: 0; }
+
+/* ── Label (th) ── */
+th {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0 0 6px 2px;
+  text-align: left;
+}
+
+/* ── td ── */
+td {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+/* ── 공통 Input ── */
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="email"],
+input[type="date"],
+input[name="saname"],
+input[name="satel"],
+input[name="sazipcode"],
+input[name="saaddr"] {
+  flex: 1;
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  -moz-appearance: textfield;
+}
+
+/* 사번·급여 - mono 폰트 */
+input[name="sabun"],
+input[name="sapay"] {
+  font-family: 'DM Mono', monospace;
+}
+
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+input:focus {
+  border-color: var(--accent);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+input[readonly] {
+  background: #eef1f7;
+  color: var(--text-muted);
+  cursor: default;
+}
+
+input[readonly]:focus {
+  border-color: var(--border);
+  box-shadow: none;
+}
+
+/* ── Select ── */
+select {
+  flex: 1;
+  padding: 11px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748b' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* ── 주소 검색 버튼 ── */
+input[type="button"][onclick="addr()"] {
+  padding: 11px 16px;
+  background: var(--surface2);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+  flex: none;
+}
+
+input[type="button"][onclick="addr()"]:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ── 추가(제출) 버튼 ── */
+input[type="button"][value="추가"] {
+  width: 100%;
+  padding: 13px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+  margin-top: 8px;
+}
+
+input[type="button"][value="추가"]:hover {
+  background: #1d4ed8;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.38);
+}
+
+input[type="button"][value="추가"]:active {
+  transform: scale(0.985);
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
+}
+
+/* 추가 버튼 row */
+tr:last-child td {
+  display: block;
+}
