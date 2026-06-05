@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.kh.project.dao.DeptDAO;
+import com.kh.project.dao.JobPositionDAO;
 import com.kh.project.dao.SawonDAO;
 import com.kh.project.dao.SleaveDAO;
 import com.kh.project.vo.DeptVO;
+import com.kh.project.vo.JobPositionVO;
 import com.kh.project.vo.DcalendarVO;
 import com.kh.project.vo.SawonVO;
 import com.kh.project.vo.SleaveVO;
@@ -25,6 +27,8 @@ import com.kh.project.common.PwdSecurity;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @Controller
@@ -42,6 +46,8 @@ public class SawonController {
     private final PwdSecurity pwdSecurity;
     //연차DAO
     private final SleaveDAO sleaveDao;
+    //직급DAO
+    private final JobPositionDAO jobDao;
 
     //전체 사원 목록
     @GetMapping("/sawon_list.do")
@@ -141,7 +147,6 @@ public class SawonController {
         return map;
     }
 
-    //사원 정보 수정
     @GetMapping("/admin_sawon_modify")
     public String sawonModify( Model model , int sabun){
 
@@ -149,12 +154,60 @@ public class SawonController {
         SawonVO sawon = sawonDao.sawonView(sabun);
         //부서 선택을 위한 부서목록
         List<DeptVO> deptList = deptDao.selectAll();
+
+        //직급 변경 선택을 위한 직급목록
+        List<JobPositionVO> jobList = jobDao.allJob();
+
+        System.out.println(jobList);
+
         
         //바인딩 및 포워딩
         model.addAttribute("sawon", sawon);
         model.addAttribute("deptList", deptList);
+
+        model.addAttribute("jobList", jobList);
         return "/sawon/sawon_modify_form";
 
     }
 
+    //변경할 비밀번호와 현재 비밀번호의 중복 여부 체크
+    @PostMapping("/admin_check_pwd")
+    @ResponseBody
+    public Map<String, String> checkPwd(SawonVO vo, String new_pwd, String ori_pwd ) {
+        
+        boolean res = pwdSecurity.pwdDecoding(new_pwd, ori_pwd);
+
+        String resStr;
+        if( !res ){
+            //기존 비밀번호와 새 비밀번호가 일치하지 않아 변경 가능
+            resStr = "possible";
+        }else{
+            //기존 비밀번호와 새로 입력받은 비밀번호가 일치해서 변경 불가능
+            resStr = "impossible";
+        }
+        
+        Map<String, String> map = new HashMap<>();
+        map.put("result", resStr);
+        return map;
+    }
+    
+    //관리자용 사원 정보 변경
+    @PostMapping("/admin_sawon_modify")
+    @ResponseBody
+    public Map<String, Integer> modifySawonInfo( SawonVO vo, String new_pwd ){
+
+        //새로 입력받은 비밀번호 암호화
+        String securedPwd = pwdSecurity.pwdEncoding(new_pwd);
+        vo.setPwd(securedPwd);
+
+        int res = sawonDao.sawonUpdate(vo);
+
+        Map<String, Integer> map = new HashMap<>();
+        map.put("result", res);
+
+        return map;
+
+       
+
+    }
 }

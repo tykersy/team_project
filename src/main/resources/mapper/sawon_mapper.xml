@@ -33,6 +33,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         )
     </insert>
 
-    
+    <!-- 사원삭제 -->
+    <delete id="sawonDelete"
+            parameterType="int">
+        delete from sawon where sabun = #{sabun}
+    </delete>
+
+    <!-- 사원 정보 수정 -->
+    <update id="sawonUpdate"
+            parameterType="sawon">
+        update sawon set saname = #{saname},
+                         deptno = #{deptno},
+                         pwd = #{pwd},
+                         sapay = #{sapay},
+                         sajob = #{sajob},
+                         sahire = #{sahire},
+                         saemail = #{saemail},
+                         satel = #{satel},
+                         saaddr = #{saaddr},
+                         sazipcode = #{sazipcode}
+        where sabun = #{sabun}
+    </update>
 
 </mapper>

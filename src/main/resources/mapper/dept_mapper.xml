@@ -39,5 +39,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ORDER BY d.deptno, s.sabun
     </select>
 
-    
+    <!-- 부서별 인원 조회 -->
+    <select id="memberCount"
+            resultType="java.util.Map">
+        select d.dname, count(s.sabun) cnt
+        from dept d
+        left join sawon s
+        on d.deptno = s.deptno
+        group by d.dname
+    </select>
+
 </mapper>

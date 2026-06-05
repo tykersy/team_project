@@ -17,17 +17,6 @@ import lombok.RequiredArgsConstructor;
 public class DeptController {
     
     private final DeptDAO deptdao;
-
-    @GetMapping(value={"/", "/list.do"})
-    public String deptList(Model model){
-
-        List<DeptVO> list = deptdao.selectAll();
-
-        model.addAttribute("list", list);
-
-        return"dept/dept_list";
-
-    } 
     
     // 조직도 화면을 보여주는 컨트롤러 메서드
     @GetMapping("/org_chart")
@@ -40,5 +29,13 @@ public class DeptController {
         return "dept/org_chart"; 
     }
 
+    //관리자-부서/조직 관리 메인페이지
+    @GetMapping("/admin_dept_main")
+    public String adminDeptMain(){
+
+        //부서별 인원 조회
+        Map<Object> dMemberCount = deptdao.memberCount();
+
+    }
 
 }

@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Alias("sleave")
-public class SleaveVO {
+@Alias("job")
+public class JobPositionVO {
     
-    private int sabun;
-    private double annual, etc, mc, health;
+    private int job_id;
+    private String sajob;
 
 }

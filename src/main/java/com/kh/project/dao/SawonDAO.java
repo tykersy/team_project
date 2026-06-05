@@ -17,4 +17,8 @@ public interface SawonDAO {
 
     //사원 삭제
     int sawonDelete( int sabun );
+
+    //사원 정보 수정
+    int sawonUpdate( SawonVO vo );
+
 } 
