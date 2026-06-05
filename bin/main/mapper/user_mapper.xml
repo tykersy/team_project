@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.project.dao.UserDAO">
+    
+    <!-- 로그인을 위한 회원 조회 -->
+    <select id="selectUser" parameterType="int" resultType="sawon">
+        select * from sawon where sabun=#{sabun}
+    </select>
+
+    <!-- 마이페이지 조회 -->
+    <select id="userMyPage" parameterType="int" resultType="user">
+        select * from
+            sawon as s join dept as d
+            on s.deptno = d.deptno
+        where sabun=#{sabun}
+    </select>
+
+    <!-- 마이페이지 월 출/퇴근 조회 -->
+    <select id="userTa" parameterType="int" resultType="user" >
+        select  day,
+                TIME_FORMAT(checkin, '%H:%i') as checkin,
+                TIME_FORMAT(checkout, '%H:%i') as checkout,
+                TIME_FORMAT(timediff(checkout, checkin), '%H시 %i분') as working_time
+        from ta
+        where sabun=#{sabun} AND YEAR(day) = YEAR(NOW())
+                      AND MONTH(day) = MONTH(NOW())
+        order by `day` desc
+    </select>
+
+    <!-- 마이페이지 월 총근무시간 & 근무일 조회 -->
+    <select id="userTotalTa" parameterType="int" resultType="java.util.Map">
+        SELECT  COUNT(checkin) AS work_day,
+            ROUND(
+                SUM(
+                    TIME_TO_SEC(
+                        TIMEDIFF(checkout, checkin)
+                    ) / 3600
+                ),
+                1
+            ) AS total_work_time
+        FROM ta
+        WHERE sabun = #{sabun}
+        AND checkin IS NOT NULL
+        AND checkout IS NOT NULL
+        AND YEAR(day) = YEAR(NOW())
+        AND MONTH(day) = MONTH(NOW());
+    </select>
+
+</mapper>

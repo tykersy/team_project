@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.project.dao.SleaveDAO">
+	
+	<select id="sawonLeave"
+            resultType="sleave">
+        select * from sleave where sabun = #{sabun}
+    </select>
+
+    <!-- 사원 추가 하며 기본 연차 추가 -->
+    <insert id="sleaveInsert" parameterType="sleave">
+        insert into sleave values (#{sabun}, 15.0, 0, 0, 0);
+    </insert>
+
+    <!-- 연차 사용 -->
+    <update id="sleaveApplyUpdate" parameterType="sleavelog">
+        update sleave
+        <set>
+            <choose>
+                <when test="leave_type eq 'annual'">
+                    annual = annual - #{use_days}
+                </when>
+                <when test="leave_type eq 'mc'">
+                    mc = mc - #{use_days}
+                </when>
+                <when test="leave_type eq 'health'">
+                    health = health - #{use_days}
+                </when>
+                <when test="leave_type eq 'etc'">
+                    etc = etc - #{user_days}
+                </when>
+            </choose>
+        </set>
+        where sabun=#{sabun}
+    </update>
+
+</mapper>

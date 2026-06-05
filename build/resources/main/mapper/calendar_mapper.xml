@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.project.dao.CalendarDAO">
+	
+        <insert id="insertDcal"
+                parameterType="dcal">
+            insert into dcalendar (  deptno, sabun, title, start_date, end_date, content )
+            values ( #{deptno}, #{sabun}, #{title}, #{start_date}, #{end_date}, #{content} )
+        </insert>
+
+        <insert id="insertScal"
+                parameterType="scal">
+            insert into scalendar ( sabun, title, start_date, end_date, content )
+            values ( #{sabun}, #{title}, #{start_date}, #{end_date}, #{content} )
+        </insert>
+
+        <select id="selectDeptnoBySabun"
+                parameterType="int"
+                resultType="int">
+            SELECT deptno FROM sawon
+            WHERE sabun = #{sabun}
+        </select>
+
+        <select id="selectDcalByDeptno"
+                parameterType="map"
+                resultType="dcal">
+                SELECT * FROM dcalendar
+                WHERE deptno = #{deptno}
+                AND start_date &lt;= #{monthEnd}
+                AND end_date &gt;= #{monthStart}
+        </select>
+
+        <select id="selectScalBySabun"
+                parameterType="map"
+                resultType="scal">
+            SELECT * FROM scalendar
+            WHERE sabun = #{sabun}
+            AND start_date &lt;= #{monthEnd}
+            AND end_date &gt;= #{monthStart}
+        </select>
+
+        <select id="selectDept" parameterType="int" resultType="com.kh.project.vo.CalendarVO">
+            SELECT * FROM calendar WHERE deptno = #{deptno}
+        </select>
+
+        <select id="selectDcalWriter" parameterType="int" resultType="int">
+            SELECT sabun FROM dcalendar WHERE dcal_idx = #{dcal_idx}
+        </select>
+
+        <select id="selectScalWriter" parameterType="int" resultType="int">
+            SELECT sabun FROM scalendar WHERE scal_idx = #{scal_idx}
+        </select>
+
+        <delete id="deleteDcal" parameterType="int">
+            DELETE FROM dcalendar WHERE dcal_idx = #{dcal_idx}
+        </delete>
+
+        <delete id="deleteScal" parameterType="int">
+            DELETE FROM scalendar WHERE scal_idx = #{scal_idx}
+        </delete>
+
+        <select id="selectOneDcal"
+                parameterType="int"
+                resultType="dcal">
+
+            SELECT * FROM dcalendar
+            WHERE dcal_idx = #{dcal_idx}
+
+        </select>
+
+        <select id="selectOneScal"
+                parameterType="int"
+                resultType="scal">
+
+            SELECT * FROM scalendar
+            WHERE scal_idx = #{scal_idx}
+
+        </select>
+
+        <update id="updateDcal"
+                parameterType="dcal">
+
+            UPDATE dcalendar
+            SET title = #{title},
+                start_date = #{start_date},
+                end_date = #{end_date},
+                content = #{content}
+            WHERE dcal_idx = #{dcal_idx}
+
+        </update>
+
+        <update id="updateScal"
+                parameterType="scal">
+
+            UPDATE scalendar
+            SET title = #{title},
+                start_date = #{start_date},
+                end_date = #{end_date},
+                content = #{content}
+            WHERE scal_idx = #{scal_idx}
+
+        </update>
+
+</mapper>

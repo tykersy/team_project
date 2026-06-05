@@ -1,0 +1,204 @@
+:root {
+        --primary-navy: #1e272e;
+        --accent-blue: #0984e3;
+        --bg-light: #f5f6fa;
+        --text-dark: #2f3542;
+    }
+
+    body {
+        font-family: 'Pretendard', -apple-system, sans-serif;
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+        margin: 0;
+        padding: 0; /* 전체 패딩은 해제하고 내부 콘텐츠에서 조절 */
+        overflow-x: hidden; /* 가로 스크롤 방지 */
+    }
+
+    /* ──────────────────────────────
+    ★ 세로 정렬을 가로 정렬로 바꿔주는 핵심 코드
+    ────────────────────────────── */
+    .manager-container {
+        display: flex;       /* 자식인 사이드바와 main-content를 가로로 배치 */
+        min-height: 100vh;   /* 화면 전체 높이 차지 */
+        width: 100%;
+    }
+
+    .main-content {
+        flex: 1;             /* 사이드바를 제외한 나머지 모든 가로 공간을 차지 */
+        padding: 40px;       /* 여백을 이쪽으로 이동 */
+        box-sizing: border-box;
+    }
+
+    /* ────────────────────────────── */
+
+    h2 {
+        color: var(--primary-navy);
+        font-size: 24px;
+        margin-bottom: 30px;
+        border-left: 5px solid var(--primary-navy);
+        padding-left: 15px;
+    }
+
+    /* 컨트롤 바 (검색 & 부서필터) */
+    .controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+    }
+
+    /* 입력창 디자인 */
+    input[name="search_name"] {
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        width: 250px;
+        outline: none;
+    }
+
+    /* 공통 버튼 디자인 */
+    input[type="button"] {
+        cursor: pointer;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        background-color: var(--primary-navy);
+        color: white;
+        font-weight: 500;
+        transition: all 0.2s;
+        margin-right: 5px;
+    }
+
+    input[type="button"]:hover {
+        background-color: var(--accent-blue);
+        transform: translateY(-1px);
+    }
+
+    /* 캘린더 박스 */
+    #calendarbox {
+        height: 750px;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    /* 필터 버튼들과 범례를 한 줄에 이쁘게 배치 */
+    .filter-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    /* 범례 전체 박스 */
+    .calendar-legend {
+        display: flex;
+        gap: 16px;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #334155;
+    }
+
+    /* 개별 범례 아이템 */
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* 공통 동그라미 스타일 */
+    .dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+    }
+
+    /* ⭐ 설정하신 쨍한 원색 매칭 */
+    .dot.admin { background-color: #111827; } /* 사장 (블랙) */
+    .dot.hr    { background-color: #0055FF; } /* 인사 (블루) */
+    .dot.mg    { background-color: #00B050; } /* 경영 (그린) */
+    .dot.mkt   { background-color: #FF0000; } /* 마케팅 (레드) */
+    .dot.sec   { background-color: #A020F0; } /* 보안 (퍼플) */
+    .dot.dev   { background-color: #FF8C00; } /* 개발 (오렌지) */
+
+
+    /* 💡 1. 검색 결과 전체를 감싸는 박스 세련되게 변경 */
+    #searchbox {
+        display: none;
+        width: 90%;
+        margin-top: 25px;
+        padding: 35px 25px;
+        background: #ffffff; /* 깔끔한 화이트 배경 */
+        border: 1px solid #E2E8F0; /* 모던한 연그레이 테두리 */
+        border-radius: 16px; /* 부드러운 라운딩 */
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        
+        /* 내부 버튼들이 예쁘게 정렬되도록 정렬 방식 부여 */
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px; /* 버튼 사이의 간격 균일하게 통일 */
+        justify-content: flex-start;
+    }
+
+    /* 💡 2. 검색창 상단에 "검색 결과" 타이틀 장식 효과 (선택사항) */
+    #searchbox::before {
+        content: "🔍 부서 검색 결과";
+        display: block;
+        width: 100%;
+        font-size: 16px;
+        font-weight: 700;
+        color: #475569;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #F1F5F9;
+        padding-bottom: 12px;
+    }
+
+    /* 💡 3. 스크립트가 생성한 <input type="button"> 대변신 */
+    #searchbox input[type="button"] {
+        /* 기존 자바스크립트의 margin: 20px 50px; 속성을 무력화하고 강제 제어 */
+        margin: 0 !important; 
+        
+        /* 일반 회색 버튼을 지우고 세련된 카드 형태로 디자인 */
+        background-color: #F8FAFC !important;
+        color: #1E293B !important;
+        border: 1px solid #E2E8F0 !important;
+        padding: 18px 30px !important;
+        min-width: 160px;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+        cursor: pointer;
+        
+        /* 부서 느낌을 내기 위해 버튼 왼쪽에 빌딩 아이콘 살짝 배치 효과 */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease-in-out;
+    }
+
+    /* 💡 4. 검색된 부서 버튼에 마우스를 올렸을 때 (Hover) 반응 효과 */
+    #searchbox input[type="button"]:hover {
+        background-color: #EFF6FF !important; /* 연한 블루 배경 */
+        border-color: #3B82F6 !important;     /* 쨍한 블루 테두리 */
+        color: #1D4ED8 !important;            /* 짙은 블루 텍스트 */
+        transform: translateY(-3px);          /* 자석처럼 위로 살짝 뜨는 효과 */
+        box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.15) !important;
+    }
+
+    /* 💡 5. "검색 결과가 없습니다" 문구 스타일 가공 */
+    #searchbox p {
+        width: 100%;
+        text-align: center;
+        padding: 40px 0;
+        color: #94A3B8;
+        font-size: 15px;
+        font-weight: 500;
+    }
