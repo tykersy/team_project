@@ -42,7 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </select>
 
         <select id="selectDept" parameterType="int" resultType="com.kh.project.vo.CalendarVO">
-            SELECT * FROM calendar WHERE deptno = #{deptno}
+            SELECT * FROM dcalendar WHERE deptno = #{deptno}
         </select>
 
         <select id="selectDcalWriter" parameterType="int" resultType="int">

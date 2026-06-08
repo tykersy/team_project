@@ -309,7 +309,7 @@
   .salary-history { margin-top: 0; }
  
   /* ── Attendance ── */
-  .attend-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .attend-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
   .attend-stat {
     background: var(--surface2); border: 1px solid var(--border);
     border-radius: var(--radius-sm); padding: 18px;

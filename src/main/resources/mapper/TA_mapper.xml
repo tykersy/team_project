@@ -39,5 +39,48 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where sabun = #{sabun}
         order by day desc
     </select>
+
+    <!-- 관리자 페이지 근태 관련 -->
+    <!-- 부서별 근태 현황 -->
+    <select id="selectDeptTA" parameterType="int" resultType="java.util.Map">
+        WITH RECURSIVE calendar AS (
+            SELECT DATE(CONCAT(YEAR(CURDATE()), '-01-01')) AS day
+            UNION ALL
+            SELECT DATE_ADD(day, INTERVAL 1 DAY)
+            FROM calendar 
+            WHERE day &lt; DATE(CONCAT(YEAR(CURDATE()), '-12-31'))
+        )
+        SELECT 
+            s.sabun,
+            s.saname,
+            s.sahire,
+            s.deptno,
+            COUNT(CASE WHEN sl.use_date IS NULL AND t.checkin IS NOT NULL AND TIME(t.checkin) &lt;= '09:00:00' THEN 1 END) AS normalCount,
+            COUNT(CASE WHEN sl.use_date IS NULL AND t.checkin IS NOT NULL AND TIME(t.checkin) &gt; '09:00:00' THEN 1 END) AS lateCount,
+            COUNT(CASE WHEN sl.use_date IS NOT NULL AND sl.approve = true THEN 1 END) AS leaveCount,
+            COUNT(CASE WHEN (t.day IS NULL OR t.checkin IS NULL OR t.checkout IS NULL) AND sl.use_date IS NULL THEN 1 END) AS absentCount,
+            ROUND(
+                COALESCE(
+                    SUM(CASE WHEN sl.use_date IS NULL AND t.checkin IS NOT NULL AND t.checkout IS NOT NULL
+                        THEN TIME_TO_SEC(TIMEDIFF(t.checkout, t.checkin)) / 3600 END),
+                    0
+                ), 1
+            ) AS totalWorkTime
+        FROM calendar c
+        JOIN sawon s ON 1=1
+        LEFT JOIN ta t 
+            ON t.sabun = s.sabun 
+            AND t.day = c.day
+        LEFT JOIN sleave_log sl 
+            ON sl.sabun = s.sabun 
+            AND sl.use_date = c.day
+            AND sl.approve = true
+        WHERE 
+            DAYOFWEEK(c.day) NOT IN (1, 7)
+            AND c.day &lt;= CURDATE()
+            AND s.deptno = #{deptno}
+        GROUP BY s.sabun, s.saname, s.sahire, s.deptno
+        ORDER BY s.deptno, s.sabun
+    </select>
     
 </mapper>

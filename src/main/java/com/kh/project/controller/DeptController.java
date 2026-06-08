@@ -34,7 +34,9 @@ public class DeptController {
     public String adminDeptMain(){
 
         //부서별 인원 조회
-        Map<Object> dMemberCount = deptdao.memberCount();
+        Map<Object,Object> dMemberCount = deptdao.memberCount();
+
+        return "";
 
     }
 
