@@ -147,7 +147,6 @@ public class SawonController {
         return map;
     }
 
-    //사원 정보 수정폼으로 이동
     @GetMapping("/admin_sawon_modify")
     public String sawonModify( Model model , int sabun){
 
@@ -155,14 +154,17 @@ public class SawonController {
         SawonVO sawon = sawonDao.sawonView(sabun);
         //부서 선택을 위한 부서목록
         List<DeptVO> deptList = deptDao.selectAll();
+
         //직급 변경 선택을 위한 직급목록
         List<JobPositionVO> jobList = jobDao.allJob();
 
         System.out.println(jobList);
+
         
         //바인딩 및 포워딩
         model.addAttribute("sawon", sawon);
         model.addAttribute("deptList", deptList);
+
         model.addAttribute("jobList", jobList);
         return "/sawon/sawon_modify_form";
 
@@ -204,6 +206,8 @@ public class SawonController {
         map.put("result", res);
 
         return map;
+
+       
 
     }
 }

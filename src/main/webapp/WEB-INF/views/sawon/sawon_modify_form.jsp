@@ -20,7 +20,9 @@
                 for( let i = 0; i < num_list.length; i++ ){
                     if( num_list[i] == deptno ){
                         deptnoSelect.value = num_list[i];
+                      
                         break;
+
                     }
                 }
 
@@ -30,6 +32,7 @@
                 let job_list = [ '관리자', '부장', '차장', '과장', '대리', '주임', '사원' ];
                 for( let i = 0; i < job_list.length; i++ ){
                     if( job_list[i] == sajob ){
+
                         sajobSelect.value = job_list[i];
                         return;
                     }
@@ -41,6 +44,7 @@
 
                 let saname = f.saname.value;
                 let deptno = f.deptno.value;
+
                 let sabun = f.sabun.value;
                 let new_pwd = f.new_pwd.value;
                 let sajob = f.sajob.value;
@@ -129,9 +133,11 @@
 
                 }
 
+
                 fetch( "/admin_sawon_modify", { method:"post", body:formData } )
                 .then( res => res.json() )
                 .then( data => {
+
 
                     if( data.result == 1 ){
                         alert(saname+"사원의 정보가 성공적으로 변경 되었습니다")
@@ -139,6 +145,7 @@
                     }else{
                         alert(saname+"사원 정보 수정에 실패했습니다. 다시 시도해주세요")
                     }
+
 
                 } )
 
@@ -163,18 +170,22 @@
                         </div>
 
                         <div class="form-group">
+
                             <label for="empName">사원명
                                 <font size="1" color="red">
                                     <span id="error_saname"></span></font>
                             </label>
+
                             <input id="empName" name="saname" class="form-control" value="${sawon.saname}" required>
                         </div>
 
                         <div class="form-group">
+
                             <label for="empPw">변경할 비밀번호
                                 <font size="1" color="red">
                                     <span id="error_pwd">영문 대·소문자, 숫자, 특수문자를 포함하여 8자 이상</span></font>
                             </label>
+
                             <input type="password" id="empPw" name="new_pwd" class="form-control" placeholder="변경 시에만 입력하세요">
                         </div>
 
@@ -184,7 +195,9 @@
                                 <input class="form-control" placeholder="관리자" readonly="readonly"/>
                             </c:if>
                             <c:if test="${sawon.deptno ne 1}">
+
                             <select id="deptno" name="deptno" class="form-control" required>
+
                                 <c:forEach var="dept" items="${deptList}">
                                     <option value="${dept.deptno}">${dept.dname}</option>
                                 </c:forEach>
@@ -194,59 +207,73 @@
 
                         <div class="form-group">
                             <label for="empPosition">직급</label>
+
                             <select id="empPosition" name="sajob" class="form-control">
                                 <c:forEach var="job" items="${jobList}">
                                     <option value="${job.sajob}">${job.sajob}</option>
+
                                 </c:forEach>
                             </select>
                         </div>
 
                         <div class="form-group">
+
                             <label for="salary">연봉 (원)
                                 <font size="1" color="red">
                                     <span id="error_sapay"></span></font>
                             </label>
+
                             <input type="number" id="salary" name="sapay" class="form-control" value="${sawon.sapay}">
                         </div>
 
                         <div class="form-group">
+
                             <label for="hireDate">입사일
                                 <font size="1" color="red">
                                     <span id="error_sahire"></span></font>
                             </label>
+
                             <input type="date" id="hireDate" name="sahire" class="form-control" value="${sawon.sahire}">
                         </div>
 
                         <div class="form-group">
+
                             <label for="email">이메일 주소
                                 <font size="1" color="red">
                                     <span id="error_saemail"></span></font>
                             </label>
+
                             <input type="email" id="email" name="saemail" class="form-control" value="${sawon.saemail}">
                         </div>
 
                         <div class="form-group">
+
                             <label for="phone">전화번호
                                 <font size="1" color="red">
                                     <span id="error_satel"></span></font>
                             </label>
+
                             <input type="tel" id="phone" name="satel" class="form-control" value="${sawon.satel}" placeholder="010-0000-0000">
                         </div>
 
                         <div class="form-group">
+
                             <label for="zipCode">우편번호
                                 <font size="1" color="red">
                                     <span id="error_sazipcode"></span></font>
                             </label>
+
                             <input id="zipCode" name="sazipcode" class="form-control" value="${sawon.sazipcode}">
                         </div>
 
                         <div class="form-group">
                             <div class="form-group">
+
                                 <label for="address">주소
                                     <font size="1" color="red">
                                         <span id="error_saaddr"></span></font>
                                 </label>
+
                                 <input id="address" name="saaddr" class="form-control" value="${sawon.saaddr}">
                             </div>
                         </div>
