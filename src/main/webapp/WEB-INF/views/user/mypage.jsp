@@ -115,15 +115,6 @@
                             </td>
                         </tr>
                     </c:forEach>
-                    <%-- <tr><td class="label">05. 26 (금)</td><td>09:00</td><td>19:30</td><td>10h 30m</td><td><span class="tag normal">정상</span></td></tr>
-                    <tr><td class="label">05. 23 (목)</td><td>09:22</td><td>18:00</td><td>8h 38m</td><td><span class="tag late">지각</span></td></tr>
-                    <tr><td class="label">05. 22 (수)</td><td>09:00</td><td>18:00</td><td>8h 00m</td><td><span class="tag normal">정상</span></td></tr>
-                    <tr><td class="label">05. 21 (화)</td><td>09:00</td><td>18:00</td><td>8h 00m</td><td><span class="tag normal">정상</span></td></tr>
-                    <tr><td class="label">05. 20 (월)</td><td>—</td><td>—</td><td>—</td><td><span class="tag absent">결근</span></td></tr>
-                    <tr><td class="label">05. 17 (금)</td><td>08:50</td><td>17:55</td><td>9h 05m</td><td><span class="tag early">조기출근</span></td></tr>
-                    <tr><td class="label">05. 16 (목)</td><td>09:00</td><td>18:00</td><td>8h 00m</td><td><span class="tag normal">정상</span></td></tr>
-                    <tr><td class="label">05. 15 (수)</td><td>09:05</td><td>18:10</td><td>8h 55m</td><td><span class="tag normal">정상</span></td></tr>
-                    <tr><td class="label">05. 14 (화)</td><td>09:00</td><td>18:00</td><td>8h 00m</td><td><span class="tag normal">정상</span></td></tr> --%>
                 </tbody>
             </table>
             </div>
@@ -173,8 +164,7 @@
             <div class="attend-grid">
                 <div class="attend-stat"><span class="n green">${yearlyTA[0].normalCount}</span><span class="lbl">정상 출근</span></div>
                 <div class="attend-stat"><span class="n yellow">${yearlyTA[0].lateCount}</span><span class="lbl">지각</span></div>
-                <div class="attend-stat"><span class="n red">0</span><span class="lbl">결근</span></div>
-                <div class="attend-stat"><span class="n blue">0</span><span class="lbl">조기 출근</span></div>
+                <div class="attend-stat"><span class="n red">${yearlyTA[0].absentCount}</span><span class="lbl">결근</span></div>
             </div>
             </div>
         
@@ -202,7 +192,7 @@
             <div class="card-title"><span class="dot"></span>연간 근태 현황</div>
             <table>
                 <thead>
-                <tr><th>월</th><th>정상</th><th>지각</th><th>결근</th><th>조기출근</th><th>총 근무(h)</th></tr>
+                <tr><th>월</th><th>정상</th><th>지각</th><th>결근</th><th>총 근무(h)</th></tr>
                 </thead>
                 <tbody>
                 <c:forEach var="monthTA" items="${yearlyTA}" >
@@ -210,8 +200,7 @@
                         <td class="label">${monthTA.month}월</td>
                         <td>${monthTA.normalCount}</td>
                         <td>${monthTA.lateCount}</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <td>${monthTA.absentCount}</td>
                         <td>${monthTA.totalWorkTime}</td>
                     </tr>
                 </c:forEach>

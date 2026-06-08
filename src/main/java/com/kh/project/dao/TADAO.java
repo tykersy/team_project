@@ -1,6 +1,7 @@
 package com.kh.project.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.kh.project.vo.TAVO;
 
@@ -17,5 +18,8 @@ public interface TADAO {
 
     // 근태 목록
     List<TAVO> selectList(int sabun);
+
+    //관리자 페이지 부서별 근태 현황
+    List<Map<String, Object>> selectDeptTA(int deptno);
     
 } 

@@ -1,0 +1,314 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title></title>
+        <link rel="stylesheet" href="/css/admin/sidebar.css">
+        <link rel="stylesheet" href="/css/admin/main.css">
+        <style>        
+            *, *::before, *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            
+            body {
+                font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+                background-color: #f0f2f5;
+                color: #222831;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+            
+            /* ============================
+            레이아웃
+            ============================ */
+            
+            .manager-container {
+                display: flex;
+                min-height: 100vh;
+            }
+            
+            .main-content {
+                flex: 1;
+                padding: 32px 36px;
+                overflow-x: hidden;
+                min-width: 0;
+            }
+            
+            /* ============================
+            페이지 타이틀 영역
+            ============================ */
+            
+            .page-header {
+                margin-bottom: 24px;
+            }
+            
+            .page-title {
+                font-size: 20px;
+                font-weight: 700;
+                color: #1a2035;
+                letter-spacing: -0.3px;
+            }
+            
+            /* ============================
+            부서 필터 버튼
+            ============================ */
+            
+            .dept-filter-wrap {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-bottom: 20px;
+            }
+            
+            .main-content > input[type="button"] {
+                display: inline-block;
+                margin: 0 6px 8px 0;
+                padding: 7px 20px;
+                font-family: inherit;
+                font-size: 13px;
+                font-weight: 500;
+                color: #4a5568;
+                background: #ffffff;
+                border: 1px solid #dde1e9;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.15s ease;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            }
+            
+            .main-content > input[type="button"]:hover {
+                background: #1a56db;
+                color: #ffffff;
+                border-color: #1a56db;
+                box-shadow: 0 2px 6px rgba(26,86,219,0.25);
+            }
+            
+            .main-content > input[type="button"]:active {
+                background: #1346c0;
+                border-color: #1346c0;
+                transform: scale(0.98);
+            }
+            
+            /* ============================
+            카드 컨테이너
+            ============================ */
+            
+            .table-card {
+                background: #ffffff;
+                border-radius: 12px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+                overflow: hidden;
+                border: 1px solid #eaecf0;
+            }
+            
+            /* ============================
+            근태 테이블
+            ============================ */
+            
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+                background: #ffffff;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+                border: 1px solid #eaecf0;
+            }
+            
+            caption {
+                caption-side: top;
+                font-size: 16px;
+                font-weight: 700;
+                color: #1a2035;
+                text-align: left;
+                padding: 0 0 14px 2px;
+                letter-spacing: -0.2px;
+            }
+            
+            thead tr {
+                background: #f8f9fb;
+                border-bottom: 1.5px solid #eaecf0;
+            }
+            
+            th {
+                padding: 13px 20px;
+                font-size: 12px;
+                font-weight: 600;
+                color: #6b7280;
+                text-align: left;
+                white-space: nowrap;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+            }
+            
+            th:first-child {
+                padding-left: 28px;
+            }
+            
+            tbody tr {
+                border-bottom: 1px solid #f3f4f6;
+                transition: background 0.1s;
+            }
+            
+            tbody tr:last-child {
+                border-bottom: none;
+            }
+            
+            tbody tr:hover {
+                background: #f8faff;
+            }
+            
+            td {
+                padding: 14px 20px;
+                font-size: 14px;
+                color: #374151;
+                vertical-align: middle;
+            }
+            
+            td:first-child {
+                padding-left: 28px;
+                font-weight: 600;
+                color: #1a2035;
+            }
+            
+            /* 입사일 열 */
+            td:nth-child(2) {
+                color: #9ca3af;
+                font-size: 13px;
+            }
+            
+            /* 정상 */
+            td:nth-child(3) {
+                font-weight: 600;
+                color: #0d9488;
+            }
+            
+            /* 지각 */
+            td:nth-child(4) {
+                font-weight: 600;
+                color: #f59e0b;
+            }
+            
+            /* 결근 */
+            td:nth-child(5) {
+                font-weight: 600;
+                color: #ef4444;
+            }
+            
+            /* 숫자 배지 스타일 */
+            td:nth-child(3) span,
+            td:nth-child(4) span,
+            td:nth-child(5) span {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 28px;
+                padding: 2px 10px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 600;
+            }
+            
+            /* ============================
+            빈 데이터 상태
+            ============================ */
+            
+            tbody tr.empty-row td {
+                text-align: center;
+                color: #9ca3af;
+                font-size: 14px;
+                padding: 3rem;
+            }
+            
+            /* ============================
+            반응형
+            ============================ */
+            
+            @media (max-width: 1024px) {
+                .main-content {
+                    padding: 24px 20px;
+                }
+            }
+            
+            @media (max-width: 768px) {
+                .main-content {
+                    padding: 16px 14px;
+                }
+            
+                th, td {
+                    padding: 10px 12px;
+                }
+            
+                th:first-child, td:first-child {
+                    padding-left: 16px;
+                }
+            
+                caption {
+                    font-size: 15px;
+                }
+            }
+        </style>
+        <script>
+            function today_ta(deptno){
+                fetch('/admin_main.do/today_ta/data?deptno=' + deptno)
+                    .then(res => res.json())
+                    .then(data =>{
+                        let tbody = document.getElementById('ta-tbody');
+                        tbody.innerHTML = data.map(d => `
+                            <tr>
+                                <td>\${d.saname}</td>
+                                <td>\${d.sahire}</td>
+                                <td>\${d.normalCount}</td>
+                                <td>\${d.lateCount}</td>
+                                <td>\${d.absentCount}</td>
+                            </tr>
+                        `).join('');
+                    });
+            }
+        </script>
+    </head>
+    <body>
+        <div class="manager-container">
+            <jsp:include page="/WEB-INF/views/admin_common/admin_sidebar.jsp"/>
+            <div class="main-content">
+
+                <c:forEach var="dept" items="${deptList}">
+                    <input type="button" value="${dept.dname}"
+                        onclick="today_ta(${dept.deptno})" />
+                </c:forEach>
+                
+                <table border="1">
+                    <caption>
+                        근태 현황
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th>이름</th>
+                            <th>입사일</th>
+                            <th>정상</th>
+                            <th>지각</th>
+                            <th>결근</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ta-tbody">
+                    <c:forEach var="dept" items="${deptTA}">
+                        <tr>
+                            <td>${dept.saname}</td>
+                            <td>${dept.sahire}</td>
+                            <td>${dept.normalCount}</td>
+                            <td>${dept.lateCount}</td>
+                            <td>${dept.absentCount}</td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

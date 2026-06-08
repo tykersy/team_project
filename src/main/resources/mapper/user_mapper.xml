@@ -91,50 +91,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!-- 마이페이지 근태 현황 조회 -->
     <select id="getYearlyTa" parameterType="java.util.Map" resultType="java.util.Map">
-         SELECT
-            MONTH(t.day) AS month,
-
-            COUNT(CASE
-                WHEN sl.use_date IS NULL
-                AND TIME(t.checkin) &lt;= '09:00:00' THEN 1
-            END) AS normalCount,
-
-            COUNT(CASE
-                WHEN sl.use_date IS NULL
-                AND TIME(t.checkin) > '09:00:00' THEN 1
-            END) AS lateCount,
-
-            COUNT(CASE
-                WHEN sl.use_date IS NOT NULL
-                AND sl.approve = true THEN 1
-            END) AS leaveCount,
-
+        WITH RECURSIVE calendar AS (
+            SELECT DATE(CONCAT(#{year}, '-01-01')) AS day
+            UNION ALL
+            SELECT DATE_ADD(day, INTERVAL 1 DAY)
+            FROM calendar 
+            WHERE day &lt; DATE(CONCAT(#{year}, '-12-31'))
+        )
+        SELECT 
+            MONTH(c.day) AS month,
+            COUNT(CASE WHEN sl.use_date IS NULL AND t.checkin IS NOT NULL AND TIME(t.checkin) &lt;= '09:00:00' THEN 1 END) AS normalCount,
+            COUNT(CASE WHEN sl.use_date IS NULL AND t.checkin IS NOT NULL AND TIME(t.checkin) &gt; '09:00:00' THEN 1 END) AS lateCount,
+            COUNT(CASE WHEN sl.use_date IS NOT NULL AND sl.approve = true THEN 1 END) AS leaveCount,
+            COUNT(CASE WHEN (t.day IS NULL OR t.checkin IS NULL OR t.checkout IS NULL) AND sl.use_date IS NULL THEN 1 END) AS absentCount,
             ROUND(
                 COALESCE(
-                    SUM(
-                        CASE WHEN sl.use_date IS NULL
-                        THEN TIME_TO_SEC(TIMEDIFF(t.checkout, t.checkin)) / 3600
-                        END
-                    ), 0
+                    SUM(CASE WHEN sl.use_date IS NULL AND t.checkin IS NOT NULL AND t.checkout IS NOT NULL
+                        THEN TIME_TO_SEC(TIMEDIFF(t.checkout, t.checkin)) / 3600 END),
+                    0
                 ), 1
             ) AS totalWorkTime
-
-        FROM ta t
-        LEFT JOIN sleave_log sl
-            ON  t.sabun    = sl.sabun
-            AND t.day      = sl.use_date
+        FROM calendar c
+        LEFT JOIN ta t 
+            ON t.sabun = #{sabun} 
+            AND t.day = c.day
+        LEFT JOIN sleave_log sl 
+            ON t.sabun = sl.sabun 
+            AND t.day = sl.use_date 
             AND sl.approve = true
-        WHERE t.sabun        = #{sabun}
-        AND t.checkin      IS NOT NULL
-        AND t.checkout     IS NOT NULL
-        AND YEAR(t.day)    = #{year}
-        GROUP BY MONTH(t.day)
-        ORDER BY MONTH(t.day) desc
+        WHERE 
+            DAYOFWEEK(c.day) NOT IN (1, 7)  -- 주말 제외 (1=일요일, 7=토요일)
+            AND c.day &lt;= CURDATE()           -- 미래 날짜 제외
+        GROUP BY MONTH(c.day)
+        ORDER BY MONTH(c.day) DESC
     </select>
 
     <!-- 비밀번호 변경 -->
     <update id="changePW" parameterType="user">
         update sawon set pwd=#{pwd} where sabun=#{sabun}
     </update>
-
 </mapper>
