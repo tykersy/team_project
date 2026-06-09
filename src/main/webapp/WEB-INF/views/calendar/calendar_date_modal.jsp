@@ -39,7 +39,7 @@
         <div class="cal-btn-area">
 
             <button type="button"
-                    onclick="closeModal()">
+                    onclick="closeDateModal()">
                 취소
             </button>
 
