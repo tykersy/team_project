@@ -55,4 +55,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where sabun = #{sabun}
     </update>
 
+    <!-- 전체 사원 수 조회 -->
+    <select id="sawonCnt"
+            resultType="int">
+        select count(sabun)cnt from sawon
+    </select>
 </mapper>

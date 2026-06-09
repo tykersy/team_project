@@ -13,7 +13,7 @@
             <div class="sidebar-item">인사/조직 관리</div>
             <ul class="submenu">
                 <li><a href="/sawon_list.do">사원 정보 관리</a></li>
-                <li><a href="">부서/직급 관리</a></li>
+                <li><a href="/admin_hr">부서/직급 관리</a></li>
             </ul>
         </div>
 
