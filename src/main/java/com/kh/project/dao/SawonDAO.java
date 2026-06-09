@@ -21,4 +21,7 @@ public interface SawonDAO {
     //사원 정보 수정
     int sawonUpdate( SawonVO vo );
 
+    //전체 사원 수 조회
+    int sawonCnt();
+
 } 

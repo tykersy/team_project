@@ -18,13 +18,13 @@ public interface DeptDAO {
     
     //조직도 관련 정보
     List<Map<String, Object>> getDeptOrgChart();
-    
 
     //부서별 인원 조회
-
     Map<String,Object> memberCount();
 
+    //총 부서 갯수 조회
+    int deptCnt();
 
-
-
+    //부서별 사원 수 조회
+    List<Map<String, Object>> deptCntList();
 }

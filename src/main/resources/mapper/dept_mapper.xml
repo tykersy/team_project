@@ -49,4 +49,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         group by d.dname
     </select>
 
+    <!-- 총 부서 갯수 조회 -->
+    <select id="deptCnt"
+            resultType="int">
+        select count(deptno)cnt from dept
+    </select>
+
+    <!-- 부서별 사원 수 조회 -->
+    <select id="deptCntList" resultType="map">
+        SELECT
+        d.dname AS deptName,
+        COUNT(s.sabun) AS sawonCount
+        FROM dept d
+        LEFT JOIN sawon s
+        ON d.deptno = s.deptno
+        GROUP BY d.deptno, d.dname
+        ORDER BY sawonCount DESC
+</select>
 </mapper>
