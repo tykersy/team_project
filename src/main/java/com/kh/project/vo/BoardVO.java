@@ -9,8 +9,8 @@ import org.apache.ibatis.type.Alias;
 @NoArgsConstructor
 @AllArgsConstructor
 @Alias("board")
-
 public class BoardVO {
-    private int idx, sabun;
+    private int idx, sabun, views;
     private String saname, title, content, file, created, updated;
+    private String dept; 
 }

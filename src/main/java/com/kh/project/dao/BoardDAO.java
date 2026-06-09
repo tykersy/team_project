@@ -15,9 +15,9 @@ public class BoardDAO {
     public BoardDAO(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
     }
-    
+
     // 네임스페이스를 지정해 XML 파일의 쿼리 아이디와 연결
-   private static final String NAMESPACE = "com.kh.project.dao.BoardDAO.";
+    private static final String NAMESPACE = "com.kh.project.dao.BoardDAO.";
 
     // 전체 게시글 목록
     public List<BoardVO> getBoardList() {
@@ -30,4 +30,26 @@ public class BoardDAO {
         // XML에 있는 id="insertBoard" 쿼리에 board를 실어서 보냄
         sqlSession.insert(NAMESPACE + "insertBoard", board);
     }
+
+    // 게시글 상세 보기
+    public BoardVO getBoard(int idx) {
+        // XML에 있는 id="getBoard" 쿼리를 실행하여 결과값 1개를 받아옴
+        return sqlSession.selectOne(NAMESPACE + "getBoard", idx);
+    }
+
+    // 조회수 증가
+    public void incrementViews(int idx) {
+        sqlSession.update(NAMESPACE + "incrementViews", idx);
+    }
+
+    // 게시글 수정
+    public void updateBoard(BoardVO board) {
+        sqlSession.update(NAMESPACE + "updateBoard", board);
+    }
+
+    // 게시글 삭제
+    public void deleteBoard(int idx) {
+        sqlSession.delete(NAMESPACE + "deleteBoard", idx);
+    }
+
 }
