@@ -30,11 +30,11 @@ public class DeptController {
     }
 
     //관리자-부서 관리 페이지 ---여기부터 추가수정하기
-    @GetMapping("/admin_deptlist")
-    public String adminDeptMain(Model model){
+    // @GetMapping("/admin_deptlist")
+    // public String adminDeptMain(Model model){
 
-        
+    //     return
 
-    }
+    // }
 
 }
