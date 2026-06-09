@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/board.css">
     <style>
-        /* 글쓰기 전용 미세 조정: 테이블이 목록 페이지처럼 깔끔하게 나오도록 함 */
+        /* 글쓰기 전용 미세 조정 */
         .board-table th { width: 15%; text-align: center; vertical-align: middle; }
         .board-table td { padding: 10px; }
         .input-text { width: 98%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
@@ -43,9 +43,9 @@
                         </tbody>
                     </table>
 
-                    <div style="margin-top: 20px; text-align: right;">
-                        <button type="submit" class="write-btn">등록</button>
-                        <a href="/board/list" class="write-btn" style="background-color: #666; text-decoration: none;">취소</a>
+                    <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 8px;">
+                        <button type="submit" class="btn-custom btn-primary">등록</button>
+                        <a href="/board/list" class="btn-custom btn-secondary">취소</a>
                     </div>
                 </form>
             </div>

@@ -1,4 +1,4 @@
-/* 공지사항 */
+/* 공지사항 테이블 */
 .board-table {
     width: 100%;
     border-collapse: collapse;
@@ -60,4 +60,68 @@
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+/* 게시글 상세 본문 영역 스타일 */
+.post-content {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 300px; 
+    padding: 20px; 
+    white-space: pre-wrap; 
+    word-break: break-all;
+    line-height: 1.6;
+}
+
+/* 💡 버튼 통일 공통 클래스 (Flexbox를 이용한 완벽한 크기/정렬 통일) */
+.btn-custom {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;        
+    height: 44px;            
+    padding: 0 20px;         
+    border-radius: 8px; 
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;            /* 💡 기본 테두리 제거 확실히 적용 */
+    outline: none;           /* 💡 포커스 시 생기는 외곽선 제거 */
+    transition: background-color 0.2s, color 0.2s;
+    margin-left: 8px;
+    box-sizing: border-box;  /* 💡 패딩/높이가 border 포함해서 계산되도록 설정 */
+    white-space: nowrap;      
+    vertical-align: middle;  /* 💡 수직 정렬 강제화 */
+}
+
+/* 추가: 버튼 태그 자체의 기본 브라우저 스타일 초기화 */
+button.btn-custom {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.btn-primary {
+    background-color: #2563EB; 
+    color: white;
+}
+.btn-primary:hover { 
+    background-color: #1D4ED8; 
+}
+
+.btn-danger {
+    background-color: #DC2626; 
+    color: white;
+}
+.btn-danger:hover { 
+    background-color: #B91C1C; 
+}
+
+.btn-secondary {
+    background-color: #64748B; 
+    color: white;
+}
+.btn-secondary:hover { 
+    background-color: #475569; 
 }
