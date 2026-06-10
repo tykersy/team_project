@@ -30,9 +30,9 @@
                 <table class="board-table">
                     <thead>
                         <tr>
-                            <th width="10%">No</th>
-                            <th width="25%">제목</th>
-                            <th width="20%">부서명</th>
+                            <th width="7%">No</th>
+                            <th width="33%">제목</th>
+                            <th width="15%">부서명</th>
                             <th width="25%">작성일</th>
                             <th width="10%">조회수</th>
                         </tr>

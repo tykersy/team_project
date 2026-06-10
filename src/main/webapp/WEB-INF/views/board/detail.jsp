@@ -35,7 +35,9 @@
                 
                 <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e5e7eb;">
                 
-                <div class="post-content" style="min-height: 300px; padding: 10px 0; white-space: pre-wrap; word-break: break-all;">${board.content}</div>
+                <div class="post-content" style="min-height: 300px; padding: 10px 0; word-break: break-all;">
+                    <c:out value="${board.content}" escapeXml="false" />
+                </div>
                 
                 <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e5e7eb;">
                 
