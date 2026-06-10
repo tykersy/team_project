@@ -67,32 +67,62 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="getMonthlyTA" resultType="ta">
+        WITH RECURSIVE calendar AS (
+            SELECT GREATEST(
+                DATE(CONCAT(#{year}, '-01-01')),
+                (SELECT DATE(sahire) FROM sawon WHERE sabun = #{sabun})  -- 입사일과 비교
+            ) AS day
+            UNION ALL
+            SELECT DATE_ADD(day, INTERVAL 1 DAY)
+            FROM calendar
+            WHERE day &lt; LEAST(
+                DATE(CONCAT(#{year}, '-12-31')),
+                CURDATE()                           -- 오늘 날짜와 비교해서 더 작은 값까지만
+            )
+        )
         SELECT
-        t.sabun,                                          <!-- t. 추가 -->
-        DATE_FORMAT(t.day, '%Y-%m-%d') AS day,            <!-- t. 추가 -->
-        t.checkin,                                        <!-- t. 추가 -->
-        t.checkout,                                       <!-- t. 추가 -->
-        CASE
-            WHEN sl.use_date IS NOT NULL AND sl.approve = true THEN 'leave'
-            WHEN t.checkin IS NULL                             THEN 'absent'
-            WHEN TIME(t.checkin) > '09:00:00'                 THEN 'late'
-            ELSE 'normal'
-        END AS status
-        FROM ta t
+            #{sabun}                             AS sabun,
+            DATE_FORMAT(c.day, '%Y-%m-%d')        AS day,
+            t.checkin,
+            t.checkout,
+            CASE
+                WHEN sl.use_date IS NOT NULL AND sl.use_days = 0.5 THEN 'half'
+                WHEN sl.use_date IS NOT NULL AND sl.use_days = 1 THEN 'leave'
+                WHEN t.checkin   IS NULL THEN 'absent'  -- 행 없으면 NULL
+                WHEN TIME(t.checkin) > '09:00:00'  THEN 'late'
+                ELSE 'normal'
+            END AS status
+        FROM calendar c
+        LEFT JOIN ta t
+            ON  t.sabun = #{sabun}
+            AND t.day   = c.day
         LEFT JOIN sleave_log sl
-            ON  t.sabun    = sl.sabun
-            AND t.day      = sl.use_date
+            ON  sl.sabun = #{sabun}
+            AND c.day    = sl.use_date
             AND sl.approve = true
-        WHERE t.sabun      = #{sabun}
-        AND YEAR(t.day)  = #{year}
-        AND MONTH(t.day) = #{month}
-        ORDER BY t.day ASC
+        WHERE
+            DAYOFWEEK(c.day) NOT IN (1, 7)
+            <if test="month != null">
+            AND MONTH(c.day) = #{month}
+            </if>
+            <if test="month == null">
+                AND 1 = 1
+            </if>
+            <if test="orderBy == null">
+                ORDER BY c.day ASC
+            </if>
+            <if test="orderBy == 'desc'">
+                ORDER BY c.day DESC
+            </if>
     </select>
 
     <!-- 마이페이지 근태 현황 조회 -->
     <select id="getYearlyTa" parameterType="java.util.Map" resultType="java.util.Map">
         WITH RECURSIVE calendar AS (
-            SELECT DATE(CONCAT(#{year}, '-01-01')) AS day
+            SELECT GREATEST(
+                DATE(CONCAT(#{year}, '-01-01')),
+                (SELECT DATE(sahire) FROM sawon WHERE sabun = #{sabun})  -- 입사일과 비교
+            ) AS day
             UNION ALL
             SELECT DATE_ADD(day, INTERVAL 1 DAY)
             FROM calendar 

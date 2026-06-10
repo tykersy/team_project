@@ -134,14 +134,13 @@
                 color: #374151;
                 font-family: Consolas, monospace;
             }
+
+            a{ color:white;
+                text-decoration: none; }
         </style>
 
         <script>
-            const deptLabels = deptCntList.map(d => d.deptName);
-            const deptData = deptCntList.map(d => d.empCount);
-
-            const positionLabels = positionCnt.map(p => p.positionName);
-            const positionData = positionCnt.map(p => p.empCount);
+            
         </script>
     </head>
 
@@ -204,8 +203,8 @@
                         </div>
 
                         <div class="quick-menu">
-                            <button href="/admin_deptlist">부서 관리</button>
-                            <button>직급 관리</button>
+                            <button><a href="/admin_deptlist">부서 관리</a></button>
+                            <button><a href="/admin_job_position">부서 관리</a></button>
                             <button>조직도 관리</button>
                         </div>
                     </div>

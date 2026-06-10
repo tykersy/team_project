@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.kh.project.dao.DeptDAO">
 	
     <!-- 전체 부서 정보 조회 -->
-	<select id = "selectAll" parameterType="dept">
+	<select id = "selectAll" resultType="dept">
         select * from dept
     </select>
 
@@ -65,5 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ON d.deptno = s.deptno
         GROUP BY d.deptno, d.dname
         ORDER BY sawonCount DESC
-</select>
+    </select>
+
+    
 </mapper>

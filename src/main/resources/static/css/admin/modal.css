@@ -1,0 +1,111 @@
+/* ─── 모달 스타일 ─── */
+/* 모달 배경 (기본적으로 숨김 처리 display: none) */
+.modal-overlay {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 배경을 어둡게 */
+    z-index: 1000; /* 사이드바나 테이블보다 위에 뜨도록 함 */
+    justify-content: center;
+    align-items: center;
+}
+
+/* 모달 실제 콘텐츠 박스 */
+.modal-content-box {
+    background-color: #ffffff;
+    width: 450px;
+    border-radius: 14px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    padding: 28px;
+    animation: fadeIn 0.25s ease-out; /* 부드럽게 나타나는 효과 */
+}
+
+/* 모달 헤더 */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+.modal-header h3 {
+    margin: 0;
+    font-size: 20px;
+    color: #111827;
+}
+.close-btn {
+    font-size: 24px;
+    color: #9ca3af;
+    cursor: pointer;
+}
+.close-btn:hover {
+    color: #111827;
+}
+
+/* 입력 폼 스타일 */
+.modal-body .input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+.modal-body label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 6px;
+}
+.modal-body input[type="text"] {
+    padding: 10px 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.modal-body input[type="text"]:focus {
+    border-color: #111827; /* 포커스 시 테마 컬러로 변경 */
+}
+
+/* 모달 푸터 버튼 배치 */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 24px;
+}
+.modal-footer input[type="button"], 
+.modal-footer input[type="submit"] {
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+/* 취소 버튼 */
+.modal-footer .btn-cancel {
+    background-color: #f3f4f6;
+    color: #4b5563;
+}
+.modal-footer .btn-cancel:hover {
+    background-color: #e5e7eb;
+}
+
+/* 등록 버튼 (#111827 메인 포인트 적용) */
+.modal-footer .btn-submit {
+    background-color: #111827;
+    color: #ffffff;
+}
+.modal-footer .btn-submit:hover {
+    background-color: #1f2937;
+}
+
+/* 애니메이션 효과 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

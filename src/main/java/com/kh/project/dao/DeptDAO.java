@@ -27,4 +27,6 @@ public interface DeptDAO {
 
     //부서별 사원 수 조회
     List<Map<String, Object>> deptCntList();
+
+    
 }
