@@ -27,4 +27,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select count(job_id) cnt from job_position
     </select>
     
+    <!-- id, 직급명 중복체크 -->
+    <select id="chId"
+            resultType="job"
+            parameterType="job">
+        select * from job_position where job_id = #{job_id}
+    </select>
+
+    <!-- 직급 추가 -->
+    <insert id="insert"
+            parameterType="job">
+        INSERT INTO job_position values( #{job_id}, #{sajob} )
+    </insert>
+
+    <!-- 직급 정보 수정 -->
+    <update id="update" 
+            parameterType="java.util.Map">
+        update job_position set job_id = #{job_id}, sajob = #{sajob}
+        WHERE job_id = #{ori_job_id}
+    </update>
+
+    <!-- 직급 삭제 -->
+    <delete id="delete"
+            parameterType="int">
+        delete from job_position where job_id = #{job_id}
+    </delete>
+
 </mapper>

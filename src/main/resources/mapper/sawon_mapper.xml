@@ -60,4 +60,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             resultType="int">
         select count(sabun)cnt from sawon
     </select>
+
+    <!-- 최근 충원 부서 조회 -->
+    <select id="cur_upd_dept"
+            resultType="java.util.Map">
+        SELECT s.saname, s.deptno, d.dname
+        FROM sawon s
+        LEFT JOIN dept d on s.deptno = d.deptno
+        ORDER BY s.sahire DESC
+        LIMIT 1;
+    </select>
+
+    <!-- 최근 충원 직급 조회 -->
+    <select id="cur_upd_position"
+            resultType="sawon">
+        SELECT s.sajob
+        FROM sawon s
+        LEFT JOIN job_position p on s.sajob = p.sajob
+        ORDER BY s.sahire DESC
+        LIMIT 1;
+    </select>
+
 </mapper>
