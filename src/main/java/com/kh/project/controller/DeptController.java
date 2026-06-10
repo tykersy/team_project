@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.kh.project.dao.DeptDAO;
-import com.kh.project.vo.DeptVO;
 
 import lombok.RequiredArgsConstructor;
 
