@@ -68,6 +68,7 @@
 
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
             <link rel="stylesheet" href="/css/dashboard.css">
+            <link rel="stylesheet" href="/css/ta/ta_main.css">
 
         </head>
 
@@ -77,35 +78,34 @@
                 <div class="main-content">
                     <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-                    <h2>근태 관리</h2>
+                    <h2 class="ta-title">근태 관리</h2>
+                    <div class="ta-card">
+                        <c:choose>
+                            <c:when test="${empty today}">
+                                <button type="button" onclick="checkIn()">출근</button>
+                            </c:when>
 
-                    <c:choose>
-                        <c:when test="${empty today}">
-                            <button type="button" onclick="checkIn()">출근</button>
-                        </c:when>
+                            <c:when test="${empty today.checkout}">
+                                <p>출근 시간 : ${today.checkin}</p>
+                                <button type="button" onclick="checkOut()">퇴근</button>
+                            </c:when>
 
-                        <c:when test="${empty today.checkout}">
-                            <p>출근 시간 : ${today.checkin}</p>
-                            <button type="button" onclick="checkOut()">퇴근</button>
-                        </c:when>
-
-                        <c:otherwise>
-                            <p>오늘 근무 완료</p>
-                            <p>출근 시간 : ${today.checkin}</p>
-                            <p>퇴근 시간 : ${today.checkout}</p>
-                        </c:otherwise>
-                    </c:choose>
-
-                    <hr>
+                            <c:otherwise>
+                                <p>오늘 근무 완료</p>
+                                <p>출근 시간 : ${today.checkin}</p>
+                                <p>퇴근 시간 : ${today.checkout}</p>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
 
                     <h3>근태 기록</h3>
 
-                    <table border="1">
+                    <table class="ta-table">
                         <tr>
                             <th>날짜</th>
                             <th>출근</th>
-                            <th>퇴근</th>
-                        </tr>
+                            <th>퇴근</th>rmx
+                        </tr>   
 
                         <c:forEach var="vo" items="${list}">
                             <tr>
