@@ -21,5 +21,8 @@ public interface TADAO {
 
     //관리자 페이지 부서별 근태 현황
     List<Map<String, Object>> selectDeptTA(int deptno);
+
+    //관리자 메인페이지 오늘 근태 현황
     
+
 } 
