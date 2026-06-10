@@ -25,7 +25,7 @@ public interface UserDAO {
     List<Map<String, Object>> getYearlyTa(Map<String, Object> map);
 
     //
-   List<TAVO> getMonthlyTA(int sabun, int year, int month);
+    List<TAVO> getMonthlyTA(Map<String, Object> info);
 
     //비밀번호 변경
     int changePW(UserVO vo);

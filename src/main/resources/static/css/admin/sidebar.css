@@ -22,6 +22,8 @@ body {
 
     display: flex;
     flex-direction: column;
+    position: sticky;
+    top: 0;
 }
 
 /* 상단 로고 영역 */
