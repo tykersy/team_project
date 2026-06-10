@@ -8,7 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.kh.project.dao.DeptDAO;
+import com.kh.project.dao.SawonDAO;
 import com.kh.project.vo.DeptVO;
+import com.kh.project.vo.SawonVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,7 +18,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DeptController {
     
+    //부서DAO
     private final DeptDAO deptdao;
+    //사원DAO
+    private final SawonDAO sawonDao;
     
     // 조직도 화면을 보여주는 컨트롤러 메서드
     @GetMapping("/org_chart")
@@ -29,12 +34,27 @@ public class DeptController {
         return "dept/org_chart"; 
     }
 
-    //관리자-부서 관리 페이지 ---여기부터 추가수정하기
-    // @GetMapping("/admin_deptlist")
-    // public String adminDeptMain(Model model){
+    //관리자-부서 관리 페이지 
+    @GetMapping("/admin_deptlist")
+    public String adminDeptMain(Model model){
 
-    //     return
+        //전체 부서 리스트 조회
+        List<DeptVO> deptlist = deptdao.selectAll();
+        //부서별 인원 조회
+        List<Map<String, Object>> memberCnt = deptdao.deptCntList();
+        //전체 부서 수 조회
+        int deptCnt = deptdao.deptCnt();
+        //최근 충원 부서 조회
+        List<Map<String, Object>> cur_deptList = sawonDao.cur_upd_dept();
 
-    // }
+        //바인딩 및 포워딩
+        model.addAttribute("deptlist", deptlist);
+        model.addAttribute("memberCnt", memberCnt);
+        model.addAttribute("deptcnt", deptCnt);
+        model.addAttribute("cur_deptList", cur_deptList);
+
+        return "admin_hr/admin_manage_dept";
+
+    }
 
 }

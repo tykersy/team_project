@@ -1,6 +1,7 @@
 package com.kh.project.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.kh.project.vo.SawonVO;
 
@@ -23,5 +24,11 @@ public interface SawonDAO {
 
     //전체 사원 수 조회
     int sawonCnt();
+
+    //최근 입사 부서 조회
+    List<Map<String, Object>> cur_upd_dept();
+
+    //최근 입사 직급 조회
+    List<SawonVO> cur_upd_position();
 
 } 
