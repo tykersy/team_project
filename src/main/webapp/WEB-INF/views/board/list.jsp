@@ -30,10 +30,11 @@
                 <table class="board-table">
                     <thead>
                         <tr>
-                            <th width="10%">번호</th>
-                            <th width="35%">제목</th>
-                            <th width="30%">작성자(부서명)</th>
+                            <th width="10%">No</th>
+                            <th width="25%">제목</th>
+                            <th width="20%">부서명</th>
                             <th width="25%">작성일</th>
+                            <th width="10%">조회수</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,14 +42,15 @@
                             <tr>
                                 <td>${board.idx}</td>
                                 <td><a href="/board/detail?idx=${board.idx}">${board.title}</a></td>
-                                <td>${board.saname} (${board.sabun})</td>
+                                <td>${board.dept}</td>
                                 <td>${board.created}</td>
-                            </tr>
-                        </c:forEach> <c:if test="${empty boardList}">
+                                <td>${board.views}</td> </tr>
+                        </c:forEach> 
+                        <c:if test="${empty boardList}">
                             <tr>
-                                <td colspan="4" style="text-align: center; color: #888;">등록된 공지사항이 없습니다.</td>
-                            </tr>
-                        </c:if> </tbody>
+                                <td colspan="5" style="text-align: center; color: #888;">등록된 공지사항이 없습니다.</td> </tr>
+                        </c:if> 
+                    </tbody>
                 </table>
             </div>
         </div>

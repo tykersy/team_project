@@ -5,7 +5,7 @@
                         .style.display = "flex";
             }
 
-            function closeModal(){
+            function closeDateModal(){
                 document.getElementById("dateModal")
                         .style.display = "none";
             }

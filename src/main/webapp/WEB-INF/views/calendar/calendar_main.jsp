@@ -21,6 +21,17 @@
                             <a href="javascript:void(0)" class="head-ym" onclick="openDateBox()" style="font-weight: bold;">${year}.${month}</a>
                             <a href="calendar_calendarmain?year=${nextYear}&month=${nextMonth}">▶</a>
                         </div>
+                        <div class="calendar-legend">
+                            <div class="legend-item">
+                                <span class="legend-color dcal-color"></span>
+                                <span>부서 일정</span>
+                            </div>
+
+                            <div class="legend-item">
+                                <span class="legend-color scal-color"></span>
+                                <span>개인 일정</span>
+                            </div>
+                        </div>
                         <div>
                             <table class="calendar-table">
                                 <thead>

@@ -3,7 +3,6 @@
 }
 
 .calendar-header {
-    margin: 0 0 20px 0;
     text-align: center;
 }
 
@@ -458,4 +457,37 @@ body {
 .other-month {
     color: #aaa;
     background: #f8f8f8;
+}
+
+.calendar-legend{
+    width:80%;
+    margin:0 auto 15px;
+
+    display:flex;
+    justify-content:flex-end;
+    gap:20px;
+
+    font-size:14px;
+    font-weight:bold;
+}
+
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:7px;
+}
+
+.legend-color{
+    width:14px;
+    height:14px;
+    border-radius:4px;
+    display:inline-block;
+}
+
+.dcal-color{
+    background:#dce8ff;
+}
+
+.scal-color{
+    background:#dff7df;
 }
