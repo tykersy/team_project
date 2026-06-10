@@ -29,17 +29,12 @@ public class DeptController {
         return "dept/org_chart"; 
     }
 
-    //관리자-부서/조직 관리 메인페이지
-    @GetMapping("/admin_dept_main")
-    public String adminDeptMain(Model model){
+    //관리자-부서 관리 페이지 ---여기부터 추가수정하기
+    // @GetMapping("/admin_deptlist")
+    // public String adminDeptMain(Model model){
 
-        //부서별 인원 조회
-        Map<String,Object> dMemberCount = deptdao.memberCount();
+    //     return
 
-        model.addAttribute("dMemberCount", dMemberCount);
-
-        return "admin/admin_dept_main";
-
-    }
+    // }
 
 }
