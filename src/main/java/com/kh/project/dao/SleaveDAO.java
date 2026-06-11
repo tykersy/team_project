@@ -27,4 +27,16 @@ public interface SleaveDAO {
 
     //[추가] 승인 대기건
     int countPendingLeaves();
+
+    //최근 승인 완료된 연차 5개 정보 조회
+    List<SleaveLogVO> selectApprovedLeaves();
+
+    //오늘 승인 완료된 연차 갯수 조회
+    int countAporovedLeaves();
+
+    //오늘 휴가중인 인원
+    int countOnLeaveToday();
+
+    //승인 대기중인 휴가 리스트 조회
+    List<SleaveLogVO> selectpendingList();
 }

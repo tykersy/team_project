@@ -21,7 +21,7 @@
             <div class="sidebar-item">근태/휴가 관리</div>
             <ul class="submenu">
                 <li><a href="/admin_main.do/today_ta">일일 근태 현황</a></li>
-                <li><a href="">휴가/연차 관리</a></li>
+                <li><a href="/admin_leave">휴가/연차 관리</a></li>
                 <li><a href="/admin_calendar">캘린더</a></li>
             </ul>
         </div>
