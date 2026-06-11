@@ -37,5 +37,8 @@ public interface CalendarDAO {
     int updateDcal(DcalendarVO vo);
 
     int updateScal(ScalendarVO vo);
+
+    // [추가] 대시보드 오늘 일정 조회용 메서드
+    List<CalendarVO> selectDeptToday(int deptno);
     
 } 

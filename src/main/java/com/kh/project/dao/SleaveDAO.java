@@ -1,6 +1,7 @@
 package com.kh.project.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.kh.project.vo.SleaveLogVO;
 import com.kh.project.vo.SleaveVO;
@@ -21,4 +22,9 @@ public interface SleaveDAO {
     //사원 연차 사용
     int sleaveApplyUpdate(SleaveLogVO vo);
 
+    // [추가] 오늘 날짜 기준으로 휴가 중인 사원 목록 조회
+    List<Map<String, Object>> getDeptVacationList(String today);
+
+    //[추가] 승인 대기건
+    int countPendingLeaves();
 }
