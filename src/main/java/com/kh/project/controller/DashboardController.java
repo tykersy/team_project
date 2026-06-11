@@ -47,12 +47,11 @@ public class DashboardController {
 
         model.addAttribute("today", today);
 
-        // 1. KPI 데이터 (승인 대기 건수 DB 연동, 교육 이수는 기존 5 유지)
+        // 1. KPI 데이터 (승인 대기 건수 DB 연동)
         model.addAttribute("approval", sleaveDao.countPendingLeaves());
         model.addAttribute("vacation", 12);
         model.addAttribute("overallGoal", "국내시장 점유율 15% → 25%로 확대"); 
-        model.addAttribute("edu", 5);
-
+        
         // 2. 공지사항 데이터
         model.addAttribute("boardList", boardDao.getBoardList());
 

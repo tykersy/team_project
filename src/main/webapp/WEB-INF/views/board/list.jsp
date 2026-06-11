@@ -25,7 +25,7 @@
         <div class="dashboard-container">
             <div class="panel" style="width: 100%;">
                 <h2 style="display: inline-block;">📢 공지사항</h2>
-                <a href="/board/write" class="write-btn">작성</a>
+                <!-- <a href="/board/write" class="write-btn">작성</a> -->
 
                 <table class="board-table">
                     <thead>
