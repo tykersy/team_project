@@ -47,8 +47,8 @@
                                 <td>2026-06-11</td><td>1001</td><td>홍길동</td><td>개발부</td>
                                 <td>annual</td><td>2026-06-15</td><td>1.0</td><td>개인 사정</td>
                                 <td>
-                                    <button class="btn-approve" onclick="processLeave(${log.log_id}, true)">승인</button>
-                                    <button class="btn-reject" onclick="processLeave(${log.log_id}, false)">반려</button>
+                                    <button class="btn-approve" onclick="">승인</button>
+                                    <button class="btn-reject" onclick="">반려</button>
                                 </td>
                             </tr>
                         </tbody>
