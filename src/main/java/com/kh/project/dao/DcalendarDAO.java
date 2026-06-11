@@ -3,6 +3,7 @@ package com.kh.project.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.project.vo.CalendarVO;
 import com.kh.project.vo.ScheduleDTO;
 
 public interface DcalendarDAO {
@@ -18,4 +19,7 @@ public interface DcalendarDAO {
 
     //전체부서의 날짜별 일정 상세보기
     List<ScheduleDTO> detailViewAll(String date);
+
+    // 대시보드 오늘 일정용 메서드 추가
+    List<CalendarVO> selectDeptToday(int deptno);
 }

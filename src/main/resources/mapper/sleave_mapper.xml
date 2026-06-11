@@ -36,4 +36,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where sabun=#{sabun}
     </update>
 
+    <!-- 부서별 휴가현황 연동  -->
+    <select id="getDeptVacationList" resultType="map">
+    SELECT 
+    d.dname AS "deptName",
+    COUNT(l.sabun) AS "count"
+    FROM sleave_log l
+    JOIN sawon s ON l.sabun = s.sabun
+    JOIN dept d ON s.deptno = d.deptno
+    WHERE l.use_date = #{today}
+    AND l.approve = 1
+    GROUP BY d.dname
+    </select>
+
+    <!-- 승인 대기 연동 -->
+    <select id="countPendingLeaves" resultType="int">
+    SELECT COUNT(*) 
+    FROM sleave_log 
+    WHERE approve = 0
+    </select>
+    
 </mapper>
