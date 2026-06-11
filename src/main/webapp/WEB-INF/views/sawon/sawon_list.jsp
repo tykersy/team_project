@@ -43,7 +43,8 @@
             <h2>직원 관리 페이지</h2>
 
             <div class="btn-group">
-                <input type="button" value="PDF다운로드"/>
+                <input type="button" value="PDF다운로드"
+                    onclick="location.href='/sawon_download_pdf'"/>
                 <input type="button" value="+사원 추가하기"
                     onclick="location.href='sawonAdd'"/>
             </div>

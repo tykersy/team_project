@@ -204,7 +204,7 @@
 
                         <div class="quick-menu">
                             <button><a href="/admin_deptlist">부서 관리</a></button>
-                            <button><a href="/admin_job_position">부서 관리</a></button>
+                            <button><a href="/admin_job_position">직급 관리</a></button>
                             <button>조직도 관리</button>
                         </div>
                     </div>

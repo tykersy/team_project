@@ -57,6 +57,8 @@
     </div>
 
     <hr>
+    <button tyep="button" class="btn-add" 
+        onclick="location.href='/admin_add_schedule?date?=${date}&deptno=${schedule.deptno}'"></button>
     <button type="button" class="btn-close" onclick="window.close();">닫기</button>
     </body>
     
