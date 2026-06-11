@@ -7,6 +7,13 @@
         <title>로그인</title>
         <link rel="stylesheet" href="/css/user/login.css">
         <script>
+
+            function enterkey(){
+                if(window.event.keyCode == 13)
+                    document.getElementById("loginBtn").click();
+            }
+            
+
             function login(f){
                 let sabun = f.sabun.value;
                 let pwd = f.pwd.value;
@@ -49,12 +56,12 @@
                 <tr>
                     <th>비밀번호</th>
                     <td>
-                        <input name="pwd" type="password" />
+                        <input name="pwd" type="password" onkeyup="enterkey()" />
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2" align="center">
-                        <input type="button" value="로그인"
+                        <input type="button" value="로그인" id="loginBtn"
                                onclick="login(this.form)"/>
                     </td>
                 </tr>

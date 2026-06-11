@@ -33,7 +33,7 @@ import tools.jackson.databind.ObjectMapper;
 
 @Controller
 @RequiredArgsConstructor
-public class UserContorller {
+public class UserController {
 
     //userDAO
     private final UserDAO userDao;
