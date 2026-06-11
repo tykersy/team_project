@@ -68,7 +68,7 @@
 
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
             <link rel="stylesheet" href="/css/dashboard.css">
-            <link rel="stylesheet" href="/css/ta/ta_main.css">
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/css/ta/ta_main.css">
 
         </head>
 
@@ -104,7 +104,7 @@
                         <tr>
                             <th>날짜</th>
                             <th>출근</th>
-                            <th>퇴근</th>rmx
+                            <th>퇴근</th>
                         </tr>   
 
                         <c:forEach var="vo" items="${list}">
