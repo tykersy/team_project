@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="ko">
     <head>
@@ -100,7 +101,8 @@
                 <tbody>
                     <c:forEach var="taList" items="${userTaList}">
                         <tr>
-                            <td class="label">${taList.day}</td>
+                            <!--날짜부분 시간 안나오게 수정-->
+                            <td class="label">${fn:substring(taList.day, 0, 10)}</td>
                             <td>${taList.checkin}</td>
                             <td>${taList.checkout}</td>
                             <td>${taList.working_time}</td>
@@ -439,6 +441,14 @@
 
                     row.appendChild(td);
                     day++;
+
+                    //근태 확인버튼 이동용
+                    const params = new URLSearchParams(location.search);
+                    const tab = params.get("tab");
+
+                    if(tab !== null){
+                        switchTab(Number(tab));
+                    }
                 }
 
                 while (row.children.length < 7) {

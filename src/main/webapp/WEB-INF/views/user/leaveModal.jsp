@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!-- ─────────────────────────────── 연차 신청 모달 ─── -->
                     <div id="leaveModal" class="modal-overlay" style="display:none;">
-                        <form>
+                        <form method="post" action="javascript:void(0);>
                             <input type="hidden" name="use_days" id="use_days" value="0" />
                             <div class="modal-box">
                                 <div class="modal-title">연차 신청</div>
