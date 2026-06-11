@@ -254,6 +254,8 @@
 
                         searchbox.innerHTML = `
                             <div class="search-result-header">
+
+                                // 수정필요!!!!!!!!****
                                 '<strong>${search_name}</strong>' 검색 결과 (총 ${data.dlist.length}건)
                             </div>
                             <div class="search-card-grid">`;

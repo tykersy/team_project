@@ -1,11 +1,14 @@
 package com.kh.project.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.project.dao.DeptDAO;
 
@@ -56,6 +59,71 @@ public class DeptController {
         model.addAttribute("cur_deptList", cur_deptList);
 
         return "admin_hr/admin_manage_dept";
+
+    }
+
+    //관리자-부서정보 수정
+    @PostMapping("/admin_update_dept")
+    @ResponseBody
+    public Map<String, Object> updDept(DeptVO vo, String ori_deptno){
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("ori_deptno", ori_deptno);
+        map.put("vo", vo);
+
+        int res = deptdao.update(map);
+
+        map.put("result", res);
+
+        return map;
+
+    }
+
+    //관리자-부서 번호, 부서이름 중복체크
+    @GetMapping("/admin_add_dept")
+    @ResponseBody
+    public Map<String, Object> check(DeptVO vo){
+
+        DeptVO check = deptdao.selectCheck(vo);
+        String result = "";
+        if( check == null ){
+            result = "can";
+        }else{
+            result = "cannot";
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", result);
+
+        return map;
+
+    }
+
+    //관리자- 부서 등록
+    @PostMapping("/admin_add_dept")
+    @ResponseBody
+    public Map<String, Object> insertDept( DeptVO vo ){
+
+        int res = deptdao.insertDept(vo);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", res);
+
+        return map;
+
+    }
+
+    //부서 삭제
+    @GetMapping("/admin_delete_dept")
+    @ResponseBody
+    public Map<String, Integer> deleteDept( String dname ){
+
+        int res = deptdao.deleteDept(dname);
+
+        Map<String, Integer> map = new HashMap<>();
+        map.put("result", res);
+
+        return map;
 
     }
 

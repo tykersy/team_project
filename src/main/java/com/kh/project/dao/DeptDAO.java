@@ -28,5 +28,15 @@ public interface DeptDAO {
     //부서별 사원 수 조회
     List<Map<String, Object>> deptCntList();
 
-    
+    //부서 정보 수정
+    int update(Map<String, Object> map);
+
+    //부서번호, 부서명 중복체크
+    DeptVO selectCheck (DeptVO vo);
+
+    //부서 등록
+    int insertDept(DeptVO vo);
+
+    //부서 삭제
+    int deleteDept(String dname);
 }

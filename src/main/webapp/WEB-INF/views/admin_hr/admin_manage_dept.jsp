@@ -6,161 +6,330 @@
 
     <head>
         <link rel="stylesheet" href="/css/admin/sidebar.css">
+        <link rel="stylesheet" href="/css/admin/modal.css"/>
 
-<style>
-    /* 기본 초기화 및 폰트 설정 */
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-        background-color: #f3f4f6;
-        color: #1f2937;
-    }
+    <style>
+        /* 기본 초기화 및 폰트 설정 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
 
-    /* ─── 레이아웃 구조 ─── */
-    .manager-container {
-        display: flex;       
-        min-height: 100vh;
-        width: 100%;
-    }
+        /* ─── 레이아웃 구조 ─── */
+        .manager-container {
+            display: flex;       
+            min-height: 100vh;
+            width: 100%;
+        }
 
-    .main-content {
-        flex: 1;             
-        padding: 40px 45px;  /* 여백 적정 수준으로 조정 */
-        box-sizing: border-box;
-        max-width: 1400px;   /* [조정] 과하지 않게 딱 좋은 대시보드 표준 너비 */
-        margin: 0;           
-    }
+        .main-content {
+            flex: 1;             
+            padding: 40px 45px;  /* 여백 적정 수준으로 조정 */
+            box-sizing: border-box;
+            max-width: 1400px;   /* [조정] 과하지 않게 딱 좋은 대시보드 표준 너비 */
+            margin: 0;           
+        }
 
-    /* ─── 페이지 헤더 ─── */
-    .page-header {
-        margin-bottom: 32px; 
-        border-bottom: 2px solid #e5e7eb;
-        padding-bottom: 16px;
-    }
+        /* ─── 페이지 헤더 ─── */
+        .page-header {
+            display: flex;
+            justify-content: space-between; /* 타이틀은 왼쪽, 버튼은 오른쪽 끝 */
+            align-items: center;            /* 세로 중앙 정렬 */
+            margin-bottom: 32px; 
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 16px;
+        }
 
-    .page-title {
-        font-size: 28px;    /* [조정] 너무 크지 않게 조절 (32px -> 28px) */
-        font-weight: 700;
-        color: #111827; 
-        margin: 0;
-    }
+        /* ─── 상단 추가 버튼 스타일 ─── */
+        .page-header .btn-group input[type="button"] {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            
+            /* 테마 포인트 컬러 적용 (#111827) */
+            background-color: #111827; 
+            color: #ffffff;
+            border: 1px solid #111827;
+        }
 
-    /* ─── 대시보드 그리드 (테이블 배치) ─── */
-    .dashboard-grid {
-        display: grid;
-        grid-template-columns: 2.2fr 1fr; 
-        gap: 24px;          /* 간격 최적화 */
-        margin-bottom: 24px;
-    }
+        .page-header .btn-group input[type="button"]:hover {
+            background-color: #1f2937;
+            border-color: #1f2937;
+        }
 
-    /* ─── 카드 공통 스타일 ─── */
-    .table-card, .summary-card {
-        background: #ffffff; 
-        border-radius: 14px; 
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-        padding: 28px;       /* [조정] 박스 볼륨감 적정화 (36px -> 28px) */
-        box-sizing: border-box;
-        border: 1px solid #e5e7eb;
-    }
+        .page-title {
+            font-size: 28px;    /* [조정] 너무 크지 않게 조절 (32px -> 28px) */
+            font-weight: 700;
+            color: #111827; 
+            margin: 0;
+        }
 
-    /* ─── 테이블(Table) 디자인 ─── */
-    table {
-        width: 100%;
-        border-collapse: collapse; 
-        text-align: left;
-    }
+        /* ─── 대시보드 그리드 (테이블 배치) ─── */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2.2fr 1fr; 
+            gap: 24px;          /* 간격 최적화 */
+            margin-bottom: 24px;
+        }
 
-    caption {
-        font-size: 20px;    /* [조정] (22px -> 20px) */
-        font-weight: 600;
-        color: #111827; 
-        text-align: left;
-        margin-bottom: 20px;
-    }
+        /* ─── 카드 공통 스타일 ─── */
+        .table-card, .summary-card {
+            background: #ffffff; 
+            border-radius: 14px; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            padding: 28px;       /* [조정] 박스 볼륨감 적정화 (36px -> 28px) */
+            box-sizing: border-box;
+            border: 1px solid #e5e7eb;
+        }
 
-    th, td {
-        padding: 16px 20px; /* [조정] 위아래 줄간격을 딱 보기 좋은 황금비율로 조정 */
-        font-size: 15px;    /* [조정] 본문 글씨 크기 최적화 (16px -> 15px) */
-    }
+        /* ─── 테이블(Table) 디자인 ─── */
+        table {
+            width: 100%;
+            border-collapse: collapse; 
+            text-align: left;
+        }
 
-    th {
-        background-color: #f9fafb; 
-        color: #4b5563;
-        font-weight: 600;
-    }
+        caption {
+            font-size: 20px;    /* [조정] (22px -> 20px) */
+            font-weight: 600;
+            color: #111827; 
+            text-align: left;
+            margin-bottom: 20px;
+        }
 
-    tr:hover {
-        background-color: #f9fafb; 
-    }
+        th, td {
+            padding: 16px 20px; /* [조정] 위아래 줄간격을 딱 보기 좋은 황금비율로 조정 */
+            font-size: 15px;    /* [조정] 본문 글씨 크기 최적화 (16px -> 15px) */
+        }
 
-    /* ─── 테이블 내 버튼(수정/삭제) 스타일 ─── */
-    input[type="button"] {
-        padding: 7px 14px;  
-        border-radius: 7px;
-        font-size: 13px;    
-        font-weight: 500;
-        cursor: pointer;
-        border: 1px solid transparent;
-        transition: all 0.2s;
-        margin-right: 4px;
-    }
+        th {
+            background-color: #f9fafb; 
+            color: #4b5563;
+            font-weight: 600;
+        }
 
-    /* 수정 버튼 */
-    input[type="button"][value="수정"] {
-        background-color: #f3f4f6;
-        color: #111827; 
-        border: 1px solid #e5e7eb;
-    }
-    input[type="button"][value="수정"]:hover {
-        background-color: #111827; 
-        color: #ffffff;
-        border-color: #111827;
-    }
+        tr:hover {
+            background-color: #f9fafb; 
+        }
 
-    /* 삭제 버튼 */
-    input[type="button"][value="삭제"] {
-        background-color: #fef2f2;
-        color: #ef4444;
-    }
-    input[type="button"][value="삭제"]:hover {
-        background-color: #ef4444;
-        color: #ffffff;
-    }
+        /* ─── 테이블 내 버튼(수정/삭제) 스타일 ─── */
+        input[type="button"] {
+            padding: 7px 14px;  
+            border-radius: 7px;
+            font-size: 13px;    
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+            margin-right: 4px;
+        }
 
-    /* ─── 부서별 인원수 배지 ─── */
-    .count-badge {
-        background-color: #111827; 
-        color: #ffffff;
-        padding: 5px 12px;  
-        border-radius: 20px;
-        font-size: 13px;    
-        font-weight: 500;
-        display: inline-block;
-    }
+        /* 수정 버튼 */
+        input[type="button"][value="수정"] {
+            background-color: #f3f4f6;
+            color: #111827; 
+            border: 1px solid #e5e7eb;
+        }
+        input[type="button"][value="수정"]:hover {
+            background-color: #111827; 
+            color: #ffffff;
+            border-color: #111827;
+        }
 
-    /* ─── 하단 요약 카드 (Summary Card) ─── */
-    .summary-card {
-        display: inline-block;
-        min-width: 240px;   /* [조정] 하단 카드 크기 최적화 */
-        margin-right: 20px;
-        vertical-align: top;
-    }
+        /* 삭제 버튼 */
+        input[type="button"][value="삭제"] {
+            background-color: #fef2f2;
+            color: #ef4444;
+        }
+        input[type="button"][value="삭제"]:hover {
+            background-color: #ef4444;
+            color: #ffffff;
+        }
 
-    .summary-title {
-        font-size: 15px;    
-        color: #6b7280;
-        font-weight: 500;
-        margin-bottom: 10px;
-    }
+        /* ─── 부서별 인원수 배지 ─── */
+        .count-badge {
+            background-color: #111827; 
+            color: #ffffff;
+            padding: 5px 12px;  
+            border-radius: 20px;
+            font-size: 13px;    
+            font-weight: 500;
+            display: inline-block;
+        }
 
-    .summary-value {
-        font-size: 32px;    /* [조정] 대형 숫자 크기 최적화 (36px -> 32px) */
-        font-weight: 700;
-        color: #111827; 
-    }
-</style>
+        /* ─── 하단 요약 카드 (Summary Card) ─── */
+        .summary-card {
+            display: inline-block;
+            min-width: 240px;   /* [조정] 하단 카드 크기 최적화 */
+            margin-right: 20px;
+            vertical-align: top;
+        }
 
+        .summary-title {
+            font-size: 15px;    
+            color: #6b7280;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .summary-value {
+            font-size: 32px;    /* [조정] 대형 숫자 크기 최적화 (36px -> 32px) */
+            font-weight: 700;
+            color: #111827; 
+        }
+    </style>
+
+        <script>
+            // 부서 추가 모달 열기
+            function openModal() {
+                const modal = document.getElementById("jobModal");
+                const form = document.getElementById("modalForm");
+
+                document.getElementById("modalTitle").innerText = "새 부서 등록";
+                document.getElementById("submitBtn").value = "등록하기";
+                
+                form.dataset.mode = "insert"; 
+
+                // 입력창 상태 초기화 (배경색 흰색)
+                document.getElementById("deptno").style.backgroundColor = "#ffffff";
+
+                modal.style.display = "flex";
+            }
+
+            // 모달 닫기 (등록/수정 공통 사용)
+            function closeModal() {
+                const modal = document.getElementById("jobModal");
+                modal.style.display = "none"; 
+
+                // 모달 닫힐 때 폼 입력값 및 배경색 원상복구
+                const form = document.getElementById("modalForm");
+                form.reset(); 
+                document.getElementById("deptno").style.backgroundColor = "#ffffff";
+            }
+
+            //부서 정보 수정 모달 열기
+            function openUpdModal(deptno, dname, dtel) {
+                const modal = document.getElementById("jobModal");
+                const form = document.getElementById("modalForm");
+    
+                // 1. 모달창 텍스트 및 서브밋 버튼 변경
+                document.getElementById("modalTitle").innerText = "부서 정보 수정";
+                document.getElementById("submitBtn").value = "수정하기";
+                
+                form.dataset.mode = "update"; //form 태그의 data 속성에 'update' 저장
+                
+                // 2. 넘겨받은 기존 데이터를 입력창에 채워넣기
+                document.getElementById("deptno").value = deptno;
+                document.getElementById("dname").value = dname;
+                document.getElementById("dtel").value = dtel;
+
+                // ++.기존 부서번호를 form태그 안에 넣기
+                form.ori_deptno.value = deptno;
+                
+                document.getElementById("deptno").style.backgroundColor = "#ffffff";
+                
+                modal.style.display = "flex";
+            } 
+
+            function send(f){
+                let deptno = f.deptno.value.trim();
+                let ori_deptno = f.ori_deptno.value.trim();
+                let dname = f.dname.value.trim();
+                let dtel = f.dtel.value.trim();
+                let mode = f.dataset.mode; //등록인지 수정인지 구별
+
+                //유효성 체크
+                if( deptno === '' ){
+                    alert("부서 번호를 입력하세요.");
+                    return;
+                }
+
+                if( dname === '' ){
+                    alert("부서명을 입력하세요.");
+                    return;
+                }
+
+                if( dtel === '' ){
+                    alert("부서 전화번호를 입력하세요.")
+                    return;
+                }
+
+                //button모드가 수정(update)일 때는 중복체크를 건너뜀
+                if(mode === "update") {
+                    let formData = new FormData(f);
+                    formData.set("ori_deptno", ori_deptno); //기존 부서번호를 forData에 담기
+                    formData.set("deptno", deptno); // 사용자가 새로 바꾼 부서번호 있다면 담아서 전송
+                    formData.set("dtel", dtel);
+
+                    fetch("/admin_update_dept", { method: "POST", body: formData })
+                    .then(res => res.json())
+                    .then(data => {
+                        if(data.result == 1) {
+                            alert("부서 정보가 수정되었습니다.");
+                            closeModal();
+                            location.href = "/admin_deptlist";
+                        } else {
+                            alert("부서 정보 수정에 실패했습니다.");
+                        }
+                    })
+                    .catch(err => {
+                        console.error("수정 중 서버 에러 발생:", err);
+                        alert("서버 통신 중 오류가 발생했습니다.");
+                    });
+                    return; // 수정 로직이 끝나면 아래 등록 로직이 실행 안 되도록 차단
+                }
+
+                //버튼이 등록일 때 동일한 부서명, 동일한 부서번호 체크
+                if(mode === "insert") {
+                    
+                    fetch( "/admin_add_dept?deptno="+deptno+"&dname="+dname )
+                    .then( res => res.json() )
+                    .then( data => {
+                        if( data.result == 'can' ){  //부서번호가 중복되지 않을 경우 if문 실행
+                            
+                            let formData = new FormData(f);
+                            fetch( "/admin_add_dept", { method:"POST", body:formData } )
+                            .then( res => res.json() )
+                            .then( postData => {
+                                if( postData.result == 1 ){
+                                    alert("부서가 정상적으로 추가되었습니다.");
+                                    closeModal();
+                                    location.href="/admin_deptlist";
+                                }
+                            } );
+                        } else { 
+                            alert("이미 존재하는 부서번호 혹은 부서명입니다. 다시 작성해주세요.");
+                        }
+                    })
+                    .catch(err => console.error("등록 중 에러:", err));
+                }
+            }
+
+            function del(dname){
+
+                if( !confirm("정말로 " +dname+"를 삭제하시겠습니까?") ){
+                    return;
+                }
+
+                fetch( "/admin_delete_dept?dname="+dname )
+                .then( res => res.json() )
+                .then( data => {
+                    if( data.result == 1 ){
+                        alert(dname+"가 정상적으로 삭제 되었습니다.");
+                        location.href="/admin_deptlist";
+                    } else {
+                        alert("부서 삭제 실패. 다시 시도해주세요");
+                    }
+                })
+                .catch(err => console.error("삭제 중 에러:", err));
+                    }
+        </script>
     </head>
 
     <body>
@@ -168,68 +337,103 @@
             <jsp:include page="/WEB-INF/views/admin_common/admin_sidebar.jsp"/>
             <div class="main-content">
 
-    <div class="page-header">
-        <h2 class="page-title">부서 관리</h2>
-    </div>
+                <div class="page-header">
+                    <h2 class="page-title">부서 관리</h2>
+                    <div class="btn-group">
+                        <input type="button" value="+ 부서 추가하기" onclick="openModal()"/> </div>
+                </div>
 
-    <div class="dashboard-grid">
+                <div class="dashboard-grid">
 
-        <div class="table-card">
-            <table>
-                <tr>
-                    <th>부서번호</th>
-                    <th>부서명</th>
-                    <th>tel</th>
-                    <th>setting</th>
-                </tr>
-                <c:forEach var="dept" items="${deptlist}">
-                    <tr>
-                        <td>${dept.deptno}</td>
-                        <td>${dept.dname}</td>
-                        <td>${dept.dtel}</td>
-                        <td>
-                            <input type="button" value="수정"/>
-                            <input type="button" value="삭제"/>
-                        </td>
-                    </tr>
-                </c:forEach>
-            </table>
+                    <div class="table-card">
+                        <table>
+                            <tr>
+                                <th>부서번호</th>
+                                <th>부서명</th>
+                                <th>tel</th>
+                                <th>setting</th>
+                            </tr>
+                            <c:forEach var="dept" items="${deptlist}">
+                                <tr>
+                                    <td>${dept.deptno}</td>
+                                    <td>${dept.dname}</td>
+                                    <td>${dept.dtel}</td>
+                                    <td>
+                                        <input type="button" value="수정"
+                                            onclick="openUpdModal('${dept.deptno}','${dept.dname}', '${dept.dtel}')"/>
+                                        <input type="button" value="삭제"
+                                            onclick="del('${dept.dname}')"/>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                    </div>
+
+                    <div class="table-card">
+                        <table>
+                            <caption>부서별 인원 수</caption>
+                            <c:forEach var="count" items="${memberCnt}">
+                                <tr>
+                                    <th>${count.deptName}</th>
+                                    <td>
+                                        <span class="count-badge">
+                                            ${count.sawonCount}명
+                                        </span>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="summary-card">
+                        <div class="summary-title">전체 부서 수</div>
+                        <div class="summary-value">${deptcnt}</div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-title">최근 충원 부서</div>
+                    <c:if test="${ not empty cur_deptList }">
+                        <c:forEach var="cur" items="${cur_deptList}">
+                            <div class="summary-value">${cur.dname}</div>
+                        </c:forEach>
+                    </c:if>
+                </div>
+            </div>
         </div>
 
-        <div class="table-card">
-            <table>
-                <caption>부서별 인원 수</caption>
-                <c:forEach var="count" items="${memberCnt}">
-                    <tr>
-                        <th>${count.deptName}</th>
-                        <td>
-                            <span class="count-badge">
-                                ${count.sawonCount}명
-                            </span>
-                        </td>
-                    </tr>
-                </c:forEach>
-            </table>
-        </div>
-
-    </div>
-
-    <div class="summary-card">
-            <div class="summary-title">전체 부서 수</div>
-            <div class="summary-value">${deptcnt}</div>
-    </div>
-
-    <div class="summary-card">
-        <div class="summary-title">최근 충원 부서</div>
-        <c:if test="${ not empty cur_deptList }">
-            <c:forEach var="cur" items="${cur_deptList}">
-                <div class="summary-value">${cur.dname}</div>
-            </c:forEach>
-        </c:if>
-        
-    </div>
-
-</div>
+        <!-- 부서 모달창 -->
+        <div id="jobModal" class="modal-overlay">
+            <div class="modal-content-box">
+                <div class="modal-header">
+                    <h3 id="modalTitle">새 직급 등록</h3>
+                    <span class="close-btn" onclick="closeModal()">&times;</span>
+                </div>
+                
+                <form id="modalForm" method="post">
+                    <input name="ori_deptno" type="hidden"/>
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <label for="deptno">부서번호</label>
+                            <input type="text" id="deptno" name="deptno" placeholder="예: 60" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="dname">부서명</label>
+                            <input type="text" id="dname" name="dname" placeholder="예: oo부" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="dtel">부서 전화번호</label>
+                            <input type="text" id="dtel" name="dtel" placeholder="예: xxx-xxx-xxxx" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn-cancel" value="취소" onclick="closeModal()"/>
+                        <input type="button" id="submitBtn" class="btn-submit"value="등록하기"
+                                onclick="send(this.form)"/>
+                    </div>
+                </form>
+            </div>
         </div>
     </body>
     

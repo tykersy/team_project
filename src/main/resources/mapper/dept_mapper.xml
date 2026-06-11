@@ -67,5 +67,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ORDER BY sawonCount DESC
     </select>
 
-    
+    <!-- 부서 정보 수정 -->
+    <update id="update"
+            parameterType="java.util.Map">
+        update dept set deptno = #{vo.deptno}, dname = #{vo.dname}, dtel = #{vo.dtel}
+        WHERE deptno = #{ori_deptno}
+    </update>
+
+    <!-- 부서명, 부서번호 중복체크 -->
+    <select id="selectCheck"
+            parameterType="dept"
+            resultType="dept">
+        select * from dept where deptno = #{deptno} and dname = #{dname}
+    </select>
+
+    <!-- 부서등록 -->
+    <insert id="insertDept"
+            parameterType="dept">
+        insert into dept values (#{deptno}, #{dname}, #{dtel})
+    </insert>
+
+    <!-- 부서 삭제 -->
+    <delete id="deleteDept"
+            parameterType="String">
+        delete from dept where dname = #{dname}
+    </delete>
 </mapper>

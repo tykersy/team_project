@@ -388,7 +388,7 @@
             </div>
         </div>
 
-        <!-- 직급 추가 모달창 -->
+        <!-- 직급 모달창 -->
         <div id="jobModal" class="modal-overlay">
             <div class="modal-content-box">
                 <div class="modal-header">
