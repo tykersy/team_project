@@ -84,58 +84,46 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <!-- 일일 회사 근태 현황-->
-    <select id="totalAllTa" parameterType="int" resultType="java.util.Map">
+    <select id="totalAllTa" resultType="java.util.Map">
         SELECT 
-            s.deptno,
-            s.sabun,
-            s.saname,
-            s.sahire,
-
-            COUNT(CASE 
-                WHEN sl.use_date IS NULL 
-                AND t.checkin IS NOT NULL 
-                AND TIME(t.checkin) &lt;= '09:00:00' THEN 1 
+            COUNT(CASE
+                WHEN sl.use_date IS NULL
+                AND t.checkin IS NOT NULL
+                AND TIME(t.checkin) &lt;= '09:00:00' THEN 1
             END) AS normalCount,        -- 정상 출근
 
-            COUNT(CASE 
-                WHEN sl.use_date IS NULL 
-                AND t.checkin IS NOT NULL 
-                AND TIME(t.checkin) > '09:00:00' THEN 1 
+            COUNT(CASE
+                WHEN sl.use_date IS NULL
+                AND t.checkin IS NOT NULL
+                AND TIME(t.checkin) > '09:00:00' THEN 1
             END) AS lateCount,          -- 지각
 
-            COUNT(CASE 
-                WHEN sl.use_date IS NOT NULL 
-                AND sl.approve = true 
-                AND sl.use_days = 0.5 THEN 1 
+            COUNT(CASE
+                WHEN sl.use_date IS NOT NULL
+                AND sl.approve = true
+                AND sl.use_days = 0.5 THEN 1
             END) AS halfCount,          -- 반차
 
-            COUNT(CASE 
-                WHEN sl.use_date IS NOT NULL 
-                AND sl.approve = true 
-                AND sl.use_days = 1 THEN 1 
+            COUNT(CASE
+                WHEN sl.use_date IS NOT NULL
+                AND sl.approve = true
+                AND sl.use_days = 1 THEN 1
             END) AS leaveCount,         -- 연차
 
-            COUNT(CASE 
-                WHEN t.checkin IS NULL 
-                AND t.checkout IS NULL 
-                AND sl.use_date IS NULL THEN 1 
+            COUNT(CASE
+                WHEN t.checkin IS NULL
+                AND t.checkout IS NULL
+                AND sl.use_date IS NULL THEN 1
             END) AS absentCount         -- 결근
 
-        FROM staff s
-        LEFT JOIN ta t 
+        FROM sawon s
+        LEFT JOIN ta t
             ON t.sabun = s.sabun
-            AND DAYOFWEEK(t.day) NOT IN (1, 7)   -- 주말 제외
-            AND t.day &lt;= CURDATE()
-        LEFT JOIN sleave_log sl 
-            ON sl.sabun = s.sabun 
+            AND t.day = CURDATE()           -- 오늘 날짜만
+        LEFT JOIN sleave_log sl
+            ON sl.sabun = s.sabun
             AND sl.approve = true
-            AND sl.use_date = t.day
-
-        GROUP BY 
-            s.deptno, s.sabun, s.saname, s.sahire
-
-        ORDER BY 
-            s.deptno, s.sabun
+            AND sl.use_date = CURDATE()     -- 오늘 날짜만
     </select>
     
 </mapper>

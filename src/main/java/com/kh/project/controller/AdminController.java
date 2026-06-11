@@ -31,7 +31,10 @@ public class AdminController {
     private final UserDAO userdao;
     
     @GetMapping("/admin_main.do")
-    public String toMain() {
+    public String toMain(Model model) {
+
+        Map<String, Integer> todayTa = tadao.totalAllTa();
+        model.addAttribute("todayTa", todayTa);
         
         return "/admin_main/main";
     }
@@ -68,6 +71,7 @@ public class AdminController {
 
         return "admin_ta/admin_ta_view";
     }
+
 
     
     

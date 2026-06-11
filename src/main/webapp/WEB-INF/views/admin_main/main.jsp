@@ -117,7 +117,7 @@
             </div>
         </div>
 
-        <script>
+        <script th:inline="javascript">
         // 1. 근태 현황 도넛 차트 (Doughnut)
         const ctxAttendance = document.getElementById('attendanceChart').getContext('2d');
         new Chart(ctxAttendance, {
@@ -125,7 +125,13 @@
             data: {
                 labels: ['정상출근', '지각', '조퇴', '휴가/휴무', '결근'],
                 datasets: [{
-                    data: [120, 8, 3, 15, 2], // 임시 데이터 (나중에 DB값 매핑)
+                    data: [
+                        [[${todayTa.normalCount}]],
+                        [[${todayTa.lateCount}]],
+                        [[${todayTa.halfCount}]],
+                        [[${todayTa.leaveCount}]],
+                        [[${todayTa.absentCount}]]
+                        ], // 임시 데이터 (나중에 DB값 매핑)
                     backgroundColor: [
                         '#2ed573', // 정상출근 (초록)
                         '#ffa502', // 지각 (주황)
