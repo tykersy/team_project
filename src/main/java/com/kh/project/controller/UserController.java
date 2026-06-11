@@ -20,6 +20,7 @@ import com.kh.project.vo.CalendarDayVO;
 import com.kh.project.vo.SawonVO;
 import com.kh.project.vo.SleaveLogVO;
 import com.kh.project.vo.SleaveVO;
+import com.kh.project.vo.TAVO;
 import com.kh.project.vo.UserVO;
 
 import jakarta.servlet.http.HttpSession;
@@ -32,7 +33,7 @@ import tools.jackson.databind.ObjectMapper;
 
 @Controller
 @RequiredArgsConstructor
-public class UserContorller {
+public class UserController {
 
     //userDAO
     private final UserDAO userDao;
@@ -96,14 +97,21 @@ public class UserContorller {
         //세션에 저장된 사번으로 유저 정보 조회
         int sabun = (int) session.getAttribute("user");
         
+        //오늘 년/월을 구하여 포멧을 지정
+        LocalDate now = LocalDate.now();
+
+        Map<String, Object> monthlyTAMap = new HashMap<>();
+        monthlyTAMap.put("sabun", sabun);
+        monthlyTAMap.put("year", now.getYear());
+        monthlyTAMap.put("month", now.getMonthValue()); 
+        monthlyTAMap.put("orderBy", "desc");
+
         UserVO userInfo = userDao.userMyPage(sabun); // 사원 기본 정보
-        List<UserVO> userTA = userDao.userTa(sabun); // 월 출/퇴근 조회
+        List<TAVO> userTA = userDao.getMonthlyTA(monthlyTAMap); // 월 출/퇴근 조회
         Map<String,String> userTotalTA = userDao.userTotalTa(sabun); // 총 근무 시간, 일
         SleaveVO userSleave = sleaveDAO.sawonLeave(sabun); // 사원 연차 조회
         List<SleaveLogVO> userSleaveLog = sleaveDAO.sleaveLogSelect(sabun); //사원 연차 사용 조회
-
-        //오늘 년/월을 구하여 포멧을 지정
-        LocalDate now = LocalDate.now();
+        
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월");
         String today = now.format(formatter);
 
@@ -125,11 +133,11 @@ public class UserContorller {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("sabun", sabun);
-        map.put("year", now.getYear());
+        //재활용 하되 month이 필요없음
+        monthlyTAMap.remove("month");
+        monthlyTAMap.remove("orderBy");
 
-        List<Map<String,Object>> yearlyTa = userDao.getYearlyTa(map);
+        List<Map<String,Object>> yearlyTa = userDao.getYearlyTa(monthlyTAMap);
 
         model.addAttribute("info", userInfo);
         model.addAttribute("userTaList", userTA);

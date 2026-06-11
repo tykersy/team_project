@@ -17,25 +17,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where sabun=#{sabun}
     </select>
 
-    <!-- 마이페이지 월 출/퇴근 조회 -->
-    <select id="userTa" parameterType="int" resultType="user" >
-        select  t.day,
-                TIME_FORMAT(t.checkin, '%H:%i') as checkin,
-                TIME_FORMAT(t.checkout, '%H:%i') as checkout,
-                TIME_FORMAT(timediff(t.checkout, t.checkin), '%H시 %i분') as working_time,
-                CASE
-                    WHEN TIME(t.checkin) > '09:00:00' THEN 'late'
-                    ELSE 'normal'
-                END AS status
-        FROM ta t
-        LEFT JOIN sleave_log sl
-            ON  t.sabun    = sl.sabun
-            AND t.day      = sl.use_date
-        where t.sabun=#{sabun} AND YEAR(t.day) = YEAR(NOW())
-                      AND MONTH(t.day) = MONTH(NOW())
-        order by `day` desc
-    </select>
-
     <!-- 마이페이지 월 총근무시간 & 근무일 조회 -->
     <select id="userTotalTa" parameterType="int" resultType="java.util.Map">
         SELECT  COUNT(checkin) AS work_day,
@@ -66,6 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         AND MONTH(day) = MONTH(NOW());
     </select>
 
+    <!-- 마이페이지 월 출/퇴근 조회 -->
     <select id="getMonthlyTA" resultType="ta">
         WITH RECURSIVE calendar AS (
             SELECT GREATEST(
@@ -83,8 +65,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT
             #{sabun}                             AS sabun,
             DATE_FORMAT(c.day, '%Y-%m-%d')        AS day,
-            t.checkin,
-            t.checkout,
+            TIME_FORMAT(t.checkin, '%H:%i') as checkin,
+            TIME_FORMAT(t.checkout,'%H:%i') as checkout,
+            TIME_FORMAT(timediff(t.checkout, t.checkin), '%H시 %i분') as working_time,
             CASE
                 WHEN sl.use_date IS NOT NULL AND sl.use_days = 0.5 THEN 'half'
                 WHEN sl.use_date IS NOT NULL AND sl.use_days = 1 THEN 'leave'
@@ -133,7 +116,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             COUNT(CASE WHEN sl.use_date IS NULL AND t.checkin IS NOT NULL AND TIME(t.checkin) &lt;= '09:00:00' THEN 1 END) AS normalCount,
             COUNT(CASE WHEN sl.use_date IS NULL AND t.checkin IS NOT NULL AND TIME(t.checkin) &gt; '09:00:00' THEN 1 END) AS lateCount,
             COUNT(CASE WHEN sl.use_date IS NOT NULL AND sl.approve = true THEN 1 END) AS leaveCount,
-            COUNT(CASE WHEN (t.day IS NULL OR t.checkin IS NULL OR t.checkout IS NULL) AND sl.use_date IS NULL THEN 1 END) AS absentCount,
+            COUNT(CASE WHEN t.day IS NULL AND sl.use_date IS NULL THEN 1 END) AS absentCount,
             ROUND(
                 COALESCE(
                     SUM(CASE WHEN sl.use_date IS NULL AND t.checkin IS NOT NULL AND t.checkout IS NOT NULL

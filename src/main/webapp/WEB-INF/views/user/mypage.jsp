@@ -43,7 +43,7 @@
                     <div class="info-item"><label>소속 부서</label><div class="val">${info.dname}</div></div>
                     <div class="info-item"><label>직위</label><div class="val">${info.sajob}</div></div>
                     <div class="info-item"><label>입사일</label><div class="val mono">${info.sahire}</div></div>
-                    <div class="info-item"><label>계약 기간</label><div class="val mono">2024. 03. 04 ~ 2026. 03. 03</div></div>
+                    <div class="info-item"><label>계약 기간</label><div class="val mono">수정필요함</div></div>
                 </div>
             </div>
         
@@ -52,8 +52,8 @@
             <div class="info-grid">
                 <div class="info-item"><label>소정 근로시간</label><div class="val">주 40시간</div></div>
                 <div class="info-item"><label>근무 요일</label><div class="val">월 ~ 금</div></div>
-                <div class="info-item"><label>출근 시간</label><div class="val mono">09:00</div></div>
-                <div class="info-item"><label>퇴근 시간</label><div class="val mono">18:00</div></div>
+                <div class="info-item"><label>출근 시간</label><div class="val mono">09:00 ( 수정필요함 )</div></div>
+                <div class="info-item"><label>퇴근 시간</label><div class="val mono">18:00 ( 수정필요함 )</div></div>
                 <div class="info-item"><label>기본급</label><div class="val mono"><fmt:formatNumber value="${info.sapay}" pattern="#,###" /> 원</div></div>
                 <div class="info-item"><label>연봉</label><div class="val mono"><fmt:formatNumber value="${info.sapay*12}" pattern="#,###" /> 원</div></div>
             </div>
@@ -102,13 +102,16 @@
                     <c:forEach var="taList" items="${userTaList}">
                         <tr>
                             <!--날짜부분 시간 안나오게 수정-->
-                            <td class="label">${fn:substring(taList.day, 0, 10)}</td>
+                            <td class="label">${taList.day}</td>
                             <td>${taList.checkin}</td>
                             <td>${taList.checkout}</td>
                             <td>${taList.working_time}</td>
                             <td>
                                 <span class="tag ${taList.status}">
                                     <c:choose>
+                                        <c:when test="${taList.status eq 'absent'}">결근</c:when>
+                                        <c:when test="${taList.status eq 'half'}">반차</c:when>
+                                        <c:when test="${taList.status eq 'leave'}">휴가</c:when>
                                         <c:when test="${taList.status eq 'late'}">지각</c:when>
                                         <c:when test="${taList.status eq 'normal'}">정상</c:when>
                                         <c:otherwise>기타</c:otherwise>
