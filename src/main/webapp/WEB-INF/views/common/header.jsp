@@ -33,10 +33,10 @@
 
 <style>
     .header-profile-box {
-        display: flex !important;       /* ⚡ 무조건 가로로 정렬해! */
-        align-items: center !important; /* ⚡ 위아래 정중앙에 맞춰! */
-        gap: 10px !important;           /* ⚡ 글자와 동그라미 사이 간격 10px */
-        white-space: nowrap !important; /* ⚡ 글자가 절대로 밑으로 안 깨지게 한 줄로 고정! */
+        display: flex !important;       /* 무조건 가로로 정렬 */
+        align-items: center !important; /* 위아래 정중앙 맞춤 */
+        gap: 10px !important;           /* 글자와 동그라미 사이 간격 10px */
+        white-space: nowrap !important; /* 글자가 절대로 밑으로 안 깨지게 한 줄로 고정 */
     }
 
     /* 헤더 전체를 감싸는 컨테이너 */
@@ -65,10 +65,6 @@
 
     <div class="header-right">
 
-        <button class="icon-btn">
-            🔔
-        </button>
-
       <c:if test="${loginMember.sajob == '관리자' || loginMember.sajob == 'CEO'}">
         <a href="/admin" class="admin-link">
           관리자
@@ -93,7 +89,7 @@
                 
                 <c:otherwise>
 
-                    <%-- 로그인이 안 되어있거나 사번 정보가 없을 때 --%>
+                    <!-- 로그인이 안 되어있거나 사번 정보가 없을 때 -->
                     <a href="/login" class="login_href" style="display: contents">
                         <span class="profile-text" style="font-size: 0.95rem; color: #94a3b8; font-weight: 500;">
                             로그인 필요
