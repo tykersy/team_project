@@ -103,4 +103,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
         </update>
 
+        <select id="selectDeptToday" parameterType="int" resultType="com.kh.project.vo.CalendarVO">
+            SELECT dcal_idx, deptno, sabun, DATE_FORMAT(start_date, '%Y-%m-%d') AS start_date, end_date, title, content
+            FROM dcalendar 
+            WHERE deptno = #{deptno} 
+            AND DATE(start_date) = CURDATE()
+        </select>
+
 </mapper>
