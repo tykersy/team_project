@@ -38,8 +38,7 @@ body {
 }
 
 /* ── 로고 ── */
-body::before {
-  content: 'Linked';
+.logo-link {
   position: fixed;
   top: 28px;
   left: 32px;
