@@ -11,8 +11,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!-- 사원 연차 insert -->
     <insert id="sleave_logApplyInsert" parameterType="sleavelog">
-        insert into sleave_log
-        values(null, #{sabun}, #{leave_type}, #{use_date}, #{use_days}, #{reason}, now(), DEFAULT);
+        insert into sleave_log(sabun, leave_type, use_date, use_days, reason, created_at, approve)
+        values(#{sabun}, #{leave_type}, #{use_date}, #{use_days}, #{reason}, now(), DEFAULT);
     </insert>
 
+    <!-- 관리자가 승인할 연차정보 log_id로 불러오기 -->
+    <select id="selectOne"
+            parameterType="int"
+            resultType="sleavelog">
+        select * from sleave_log
+        WHERE log_id = #{log_id}
+    </select>
+
+    <!-- 연차 승인 처리 (approve상태를 1로 변경)-->
+    <update id="changeApprove"
+            parameterType="int">
+        update sleave_log set approve = 1 
+        WHERE log_id = #{log_id}
+    </update>
 </mapper>

@@ -39,4 +39,10 @@ public interface SleaveDAO {
 
     //승인 대기중인 휴가 리스트 조회
     List<SleaveLogVO> selectpendingList();
+
+    //log_id로 승인할 연차 정보 불러오기
+    SleaveLogVO selectOne(int log_id);
+
+    //승인된 연차 approve 상태를 1로 변경
+    int changeApprove(int log_id);
 }

@@ -14,21 +14,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into sleave values (#{sabun}, 15.0, 0, 0, 0);
     </insert>
 
-    <!-- 연차 사용 -->
+    <!-- 연차 사용시 잔여 갯수 차감 -->
     <update id="sleaveApplyUpdate" parameterType="sleavelog">
         update sleave
         <set>
             <choose>
-                <when test="leave_type eq 'annual'">
+                <when test="leave_type == 'annual'">
                     annual = annual - #{use_days}
                 </when>
-                <when test="leave_type eq 'mc'">
+                <when test="leave_type == 'mc'">
                     mc = mc - #{use_days}
                 </when>
-                <when test="leave_type eq 'health'">
+                <when test="leave_type == 'health'">
                     health = health - #{use_days}
                 </when>
-                <when test="leave_type eq 'etc'">
+                <when test="leave_type == 'etc'">
                     etc = etc - #{use_days}
                 </when>
             </choose>
@@ -59,7 +59,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!-- 최근 승인 완료된 휴가 5건 정보 조회 -->
     <select id="selectApprovedLeaves"
             resultType="sleavelog">
-        SELECT s.saname, d.dname, l.leave_type, l.use_date, l.use_days FROM sleave_log l
+        SELECT s.saname, d.dname, l.leave_type, l.use_date, l.use_days, l.reason, l.created_at
+        FROM sleave_log l
         JOIN sawon s ON l.sabun = s.sabun
         JOIN dept d ON s.deptno = d.deptno
         WHERE l.approve = 1
@@ -109,4 +110,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         WHERE l.approve = false
         ORDER BY l.created_at ASC
     </select>
+
+    
 </mapper>

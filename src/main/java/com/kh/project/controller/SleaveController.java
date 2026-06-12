@@ -56,4 +56,21 @@ public class SleaveController {
 
     }
 
+    // 연차 사용 승인
+    @GetMapping("/admin_leave_approval")
+    public String leaveApproval(int log_id){
+
+        //파라미터로 받은 log_id로 승인할 연차정보 불러오기
+        SleaveLogVO vo = sleaveDao.selectOne(log_id);
+
+        //승인할 연차 승인처리하기
+        int approved = sleaveDao.changeApprove(log_id);
+
+        //승인된 연차 사용 사원의 연차 갯수 차감
+        int res = sleaveDao.sleaveApplyUpdate(vo);
+
+        return "redirect:/admin_leave";
+
+    }
+
 }
