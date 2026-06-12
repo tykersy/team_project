@@ -43,7 +43,8 @@
         </script>
     </head>
     <body>
-        
+        <!--상단 아이콘 클릭되게 변경-->
+        <span class="logo-link" onclick="location.href='/'">Linked</span>
         <form>
             <h2>로그인</h2>
             <table>
