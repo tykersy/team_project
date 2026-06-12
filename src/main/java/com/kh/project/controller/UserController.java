@@ -252,10 +252,8 @@ public class UserController {
         if(leaveBool){
             //sleave 테이블 반영
             int resultSleave = sleaveDAO.sleave_logApplyInsert(logVo);
-            //sleaveLog 테이블 반영
-            int resultSleave_log = sleaveDAO.sleaveApplyUpdate(logVo);
 
-            if(resultSleave_log == 0 && resultSleave == 0){ // 신청 실패
+            if(resultSleave == 0){ // 신청 실패
                 map.put("result", "failure");
             }else{ // 신청 성공
                 map.put("result", "success");
