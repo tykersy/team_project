@@ -160,7 +160,7 @@
 
                     <jsp:include page="/WEB-INF/views/calendar/calendar_date_modal.jsp" />
                     <jsp:include page="/WEB-INF/views/calendar/calendar_detail_modal.jsp" />
-
+                    <jsp:include page="/WEB-INF/views/common/msg.jsp" />
                 </div>
             </div>
 

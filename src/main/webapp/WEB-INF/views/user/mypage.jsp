@@ -29,8 +29,7 @@
             <button class="tab-btn active" onclick="switchTab(0)"> 내 프로필 </button>
             <button class="tab-btn" onclick="switchTab(1)"> 출 / 퇴근</button>
             <button class="tab-btn" onclick="switchTab(2)"> 급여</button>
-            <button class="tab-btn" onclick="switchTab(3)"> 근태현황</button>
-            <button class="tab-btn" onclick="switchTab(4)"> 연차</button>
+            <button class="tab-btn" onclick="switchTab(3)"> 연차</button>
         </div>
         
         <!-- ─────────────────────────────── TAB 1: 내프로필 ─── -->
@@ -161,62 +160,10 @@
             </table>
             </div>
         </div>
-        
-        <!-- ─────────────────────────────── TAB 4: 근태현황 ─── -->
-        <div class="panel" id="panel-3">
-            <div class="card">
-            <div class="card-title"><span class="dot"></span>이번 달 근태 요약</div>
-            <div class="attend-grid">
-                <div class="attend-stat"><span class="n green">${yearlyTA[0].normalCount}</span><span class="lbl">정상 출근</span></div>
-                <div class="attend-stat"><span class="n yellow">${yearlyTA[0].lateCount}</span><span class="lbl">지각</span></div>
-                <div class="attend-stat"><span class="n red">${yearlyTA[0].absentCount}</span><span class="lbl">결근</span></div>
-            </div>
-            </div>
-        
-            <div class="card mini-cal">
-                <div class="card-title"><span class="dot"></span>근태 캘린더</div>
-
-                <%-- 네비게이션 --%>
-                <div class="cal-header">
-                    <div class="cal-title" id="calTitle"></div>
-                </div>
-
-                <%-- TUI Calendar 컨테이너 --%>
-                <div id="tuiCal" style="height:580px;"></div>
-
-                <%-- 범례 --%>
-                <div class="legend">
-                    <div class="legend-item"><div class="legend-dot" style="background:rgba(34,197,94,0.5)"></div>정상출근</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:rgba(245,158,11,0.5)"></div>지각</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:rgba(239,68,68,0.4)"></div>결근</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:rgba(99,102,241,0.5)"></div>휴가</div>
-                </div>
-            </div>
-        
-            <div class="card">
-            <div class="card-title"><span class="dot"></span>연간 근태 현황</div>
-            <table>
-                <thead>
-                <tr><th>월</th><th>정상</th><th>지각</th><th>결근</th><th>총 근무(h)</th></tr>
-                </thead>
-                <tbody>
-                <c:forEach var="monthTA" items="${yearlyTA}" >
-                    <tr>
-                        <td class="label">${monthTA.month}월</td>
-                        <td>${monthTA.normalCount}</td>
-                        <td>${monthTA.lateCount}</td>
-                        <td>${monthTA.absentCount}</td>
-                        <td>${monthTA.totalWorkTime}</td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
-            </div>
-        </div>
 
             <!-- 5 연차 탭 -->
 
-            <div class="panel" id="panel-4">
+            <div class="panel" id="panel-3">
 
                 <!-- 연차 잔여 현황 카드 -->
                 <div class="card">
@@ -305,6 +252,7 @@
             </div>
 
         </div>
+        <jsp:include page="/WEB-INF/views/common/msg.jsp" />
         </main>
         </div>
         
@@ -322,153 +270,6 @@
                     p.classList.toggle('active', i === idx);
                 });
             }
-
-            const taData = JSON.parse('${taJson}');
-
-            const styleMap = {
-                normal : { label: '정상출근', bg: 'rgba(34,197,94,0.15)',  border: '#16a34a', text: '#15803d' },
-                late   : { label: '지각',    bg: 'rgba(245,158,11,0.15)', border: '#d97706', text: '#b45309' },
-                absent : { label: '결근',    bg: 'rgba(239,68,68,0.12)',  border: '#dc2626', text: '#b91c1c' },
-                leave  : { label: '휴가',    bg: 'rgba(99,102,241,0.15)', border: '#6366f1', text: '#4338ca' },
-                half   : { label: '반차',    bg: 'rgba(99,102,241,0.10)', border: '#a5b4fc', text: '#6366f1' }
-            };
-
-            const taMap = {};
-            taData.forEach(function(item) { taMap[item.date] = item.status; });
-
-            const now          = new Date();
-            const currentYear  = now.getFullYear();
-            const currentMonth = now.getMonth();
-
-            function pad(n) { return String(n).padStart(2, '0'); }
-
-            function renderCal() {
-                document.getElementById('calTitle').textContent =
-                    currentYear + '년 ' + (currentMonth + 1) + '월';
-
-                const container = document.getElementById('tuiCal');
-                container.innerHTML = '';
-
-                const table = document.createElement('table');
-                table.style.cssText = 'width:100%; border-collapse:collapse; table-layout:fixed;';
-
-                // 요일 헤더
-                const thead = document.createElement('thead');
-                const headRow = document.createElement('tr');
-                ['일','월','화','수','목','금','토'].forEach(function(d, i) {
-                    const th = document.createElement('th');
-                    th.textContent = d;
-                    var color = (i === 0) ? '#dc2626' : (i === 6) ? '#6366f1' : '#6b7280';
-                    th.style.cssText =
-                        'padding:10px 0;' +
-                        'font-size:12px;' +
-                        'font-weight:600;' +
-                        'color:' + color + ';' +
-                        'text-align:center;' +
-                        'border-bottom:2px solid #e5e7eb;';
-                    headRow.appendChild(th);
-                });
-                thead.appendChild(headRow);
-                table.appendChild(thead);
-
-                const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-                const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-                const tbody = document.createElement('tbody');
-                let day = 1;
-                let row = document.createElement('tr');
-
-                for (let i = 0; i < firstDay; i++) {
-                    row.appendChild(makeEmptyCell());
-                }
-
-                while (day <= lastDate) {
-                    if (row.children.length === 7) {
-                        tbody.appendChild(row);
-                        row = document.createElement('tr');
-                    }
-
-                    const dateStr = currentYear + '-' + pad(currentMonth + 1) + '-' + pad(day);
-                    const status  = taMap[dateStr];
-                    const s       = status ? styleMap[status] : null;
-                    const dow     = (firstDay + day - 1) % 7;
-                    const isToday = now.getDate() === day;
-
-                    const td = document.createElement('td');
-                    td.style.cssText =
-                        'height:76px;' +
-                        'vertical-align:top;' +
-                        'padding:6px;' +
-                        'border:1px solid #f0f0f0;' +
-                        'background:' + (s ? s.bg : 'transparent') + ';' +
-                        (s ? 'border-left:3px solid ' + s.border + ';' : '');
-
-                    // 날짜 숫자
-                    const dateNum = document.createElement('div');
-                    dateNum.textContent = day;
-                    var numColor;
-                    if (isToday)       numColor = '#fff';
-                    else if (dow === 0) numColor = '#dc2626';
-                    else if (dow === 6) numColor = '#6366f1';
-                    else if (s)         numColor = s.text;
-                    else                numColor = '#374151';
-
-                    dateNum.style.cssText =
-                        'font-size:13px;' +
-                        'font-weight:' + (isToday ? '800' : '500') + ';' +
-                        'color:' + numColor + ';' +
-                        'width:24px;height:24px;' +
-                        'line-height:24px;' +
-                        'text-align:center;' +
-                        'border-radius:50%;' +
-                        'background:' + (isToday ? '#2563eb' : 'transparent') + ';' +
-                        'margin-bottom:5px;';
-                    td.appendChild(dateNum);
-
-                    // 상태 배지
-                    if (s) {
-                        const badge = document.createElement('div');
-                        badge.textContent = s.label;
-                        badge.style.cssText =
-                            'font-size:11px;' +
-                            'font-weight:600;' +
-                            'color:' + s.text + ';' +
-                            'background:white;' +
-                            'border:1px solid ' + s.border + ';' +
-                            'border-radius:4px;' +
-                            'padding:2px 5px;' +
-                            'display:inline-block;' +
-                            'white-space:nowrap;';
-                        td.appendChild(badge);
-                    }
-
-                    row.appendChild(td);
-                    day++;
-
-                    //근태 확인버튼 이동용
-                    const params = new URLSearchParams(location.search);
-                    const tab = params.get("tab");
-
-                    if(tab !== null){
-                        switchTab(Number(tab));
-                    }
-                }
-
-                while (row.children.length < 7) {
-                    row.appendChild(makeEmptyCell());
-                }
-                tbody.appendChild(row);
-                table.appendChild(tbody);
-                container.appendChild(table);
-            }
-
-            function makeEmptyCell() {
-                const td = document.createElement('td');
-                td.style.cssText = 'height:76px;border:1px solid #f0f0f0;background:#fafafa;';
-                return td;
-            }
-
-            renderCal();
         </script>
     </body>
 </html>
