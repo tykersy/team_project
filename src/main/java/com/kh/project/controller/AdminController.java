@@ -7,10 +7,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.project.dao.DeptDAO;
@@ -19,7 +16,7 @@ import com.kh.project.dao.UserDAO;
 import com.kh.project.vo.DeptVO;
 import com.kh.project.vo.TAVO;
 
-import jakarta.websocket.OnClose;
+import lombok.RequiredArgsConstructor;
 
 
 @Controller

@@ -9,14 +9,6 @@
     <link rel="stylesheet" href="/css/sidebar.css">
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/board.css"> 
-
-    <script>
-    function deletePost(idx) {
-        if (confirm("정말 삭제하시겠습니까?")) {
-            location.href = "/board/delete?idx=" + idx;
-        }
-    }
-    </script>
 </head>
 <body>
 <div class="layout">
@@ -42,8 +34,7 @@
                 <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e5e7eb;">
                 
                 <div style="text-align: right; margin-top: 20px;">
-                    <!-- <a href="/board/update?idx=${board.idx}" class="btn-custom btn-primary">수정</a>
-                    <a href="#" onclick="deletePost(${board.idx}); return false;" class="btn-custom btn-danger">삭제</a> -->
+                
                     <a href="/board/list" class="btn-custom btn-secondary">목록으로</a>
                 </div>
             </div>
