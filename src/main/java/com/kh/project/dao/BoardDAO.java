@@ -5,24 +5,32 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
-@Repository // 스프링에게 이 클래스가 DB 소통을 담당하는 DAO라고 알려주는 어노테이션
+@Repository
 public class BoardDAO {
 
-    // MyBatis를 이용해 DB에 쿼리를 날려주는 핵심 객체
     private final SqlSession sqlSession;
 
     public BoardDAO(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
     }
 
-    // 네임스페이스를 지정해 XML 파일의 쿼리 아이디와 연결
     private static final String NAMESPACE = "com.kh.project.dao.BoardDAO.";
 
-    // 전체 게시글 목록
-    public List<BoardVO> getBoardList() {
-        // XML에 있는 id="getBoardList" 쿼리를 실행해서 리스트를 받아옴
-        return sqlSession.selectList(NAMESPACE + "getBoardList");
+    // 기존 페이징용 메서드와 별개로 대시보드용 메서드 추가
+    public List<BoardVO> getBoardListAll() {
+    return sqlSession.selectList(NAMESPACE + "getBoardListAll");
+    }
+
+    // 페이징 처리를 위해 Map을 인자로 받도록 변경
+    public List<BoardVO> getBoardList(Map<String, Object> map) {
+    return sqlSession.selectList(NAMESPACE + "getBoardList", map);
+    }
+    
+    // 전체 게시글 수 조회 (페이징 계산용)
+    public int getTotalCount(Map<String, Object> map) {
+    return sqlSession.selectOne(NAMESPACE + "getTotalCount", map);
     }
 
     // 게시글 작성

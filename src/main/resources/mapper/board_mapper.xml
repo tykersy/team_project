@@ -4,22 +4,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.project.dao.BoardDAO">
     
-    <select id="getBoardList" resultType="board">
-        SELECT 
-            b.idx,
-            b.sabun,
-            s.saname,
-            d.dname AS dept,
-            b.title,
-            b.content,
-            b.file,
-            b.views, 
-            SUBSTRING(b.created, 1, 10) AS created,
-            b.updated
-        FROM board b
-        LEFT JOIN sawon s ON b.sabun = s.sabun
-        LEFT JOIN dept d ON s.deptno = d.deptno
-        ORDER BY b.idx DESC
+    <select id="getBoardList" parameterType="map" resultType="board">
+    SELECT b.*, s.saname, d.dname AS dept 
+    FROM board b 
+    LEFT JOIN sawon s ON b.sabun = s.sabun 
+    LEFT JOIN dept d ON s.deptno = d.deptno 
+    <where>
+        <if test="keyword != null and keyword != ''">
+            AND b.title LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+    </where>
+    ORDER BY b.idx DESC 
+    LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="getTotalCount" parameterType="map" resultType="int">
+    SELECT COUNT(*) FROM board
+    <where>
+        <if test="keyword != null and keyword != ''">
+            AND title LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+    </where>
+    </select>
+
+    <select id="getBoardListAll" resultType="board">
+        SELECT * FROM board ORDER BY idx DESC LIMIT 5
     </select>
 
     <insert id="insertBoard" parameterType="board">
