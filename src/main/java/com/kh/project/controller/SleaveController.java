@@ -2,12 +2,14 @@ package com.kh.project.controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.project.dao.SawonDAO;
 import com.kh.project.dao.SleaveDAO;
@@ -70,6 +72,37 @@ public class SleaveController {
         int res = sleaveDao.sleaveApplyUpdate(vo);
 
         return "redirect:/admin_leave";
+
+    }
+
+    // 휴가 사용 신청 반려
+    @GetMapping("/admin_leave_reject")
+    @ResponseBody
+    public Map<String, Object> reject( int log_id, String reject_reason ){
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("log_id", log_id);
+        map.put("reject_reason", reject_reason);
+
+        int res = sleaveDao.reject(map);
+
+        map.put("result", res);
+
+        return map;
+    }
+
+    //검색한 사원의 연차사용 히스토리 
+    @GetMapping("/admin_leave_search_history")
+    @ResponseBody
+    public Map<String, Object> search_leave_history(String search_name){
+
+        List<SleaveLogVO> list = sleaveDao.search_leave_history(search_name);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", list);
+        map.put("search_name", search_name);
+
+        return map;
 
     }
 

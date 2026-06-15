@@ -1,0 +1,63 @@
+/* 근태 마감 페이지 전용 스타일 */
+        .filter-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .month-picker {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .month-picker input[type="month"] {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .btn-search {
+            background-color: #4f46e5;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-all-close {
+            background-color: #10b981;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-all-close:hover { background-color: #059669; }
+        
+        /* 테이블 내부 버튼 */
+        .btn-status-wait {
+            background-color: #f59e0b;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .btn-status-wait:hover { background-color: #d97706; }
+        
+        .badge-complete {
+            background-color: #e6f4ea;
+            color: #137333;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: bold;
+            display: inline-block;
+        }

@@ -9,6 +9,111 @@
         <link rel="stylesheet" href="/css/admin/sidebar.css">
         <link rel="stylesheet" href="/css/admin/main.css">
         <link rel="stylesheet" href="/css/admin/leave_main.css">
+
+        <script>
+            let searched = false;
+
+            // 1. 모달창 열기
+            function openRejectModal(log_id) {
+                document.getElementById("modal_log_id").value = log_id; // 어떤 글을 반려할지 ID 저장
+                document.getElementById("reject_reason").value = ""; // 기존에 썼던 글 초기화
+                document.getElementById("rejectModal").classList.add("active"); // 모달 띄우기
+            }
+
+            // 2. 모달창 닫기
+            function closeRejectModal() {
+                document.getElementById("rejectModal").classList.remove("active"); // 모달 숨기기
+            }
+
+            // 3. 반려 데이터 서버로 전송
+            function submitReject() {
+                let log_id = document.getElementById("modal_log_id").value;
+                let reason = document.getElementById("reject_reason").value;
+                
+                if(reason === "") {
+                    alert("반려 사유를 반드시 입력해주세요.");
+                    document.getElementById("reject_reason").focus();
+                    return;
+                }
+                
+                // 안전하게 전송하기 위해 POST 방식 비동기 통신 이용
+                // URL과 파라미터명은 작성하시는 Controller 규격에 맞게 수정하세요.
+                fetch("/admin_leave_reject?log_id="+log_id+"&reject_reason="+encodeURIComponent(reason))
+                .then( data => data.json() )
+                .then(res => {
+                    if(res.result == 1) {
+                        alert("반려 처리가 완료되었습니다.");
+                        closeRejectModal();
+                        location.reload(); // 성공 후 대기목록 갱신을 위해 페이지 새로고침
+                    } else {
+                        alert("서버 오류로 인해 반려 처리에 실패했습니다.");
+                    }
+                })
+                .catch(err => {
+                    console.error("에러:", err);
+                    alert("통신 중 오류가 발생했습니다.");
+                });
+            }
+
+            function search_history(){
+
+                let search_name = document.getElementById("saname").value; //검색할 사원명
+
+                if( search_name === '' ){
+                    alert("검색할 사원명을 입력하세요")
+                    return;
+                }
+
+                fetch( "/admin_leave_search_history?search_name="+search_name )
+                .then( res => res.json() )
+                .then( data => {
+
+                    //사원명을 검색했다면 전역변수 searched를 true로 바꿔준다
+                    searched = true;
+
+                    let history_box = document.getElementById("history_content")
+                    history_box.style.display = 'none';
+
+                    //검색 결과를 담는 tbody
+                    let search_result = document.getElementById("search_result")
+                    search_result.style.display = 'block';
+
+                    if( data.list == null || data.list == '' ){
+                        //검색결과가 없을 때 보여줄 결과
+                        search_result.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px;">\${search_name}님에 대한 검색결과가 없습니다.</td></tr>`;
+                    }else{
+                        //받아온 데이터 출력문 작성하기
+                        let html = "";
+
+                        data.list.forEach(item => {
+                            // 날짜 데이터가 밀리세컨드(타임스탬프)로 올 경우를 대비해 YYYY-MM-DD 변환
+                            let dateStr = "";
+                            if(item.created_at) {
+                                let date = new Date(item.created_at);
+                                dateStr = date.getFullYear() + '-' + 
+                                          String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                                          String(date.getDate()).padStart(2, '0');
+                            }
+
+                            html += `<tr style="display: table-row !important; width: 100% !important;">
+                                <td>\${dateStr}</td>
+                                <td>\${item.saname || ''}</td>
+                                <td>\${item.dname || ''}</td>
+                                <td>\${item.leave_type || ''}</td>
+                                <td>\${item.use_date || ''}</td>
+                                <td>\${item.use_days || 0}일</td>
+                                <td>\${item.reason || ''}</td>
+                                </tr>`;
+                            });
+
+                        // 생성된 HTML 코드를 tbody 안에 집어넣기
+                        search_result.innerHTML = html;
+                    }
+
+                } )
+
+            }
+        </script>
     </head>
 
     <body>
@@ -54,7 +159,7 @@
                                     <td>
                                         <button class="btn-approve" 
                                             onclick="location.href='/admin_leave_approval?log_id=${pend.log_id}'">승인</button>
-                                        <button class="btn-reject" onclick="">반려</button>
+                                        <button class="btn-reject" onclick="openRejectModal('${pend.log_id}')">반려</button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -68,19 +173,20 @@
                             <a>결재 완료 히스토리</a>
                         </div>
                         <div class="search-filter-group">
-                            <input type="text" placeholder="사원명 검색...">
-                            <input type="button" value="검색" />
+                            <input type="text" id="saname" placeholder="사원명 검색...">
+                            <input type="button" value="검색" 
+                                onclick="search_history()"/>
                             <button class="btn-pdf-download">📄 PDF 내역 다운로드</button>
                         </div>
                     </div>
-                    <table class="data-table history-table">
+                    <table class="data-table">
                         <thead>
                             <tr>
                                 <th>신청일</th><th>이름</th><th>부서</th>
                                 <th>휴가</th><th>사용일</th><th>일수</th><th>사유</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="history_content">
                             <c:forEach var="appr" items="${approvedList}">
                                 <tr>
                                     <td><fmt:formatDate value="${appr.created_at}" pattern="yyyy-MM-dd"/></td>
@@ -92,11 +198,28 @@
                                     <td>${appr.reason}</td>
                                 </tr>
                             </c:forEach>
-                        </tbody>
+                            </tbody>
+
+                        <tbody id="search_result" style="display: none;">
+                        </tbody>    
                     </table>
                 </div>
             </div>
         </div>
     </body>
-    
+    <div id="rejectModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3>반려 사유 입력</h3>
+        <p>해당 휴가 신청을 반려하는 사유를 적어주세요.</p>
+        
+        <input type="hidden" id="modal_log_id">
+        
+        <textarea id="reject_reason" placeholder="반려 사유를 입력하세요... (최대 100자)"></textarea>
+        
+        <div class="modal-btn-group">
+            <button type="button" class="btn-modal-cancel" onclick="closeRejectModal()">취소</button>
+            <button type="button" class="btn-modal-submit" onclick="submitReject()">반려 확정</button>
+        </div>
+    </div>
+</div>
 </html>

@@ -3,6 +3,7 @@ package com.kh.project.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.project.vo.SalaryClosedVO;
 import com.kh.project.vo.TAVO;
 
 public interface TADAO {
@@ -23,6 +24,9 @@ public interface TADAO {
     List<Map<String, Object>> selectDeptTA(int deptno);
 
     //관리자 메인페이지 오늘 근태 현황
-     Map<String, Integer> totalAllTa();
+    Map<String, Integer> totalAllTa();
+
+    //관리자 근태 마감 처리를 위한 근태정보 불러오기
+    SalaryClosedVO selectTaConfirm(Map<String, Object> map);
 
 } 
