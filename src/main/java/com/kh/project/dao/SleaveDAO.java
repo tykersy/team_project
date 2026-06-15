@@ -45,4 +45,10 @@ public interface SleaveDAO {
 
     //승인된 연차 approve 상태를 1로 변경
     int changeApprove(int log_id);
+
+    //검색한 사원의 연차 사용 히스토리
+    List<SleaveLogVO> search_leave_history(String search_name);
+
+    //연차 사용 신청 반려
+    int reject(Map<String, Object> map);
 }

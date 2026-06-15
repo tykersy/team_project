@@ -29,4 +29,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update sleave_log set approve = 1 
         WHERE log_id = #{log_id}
     </update>
+
+    <!-- 검색한 사원의 연차 신청 히스토리 -->
+    <select id="search_leave_history"
+            resultType="sleavelog"
+            parameterType="String">
+        SELECT s.saname, d.dname, l.leave_type, l.use_date, l.use_days, l.reason, l.created_at
+        FROM sleave_log l
+        JOIN sawon s ON l.sabun = s.sabun
+        JOIN dept d ON s.deptno = d.deptno
+        WHERE s.saname = #{search_name}
+        ORDER BY l.approved_at DESC
+    </select>
+
+    <!-- 연차 사용 신청 반려 -->
+    <update id="reject"
+            parameterType="java.util.Map">
+        update sleave_log set approve = 2 , reject_reason = #{reject_reason}
+        WHERE log_id = #{log_id}
+    </update>
 </mapper>

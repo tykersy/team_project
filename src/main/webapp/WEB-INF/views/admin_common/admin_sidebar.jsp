@@ -37,7 +37,7 @@
         <div class="menu-group dropdown">
             <div class="sidebar-item">급여/정산 관리</div>
             <ul class="submenu">
-                <li><a href="">근태 정산 마감</a></li>
+                <li><a href="/admin_TA_confirm_main">근태 정산 마감</a></li>
             </ul>
         </div>
 
