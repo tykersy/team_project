@@ -180,6 +180,9 @@
                         </section>
 
                     </div>
+
+                    <jsp:include page="/WEB-INF/views/common/msg.jsp" />
+                    
                 </main>
             </div>
 
