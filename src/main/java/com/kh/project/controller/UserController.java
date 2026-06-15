@@ -115,38 +115,12 @@ public class UserController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월");
         String today = now.format(formatter);
 
-        List<CalendarDayVO> calList = calendar.getCalendar(
-            sabun, now.getYear(), now.getMonthValue()
-        );
-
-         // ── taJson 변환 (핵심 추가 부분) ──
-        List<Map<String, String>> taJson = calList.stream()
-        .filter(d -> !d.getStatus().equals("off") && !d.getStatus().equals("future"))
-        .map(d -> {
-            Map<String, String> m = new HashMap<>();
-            m.put("date", String.format("%d-%02d-%02d",
-                now.getYear(), now.getMonthValue(), d.getDay()));
-            m.put("status", d.getStatus());
-            return m;
-        })
-        .collect(Collectors.toList());
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        //재활용 하되 month이 필요없음
-        monthlyTAMap.remove("month");
-        monthlyTAMap.remove("orderBy");
-
-        List<Map<String,Object>> yearlyTa = userDao.getYearlyTa(monthlyTAMap);
-
         model.addAttribute("info", userInfo);
         model.addAttribute("userTaList", userTA);
         model.addAttribute("userTotalTA", userTotalTA);
         model.addAttribute("today", today);
         model.addAttribute("sleave", userSleave);
         model.addAttribute("leaveLogList", userSleaveLog);
-        model.addAttribute("yearlyTA", yearlyTa);
-        model.addAttribute("taJson", mapper.writeValueAsString(taJson));
         
 
         return "user/mypage";
