@@ -186,6 +186,7 @@
                             </div>
                         </div> <!-- panel 1 -->
                     </div> <!-- container -->
+                    <jsp:include page="/WEB-INF/views/common/msg.jsp" />
                 </div> <!-- main content -->
             </div>
             <script>
