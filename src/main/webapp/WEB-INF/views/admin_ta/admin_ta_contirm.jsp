@@ -31,10 +31,11 @@
                 let ym = document.getElementById('target_ym').value;
                 if(!confirm(`\${name} 사원의 \${ym} 근태를 마감하시겠습니까?\n마감 후 급여 정산이 가능합니다.`)) return;
 
-                fetch("/admin_ta_confirm", {
+                fetch("/admin_taclose", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `ym=\${ym}&sabun=\${sabun}`
+                        // 맨 앞의 슬래시(/)를 제거하여 현재 페이지 위치 기준(상대경로)으로 호출을 일치 시킴
+                    body: "ym=" + ym + "&sabun=" + sabun
                 })
                 .then(res => {
                     if(res.ok) {

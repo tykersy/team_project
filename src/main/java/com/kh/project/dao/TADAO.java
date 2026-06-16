@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.kh.project.vo.SalaryClosedVO;
+import com.kh.project.vo.SalaryLedgerVO;
 import com.kh.project.vo.TAVO;
 
 public interface TADAO {
@@ -28,5 +29,12 @@ public interface TADAO {
 
     //관리자 근태 마감 처리를 위한 근태정보 불러오기
     SalaryClosedVO selectTaConfirm(Map<String, Object> map);
+
+    //관리자 사원별 해당 연월 근태 불러오기
+    List<SalaryClosedVO> getAllMonthlyTA(String ym);
+
+    int insertClosedAttendance(SalaryClosedVO vo);
+
+    int insertSalaryLedger(SalaryLedgerVO vo);
 
 } 

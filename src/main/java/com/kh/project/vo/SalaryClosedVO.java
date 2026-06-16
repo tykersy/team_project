@@ -15,6 +15,8 @@ public class SalaryClosedVO{
     //월별 근태 정산 마감 테이블
     private String closed_ym; //정산 년월
     private int sabun; //사번
+    private String saname;
+    private String dname;
     private int standard_days; //해당 월 정상 출근 일수
     private int worked_days; //실제 출근 일수
     private int absence_days; //무급 결근 일수

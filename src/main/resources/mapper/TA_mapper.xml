@@ -125,5 +125,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             AND sl.approve = true
             AND sl.use_date = CURDATE()     -- 오늘 날짜만
     </select>
+
+    <!-- 해당 년월의 사원들의 출근 일수 조회하기 -->
+    <select id="getAllMonthlyTA"
+            parameterType="String"
+            resultType="salaryclosed">
+        SELECT 
+            s.sabun,
+            s.saname,
+            
+            -- 1. 출근일수: checkin(출근시간)이 찍힌 날의 총 개수를 구합니다.
+            COUNT(ta.checkin) AS worked_days,
+            
+            -- 2. 결근일수: 우선 0으로 던지고 자바 서비스단에서 (기준일수 - 출근일수)로 계산합니다.
+            0 AS absence_days,
+            
+            -- 3. 총 연장근무 시간 계산
+            -- [원리] 퇴근시간과 출근시간의 차이(분 단위)를 구한 뒤, 기본근무 8시간(480분)을 뺀 나머지를 시간 단위로 환산합니다.
+            IFNULL(
+                SUM(
+                    CASE 
+                        WHEN TIMESTAMPDIFF(MINUTE, ta.checkin, ta.checkout) > 480 
+                        THEN (TIMESTAMPDIFF(MINUTE, ta.checkin, ta.checkout) - 480) / 60.0
+                        ELSE 0 
+                    END
+                ), 0
+            ) AS overtime_hours
+
+        FROM sawon s
+        -- 해당 년월(예: 2026-06)의 근태 데이터만 매핑
+        LEFT JOIN ta ta ON s.sabun = ta.sabun AND ta.day LIKE CONCAT(#{ym}, '%')
+        GROUP BY s.sabun, s.saname
+    </select>
+
+    
     
 </mapper>
