@@ -6,6 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>공지사항 게시판</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/css/sidebar.css">
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/board.css"> 
@@ -49,11 +50,16 @@
                     </tbody>
                 </table>
                 
-                <!-- 검색 폼 -->
                 <div style="display: flex; justify-content: center; margin: 30px 0;">
-                    <form action="/board/list" method="get" style="display: flex; align-items: center; border: 1px solid #ccc; padding: 0 10px; width: 300px; height: 35px; background: white;">
-                        <input type="text" name="keyword" value="${keyword}" placeholder="Search" style="border: none; outline: none; width: 100%; height: 100%; padding: 5px;">
-                        <button type="submit" style="border: none; background: none; cursor: pointer;">🔍</button>
+                    <form action="/board/list" method="get" 
+                          style="display: flex; align-items: center; border: 1px solid #ccc; padding: 0 15px; width: 300px; height: 40px; background: white;">
+                        
+                        <input type="text" name="keyword" value="${keyword}" placeholder="Search" 
+                               style="border: none; outline: none; width: 100%; height: 100%; padding: 5px; font-size: 14px;">
+                        
+                        <button type="submit" style="border: none; background: none; cursor: pointer; color: #888; font-size: 16px;">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
                     </form>
                 </div>
 
