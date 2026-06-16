@@ -73,7 +73,8 @@
                     
                     <a href="/board/list?page=${currentPage < totalPages ? currentPage + 1 : totalPages}&keyword=${keyword}" style="text-decoration: none; color: #333; margin: 0 10px;">&gt;</a>
                 </div>            
-            </div> 
+            </div>
+        <jsp:include page="/WEB-INF/views/common/msg.jsp" />
         </div> 
     </main>
 </div> 
