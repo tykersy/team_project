@@ -197,23 +197,23 @@
 
 .bottom-btn {
 
-    position: fixed;
+    position: absolute;
 
     right: 20px;
-    bottom: 40px;
+    top: 80px;
 
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
 
     border: none;
 
-    border-radius: 50%;
+    border-radius: 10px;
 
-    background: #4a67ff;
+    background: white;
 
-    color: white;
+    color: #4a67ff;
 
-    font-size: 40px;
+    font-size: 25px;
 
     cursor: pointer;
 
@@ -226,7 +226,7 @@
 }
 
 .bottom-btn:hover {
-    transform: translateY(-5px) scale(1.08);
+    transform: translateY(-3px) scale(1.02);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
 }
 
@@ -234,16 +234,13 @@
     transform: scale(0.95);
 }
 
-.bottom-btn.open {
-    transform: rotate(135deg);
-}
 
 .bottom-menu {
 
-    position: fixed;
+    position: absolute;
 
     right: 40px;
-    bottom: 115px;
+    top: 130px;
 
     width: 180px;
 
@@ -262,7 +259,8 @@
     opacity: 0;
     visibility: hidden;
 
-    transform: translateY(20px) scale(0.9);
+    transform-origin: top right;
+    transform: translateY(-20px) scale(0.9);
 
     transition: all 0.3s ease;
 }

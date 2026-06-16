@@ -31,4 +31,7 @@ public interface SawonDAO {
     //최근 입사 직급 조회
     List<SawonVO> cur_upd_position();
 
+    //메신저 직원 조회
+    List<SawonVO> member_list();
+
 } 

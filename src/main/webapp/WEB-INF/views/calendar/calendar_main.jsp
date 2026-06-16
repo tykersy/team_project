@@ -16,10 +16,29 @@
                 <div class="main-content">
                     <jsp:include page="/WEB-INF/views/common/header.jsp" />
                     <div style="margin: 20px 0;">
-                        <div class="calendar-header">
-                            <a href="calendar_calendarmain?year=${prevYear}&month=${prevMonth}">◀</a>
-                            <a href="javascript:void(0)" class="head-ym" onclick="openDateBox()" style="font-weight: bold;">${year}.${month}</a>
-                            <a href="calendar_calendarmain?year=${nextYear}&month=${nextMonth}">▶</a>
+                        <div>
+                            <div class="calendar-header">
+                                <a href="calendar_calendarmain?year=${prevYear}&month=${prevMonth}">◀</a>
+                                <a href="javascript:void(0)" class="head-ym" onclick="openDateBox()" style="font-weight: bold;">${year}.${month}</a>
+                                <a href="calendar_calendarmain?year=${nextYear}&month=${nextMonth}">▶</a>
+                            </div>
+                            <!--일정 추가-->
+                            <div>
+                                <div class="bottom-menu" id="bottomMenu">
+                                    <button onclick="location.href='dcal_insert.do'">
+                                        <span>부서일정 추가</span>
+                                    </button>
+
+                                    <button onclick="location.href='scal_insert.do'">
+                                        <span>개인일정 추가</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button class="bottom-btn" onclick="insertSchedule()" id="bottomBtn">
+                                        ☰ </button>
+                                </div>
+                            </div>
+                            
                         </div>
                         <div class="calendar-legend">
                             <div class="legend-item">
@@ -140,22 +159,7 @@
                             </table>
                         </div>
 
-                        <!--일정 추가-->
-                        <div>
-                            <div class="bottom-menu" id="bottomMenu">
-                                <button onclick="location.href='dcal_insert.do'">
-                                    <span>부서일정 추가</span>
-                                </button>
-
-                                <button onclick="location.href='scal_insert.do'">
-                                    <span>개인일정 추가</span>
-                                </button>
-                            </div>
-                            <div>
-                                <button class="bottom-btn" onclick="insertSchedule()" id="bottomBtn">
-                                    + </button>
-                            </div>
-                        </div>
+                        
                     </div>
 
                     <jsp:include page="/WEB-INF/views/calendar/calendar_date_modal.jsp" />

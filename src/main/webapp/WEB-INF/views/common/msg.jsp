@@ -56,7 +56,7 @@
         border : none;
         border-bottom:1px solid #ccc;
         border-right: 1px solid #ccc;
-        height:30px;
+        height:60px;
     }
     .msg_bar-btn:hover{
         cursor:pointer;
@@ -74,6 +74,17 @@
         display:block;
     }
 
+    /*마우스 스크롤*/
+    .msg_content{
+        flex: 1;
+        overflow-y: auto;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE */
+    }
+
+    .msg_content::-webkit-scrollbar{
+        display: none;
+    }
 
     /* ── 슬라이드업 모달 ── */
     #messengerModal {
@@ -111,14 +122,14 @@
     </div>
 
     <div class="msg_bar">
-        <button class="msg_bar-btn" onclick="msgSwitchTab(0)">멤버</button>
-        <button class="msg_bar-btn" onclick="msgSwitchTab(1)">채팅</button>
-        <button class="msg_bar-btn" onclick="msgSwitchTab(2)">즐겨찾기</button>
+        <button class="msg_bar-btn" onclick="msgSwitchTab(0)"><div>👥</div>멤버</button>
+        <button class="msg_bar-btn" onclick="msgSwitchTab(1)"><div>🗨️</div>채팅</button>
+        <button class="msg_bar-btn" onclick="msgSwitchTab(2)"><div>⭐</div>즐겨찾기</button>
     </div>
 
     <div class="msg_content">
         <div class="msg_tab active" id="msg_member">
-            멤버 탭
+            <jsp:include page="/WEB-INF/views/msg/member.jsp" />
         </div>
 
         <div class="msg_tab" id="msg_chatting">
@@ -133,11 +144,28 @@
 
 <script>
 
+    const isLogin = ${sessionScope.user != null};
+
     let isOpen   = false;
+    let memberLoaded = false;
     /* ── 열기/닫기 토글 ── */
     window.toggleMessenger = function () {
+
+        if (!isLogin) {
+            alert("로그인이 필요합니다.");
+            location.href = "/login";
+            return;
+        }
         isOpen = !isOpen;
         document.getElementById('messengerModal').classList.toggle('open', isOpen);
+        if (isOpen && !memberLoaded) {
+            fetch("msg_member.do")
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById("msg_member").innerHTML = html;
+                    memberLoaded = true;
+                });
+        }
     };
     window.closeMessenger = function () {
         isOpen = false;

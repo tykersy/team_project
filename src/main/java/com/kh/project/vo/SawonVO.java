@@ -16,4 +16,6 @@ public class SawonVO {
     private String saname, pwd, sajob, sahire, saemail, satel, saaddr;
     private String sazipcode;
 
+    private String dname; // join용 
+
 }
