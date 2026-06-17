@@ -25,7 +25,7 @@ public class MsgController {
     @GetMapping("/msg_member.do")
     public String msgMember(Model model){
 
-         if(session.getAttribute("user") == null){
+        if(session.getAttribute("user") == null){
             return "redirect:/login";
         }
 
