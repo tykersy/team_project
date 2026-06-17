@@ -1,109 +1,108 @@
 package com.kh.project.common;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.kh.project.dao.ChatDAO;
 import com.kh.project.service.ChatService;
 
 import lombok.RequiredArgsConstructor;
 import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.node.ObjectNode;
-
 @Component
 @RequiredArgsConstructor
 public class ChatWebSocketHandler extends TextWebSocketHandler {
-    
+
     private final ChatService chatService;
+    private final ChatDAO chatDAO;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-   private final Map<Long, Map<Long, WebSocketSession>> roomSessions = new ConcurrentHashMap<>();
+    // sabun → WebSocketSession (유저당 1개 연결)
+    private final Map<Integer, WebSocketSession> userSessions = new ConcurrentHashMap<>();
+
     @Override
-    public void afterConnectionEstablished(WebSocketSession session){
-        Long roomId = getRoomId(session);
-        Long userId = getUserId(session);
+    public void afterConnectionEstablished(WebSocketSession session) {
+        int sabun = getSabun(session);
         String name = getName(session);
 
-        Map<Long, WebSocketSession> sessions =
-                roomSessions.computeIfAbsent(roomId, k -> new ConcurrentHashMap<>());
-
-        // ✅ 중복 접속 차단
-        if (sessions.containsKey(userId)) {
+        // 기존 연결이 있으면 닫기
+        WebSocketSession oldSession = userSessions.get(sabun);
+        if (oldSession != null && oldSession.isOpen()) {
             try {
-                WebSocketSession oldSession = sessions.get(userId);
-                if (oldSession != null && oldSession.isOpen()) {
-                    oldSession.close(); // 기존 연결 끊기
-                }
+                oldSession.close();
             } catch (Exception e) {
                 System.out.println("기존 세션 종료 실패: " + e);
             }
         }
 
-        sessions.put(userId, session);
-
-        System.out.println("입장 : " + name + " / 방 : " + roomId);
-
-        broadcastOnlineCount(roomId);
+        userSessions.put(sabun, session);
+        System.out.println("WebSocket 연결: " + name + " (sabun=" + sabun + ")");
     }
 
-    /* ── 연결 종료 시 ── */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
-        Long roomId = getRoomId(session);
-        Long userId = getUserId(session);
-        String nickname = getName(session);
+        int sabun = getSabun(session);
+        String name = getName(session);
 
-        Map<Long, WebSocketSession> sessions = roomSessions.get(roomId);
+        // 현재 세션과 동일한 경우에만 제거 (새 연결이 이미 대체했을 수 있음)
+        WebSocketSession current = userSessions.get(sabun);
+        if (current != null && current.getId().equals(session.getId())) {
+            userSessions.remove(sabun);
+        }
 
-        if (sessions != null) {
-            sessions.remove(userId);
+        System.out.println("WebSocket 종료: " + name + " (sabun=" + sabun + ")");
+    }
 
-            if (sessions.isEmpty()) {
-                roomSessions.remove(roomId);
+    @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        int senderSabun = getSabun(session);
+        String senderName = getName(session);
+
+        // 클라이언트에서 보낸 JSON 파싱: { "type": "chat", "roomId": 1, "content": "안녕" }
+        @SuppressWarnings("unchecked")
+        Map<String, Object> incoming = objectMapper.readValue(message.getPayload(), Map.class);
+        String type = incoming.getOrDefault("type", "chat").toString();
+
+        if ("chat".equals(type)) {
+            int roomId = ((Number) incoming.get("roomId")).intValue();
+            String content = (String) incoming.get("content");
+
+            // DB에 메시지 저장
+            chatService.saveMessage(roomId, senderSabun, senderName, content);
+
+            // 응답 JSON 생성
+            Map<String, Object> outgoing = new HashMap<>();
+            outgoing.put("type", "chat");
+            outgoing.put("roomId", roomId);
+            outgoing.put("senderSabun", senderSabun);
+            outgoing.put("senderName", senderName);
+            outgoing.put("content", content);
+
+            String outJson = objectMapper.writeValueAsString(outgoing);
+
+            // 해당 방의 모든 멤버에게 전송
+            List<Integer> memberSabuns = chatDAO.selectRoomMemberSabuns(roomId);
+            for (int memberSabun : memberSabuns) {
+                WebSocketSession memberSession = userSessions.get(memberSabun);
+                if (memberSession != null && memberSession.isOpen()) {
+                    memberSession.sendMessage(new TextMessage(outJson));
+                }
             }
         }
-
-        System.out.println("퇴장: " + nickname + " / 방 " + roomId);
-
-        broadcastOnlineCount(roomId);
     }
 
-     /* ── 접속자 수 브로드캐스트 ── */
-    private void broadcastOnlineCount(Long roomId) {
-        try {
-            Map<Long, WebSocketSession> sessions = roomSessions.get(roomId);
-
-            int count = (sessions == null) ? 0 : sessions.size(); // = 접속 유저 수
-
-            ObjectNode out = objectMapper.createObjectNode();
-            out.put("type", "online");
-            out.put("count", count);
-
-            System.out.println("type : " + out.get("type")
-                    + " / count : " + out.get("count"));
-
-            // TODO: 실제 전송 로직 필요하면 추가
-            // sendToRoom(roomId, out);
-
-        } catch (Exception e) {
-            System.out.println("접속자 수 오류 " + e);
-        }
+    private int getSabun(WebSocketSession session) {
+        return (int) session.getAttributes().get("sabun");
     }
 
-    private Long getRoomId(WebSocketSession session){
-        return (Long) session.getAttributes().get("roomId");
-    }
-
-    private Long getUserId(WebSocketSession session){
-        return (Long) session.getAttributes().get("userId");
-    }
-
-    private String getName(WebSocketSession session){
+    private String getName(WebSocketSession session) {
         return (String) session.getAttributes().get("userName");
     }
-
 }

@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kh.project.dao.ChatDAO;
 import com.kh.project.dao.SawonDAO;
+import com.kh.project.vo.ChatRoomVO;
 import com.kh.project.vo.SawonVO;
 
 import jakarta.servlet.http.HttpSession;
@@ -18,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 public class MsgController {
     
     private final SawonDAO sawondao;
+
+    private final ChatDAO chatdao;
 
     @Autowired
     HttpSession session;
@@ -37,6 +42,18 @@ public class MsgController {
         model.addAttribute("list", list);
 
         return "msg/member";
+    }
+
+    @GetMapping("/msg_chatRoomList")
+    public String msgChatRoom(Model model){
+        
+        int sabun = (int)session.getAttribute("user");
+        
+        List<ChatRoomVO> list = chatdao.selectListChatRoom(sabun);
+
+        model.addAttribute("chatRooms", list);
+
+        return "msg/chatRoomList";
     }
 
 }
