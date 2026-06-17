@@ -324,7 +324,7 @@
   inset: 0;
   background: rgba(15, 23, 42, 0.45);
   backdrop-filter: blur(2px);
-  z-index: 500;
+  z-index: 3000;
   align-items: center;
   justify-content: center;
 }
@@ -563,7 +563,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 3000;
 }
 .modal-box {
     background: #fff;
