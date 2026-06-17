@@ -30,9 +30,9 @@
                 btn.classList.toggle("open");
 
                 if(menu.classList.contains("active")){
-                    btn.innerText = "×";
+                    btn.innerText = "☰";
                 }else{
-                    btn.innerText = "+";
+                    btn.innerText = "☰";
                 }
             }
 

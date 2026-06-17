@@ -1,0 +1,86 @@
+.profile-box,
+.member-box{
+    padding:14px 16px;
+}
+
+.section-title{
+    font-size:13px;
+    font-weight:700;
+    color:#999;
+    margin-bottom:10px;
+}
+.member-item-my-profile{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 8px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.member-item{
+    padding:10px 8px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.member-item:hover{
+    background:#f5f5f5;
+}
+
+.member-top{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.profile-circle{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#e9eef7;
+    color:#1c2f57;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    font-size:17px;
+}
+
+.member-name{
+    font-size:15px;
+    font-weight:600;
+    color:#111;
+}
+
+.member-dept{
+    font-size:12px;
+    color:#888;
+    margin-top:3px;
+}
+
+.member-menu{
+    display:none;
+    margin-top:12px;
+    padding:8px;
+    border-radius:10px;
+    background:#f7f7f7;
+}
+
+.member-menu.open{
+    display:flex;
+}
+
+.member-menu button{
+    flex:1;
+    height:52px;
+    border:none;
+    border-radius:8px;
+    background:white;
+    cursor:pointer;
+    font-size:13px;
+}
+
+.member-menu button:hover{
+    background:#e9eef7;
+}

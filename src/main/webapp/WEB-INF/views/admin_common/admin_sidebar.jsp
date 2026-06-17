@@ -50,6 +50,6 @@
     </nav>
 
     <div class="admin-section">
-        <a href="/home" class="admin-btn">직원HOME</a>
+        <a href="/home" class="admin-btn">직원 HOME</a>
     </div>
 </aside>
