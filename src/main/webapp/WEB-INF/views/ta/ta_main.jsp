@@ -174,6 +174,7 @@
                                             <th class="red">결근</th>
                                             <th>총 근무(h)</th>
                                         </tr>
+
                                         </thead>
                                         <tbody>
                                         <c:forEach var="monthTA" items="${yearlyTA}" >
@@ -201,66 +202,84 @@
                         document.querySelectorAll('.panel').forEach((p, i) => {
                             p.classList.toggle('active', i === idx);
                         });
-                    }
 
-                    const taData = JSON.parse('${taJson}');
+                                    </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> <!-- panel 1 -->
+                    </div> <!-- container -->
+                    <jsp:include page="/WEB-INF/views/common/msg.jsp" />
+                </div> <!-- main content -->
+            </div>
+            <script>
+                // ── 탭 전환 ──
+                function switchTab(idx) {
+                    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                        b.classList.toggle('active', i === idx);
+                    });
+                    document.querySelectorAll('.panel').forEach((p, i) => {
+                        p.classList.toggle('active', i === idx);
+                    });
+                }
 
-                    const styleMap = {
-                        normal : { label: '정상출근', bg: 'rgba(34,197,94,0.15)',  border: '#16a34a', text: '#15803d' },
-                        late   : { label: '지각',    bg: 'rgba(245,158,11,0.15)', border: '#d97706', text: '#b45309' },
-                        absent : { label: '결근',    bg: 'rgba(239,68,68,0.12)',  border: '#dc2626', text: '#b91c1c' },
-                        leave  : { label: '휴가',    bg: 'rgba(99,102,241,0.15)', border: '#6366f1', text: '#4338ca' },
-                        half   : { label: '반차',    bg: 'rgba(99,102,241,0.10)', border: '#a5b4fc', text: '#6366f1' }
-                    };
+                const taData = JSON.parse('${taJson}');
 
-                    const taMap = {};
-                    taData.forEach(function(item) { taMap[item.date] = item.status; });
+                const styleMap = {
+                    normal : { label: '정상출근', bg: 'rgba(34,197,94,0.15)',  border: '#16a34a', text: '#15803d' },
+                    late   : { label: '지각',    bg: 'rgba(245,158,11,0.15)', border: '#d97706', text: '#b45309' },
+                    absent : { label: '결근',    bg: 'rgba(239,68,68,0.12)',  border: '#dc2626', text: '#b91c1c' },
+                    leave  : { label: '휴가',    bg: 'rgba(99,102,241,0.15)', border: '#6366f1', text: '#4338ca' },
+                    half   : { label: '반차',    bg: 'rgba(99,102,241,0.10)', border: '#a5b4fc', text: '#6366f1' }
+                };
 
-                    const now          = new Date();
-                    let currentYear  = now.getFullYear();
-                    let currentMonth = now.getMonth();
+                const taMap = {};
+                taData.forEach(function(item) { taMap[item.date] = item.status; });
 
-                    function pad(n) { return String(n).padStart(2, '0'); }
+                const now          = new Date();
+                let currentYear  = now.getFullYear();
+                let currentMonth = now.getMonth();
 
-                    function renderCal() {
-                        document.getElementById('calTitle').textContent =
-                            currentYear + '년 ' + (currentMonth + 1) + '월';
+                function pad(n) { return String(n).padStart(2, '0'); }
 
-                        const container = document.getElementById('tuiCal');
-                        container.innerHTML = '';
+                function renderCal() {
+                    document.getElementById('calTitle').textContent =
+                        currentYear + '년 ' + (currentMonth + 1) + '월';
 
-                        const table = document.createElement('table');
-                        table.style.cssText = 'width:100%; border-collapse:collapse; table-layout:fixed;';
+                    const container = document.getElementById('tuiCal');
+                    container.innerHTML = '';
 
-                        // 요일 헤더
-                        const thead = document.createElement('thead');
-                        const headRow = document.createElement('tr');
-                        ['일','월','화','수','목','금','토'].forEach(function(d, i) {
-                            const th = document.createElement('th');
-                            th.textContent = d;
-                            var color = (i === 0) ? '#dc2626' : (i === 6) ? '#6366f1' : '#6b7280';
-                            th.style.cssText =
-                                'padding:10px 0;' +
-                                'font-size:12px;' +
-                                'font-weight:600;' +
-                                'color:' + color + ';' +
-                                'text-align:center;' +
-                                'border-bottom:2px solid #e5e7eb;';
-                            headRow.appendChild(th);
-                        });
-                        thead.appendChild(headRow);
-                        table.appendChild(thead);
+                    const table = document.createElement('table');
+                    table.style.cssText = 'width:100%; border-collapse:collapse; table-layout:fixed;';
 
-                        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-                        const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
+                    // 요일 헤더
+                    const thead = document.createElement('thead');
+                    const headRow = document.createElement('tr');
+                    ['일','월','화','수','목','금','토'].forEach(function(d, i) {
+                        const th = document.createElement('th');
+                        th.textContent = d;
+                        var color = (i === 0) ? '#dc2626' : (i === 6) ? '#6366f1' : '#6b7280';
+                        th.style.cssText =
+                            'padding:10px 0;' +
+                            'font-size:12px;' +
+                            'font-weight:600;' +
+                            'color:' + color + ';' +
+                            'text-align:center;' +
+                            'border-bottom:2px solid #e5e7eb;';
+                        headRow.appendChild(th);
+                    });
+                    thead.appendChild(headRow);
+                    table.appendChild(thead);
 
-                        const tbody = document.createElement('tbody');
-                        let day = 1;
-                        let row = document.createElement('tr');
+                    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+                    const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-                        for (let i = 0; i < firstDay; i++) {
-                            row.appendChild(makeEmptyCell());
-                        }
+                    const tbody = document.createElement('tbody');
+                    let day = 1;
+                    let row = document.createElement('tr');
+
+                    for (let i = 0; i < firstDay; i++) {
+                        row.appendChild(makeEmptyCell());
 
                         while (day <= lastDate) {
                             if (row.children.length === 7) {

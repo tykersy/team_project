@@ -20,6 +20,9 @@ repositories {
 
 dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	//WebSocket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	
 	//롬복
 	compileOnly("org.projectlombok:lombok:1.18.46")
