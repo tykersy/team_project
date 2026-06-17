@@ -34,4 +34,6 @@ public interface SawonDAO {
     //메신저 직원 조회
     List<SawonVO> member_list();
 
+    SawonVO memberView(int sabun);
+
 } 

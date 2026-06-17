@@ -95,4 +95,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     </select>
 
+    <select id="memberView"
+            parameterType="int"
+            resultType="sawon">
+
+        select s.*,
+            d.dname
+        from sawon s
+        join dept d
+        on s.deptno = d.deptno
+        where s.sabun = #{sabun}
+
+    </select>
+
 </mapper>

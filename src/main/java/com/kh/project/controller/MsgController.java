@@ -44,6 +44,13 @@ public class MsgController {
         return "msg/member";
     }
 
+
+    @GetMapping("/msg_profile.do")
+    @ResponseBody
+    public SawonVO msgProfile(int sabun) {
+        return sawondao.memberView(sabun);
+    }
+
     @GetMapping("/msg_chatRoomList")
     public String msgChatRoom(Model model){
         
@@ -54,6 +61,7 @@ public class MsgController {
         model.addAttribute("chatRooms", list);
 
         return "msg/chatRoomList";
+
     }
 
 }
