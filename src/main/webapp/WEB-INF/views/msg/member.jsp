@@ -46,6 +46,25 @@
                     </c:if>
                 </c:forEach>
             </div>
+            <div id="profileModal" class="profile-modal">
+                <div class="profile-card">
+                    <button class="profile-close" onclick="closeProfile()">×</button>
+
+                    <div class="profile-big-circle" id="profileInitial"></div>
+                    <div>
+                    <span class="profile-name" id="profileName"></span> <span class="profile-job" id="profileJob"></span>
+                    </div>
+                    <div class="profile-dept" id="profileDept"></div>
+                    
+
+                    <div class="profile-info">
+                        <div>📧 <span id="profileEmail"></span></div>
+                        <div>📞 <span id="profileTel"></span></div>
+                    </div>
+
+                    <button class="profile-chat-btn" id="profileChatBtn">메시지 보내기</button>
+                </div>
+            </div>
             <script>
                 function toggleMemberMenu(item){
 
@@ -58,5 +77,28 @@
                     });
 
                     menu.classList.toggle("open");
+                }
+                function viewProfile(sabun) {
+                    fetch("msg_profile.do?sabun=" + sabun)
+                        .then(res => res.json())
+                        .then(data => {
+                            document.getElementById("profileInitial").innerText = data.saname.substring(0, 1);
+                            document.getElementById("profileName").innerText = data.saname;
+                            document.getElementById("profileDept").innerText = data.dname;
+                            document.getElementById("profileJob").innerText = data.sajob;
+                            document.getElementById("profileEmail").innerText = data.saemail;
+                            document.getElementById("profileTel").innerText = data.satel;
+
+                            document.getElementById("profileChatBtn").onclick = function () {
+                                openChat(data.sabun);
+                                closeProfile();
+                            };
+
+                            document.getElementById("profileModal").classList.add("open");
+                        });
+                }
+
+                function closeProfile() {
+                    document.getElementById("profileModal").classList.remove("open");
                 }
             </script>

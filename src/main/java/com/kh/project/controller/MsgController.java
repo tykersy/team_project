@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.project.dao.SawonDAO;
 import com.kh.project.vo.SawonVO;
@@ -37,6 +38,12 @@ public class MsgController {
         model.addAttribute("list", list);
 
         return "msg/member";
+    }
+
+    @GetMapping("/msg_profile.do")
+    @ResponseBody
+    public SawonVO msgProfile(int sabun) {
+        return sawondao.memberView(sabun);
     }
 
 }
