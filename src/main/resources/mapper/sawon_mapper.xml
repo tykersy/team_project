@@ -81,4 +81,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         LIMIT 1;
     </select>
 
+    <select id="member_list" resultType="sawon">
+
+        SELECT
+            s.sabun,
+            s.saname,
+            s.deptno,
+            d.dname
+        FROM sawon s
+        JOIN dept d
+            ON s.deptno = d.deptno
+        ORDER BY d.deptno, s.saname
+
+    </select>
+
 </mapper>
