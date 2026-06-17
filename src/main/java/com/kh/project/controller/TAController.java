@@ -167,63 +167,42 @@ public class TAController {
 
         //선택된 ym(년월)이 없다면 오늘날짜 기준으로 세팅
         if( ym == null || ym.equals("") ){
-            ym = "2026-06"; //임시 작성, 수정필요!!!!!!!!!
+            ym = String.format("yyyy-MM", LocalDate.now());
         }
-        
-        //-------------------------------DB연동후에는 실제DB정보 불러와서 사용
-        List<Map<String, Object>> dummyList = new ArrayList();
 
-        Map<String, Object> emp1 = new HashMap<>();
-        emp1.put("sabun", "2024001");
-        emp1.put("saname", "김민수");
-        emp1.put("dname", "경영팀");
-        emp1.put("standard_days", 22); // 해당 월 평일 총 일수
-        emp1.put("worked_days", 21);
-        emp1.put("absence_days", 1);   // 무급 결근 1일 발생 -> 나중에 월급 차감용
-        emp1.put("leave_days", 0);
-        emp1.put("overtime_hours", 5); // 연장근무 5시간 -> 나중에 연장수당용
-        emp1.put("status", "대기");     // 마감 상태
-        dummyList.add(emp1);
+        //전체 사원별 해당 년월 TA리스트 불러오기
+        List<SalaryClosedVO> attendanceList = tadao.getAllMonthlyTA(ym);
 
-        Map<String, Object> emp2 = new HashMap<>();
-        emp2.put("sabun", "2024002");
-        emp2.put("saname", "이영희");
-        emp2.put("dname", "개발팀");
-        emp2.put("standard_days", 22);
-        emp2.put("worked_days", 20);
-        emp2.put("absence_days", 0);
-        emp2.put("leave_days", 2);     // 연차 사용 2일 (출근으로 인정)
-        emp2.put("overtime_hours", 12);
-        emp2.put("status", "완료");
-        dummyList.add(emp2);
+        // 2. 이번 달(예: 6월)의 총 평일 수 설정 (보통 주말 제외 21일 ~ 22일)
+        int standardDays = 22;
 
-        //-------------------------------DB연동후에는 실제DB정보 불러와서 사용
+        for(SalaryClosedVO emp : attendanceList ) {
+            // DB에서 세어온 실제 출근일수 꺼내기
+            int workedDays = Integer.parseInt(String.valueOf(emp.getWorked_days()));
+            
+            // [결근일수 계산] = 기준일수(22일) - 실제출근일수
+            int absenceDays = standardDays - workedDays;
+            if(absenceDays < 0) absenceDays = 0; // 혹시 주말 출근 등으로 출근일이 더 많으면 0일 처리
+            
+            // 3. 계산된 값들을 다시 attendanceList 주입
+            emp.setStandard_days(standardDays);
+            emp.setAbsence_days(absenceDays);
+            
+            // 연차 테이블(sleave_log) 연동 전이므로 임시로 leave_days도 0으로 입력해두기
+            emp.setLeave_days(0); 
+            emp.setStatus("대기");
+        }
 
-        // 3. JSP 화면으로 데이터 토스
-        model.addAttribute("attendanceList", dummyList); //정산 대상자 목록
+        // 3. 바인딩 및 포워딩
+        // model.addAttribute("attendanceList", dummyList); //정산 대상자 목록
         model.addAttribute("selectedYm", ym); //선택 년월
         model.addAttribute("waitCnt", 1); //마감 대기자 수
         model.addAttribute("completeCnt", 1); //마감 완료자 수
 
+        model.addAttribute("attendanceList", attendanceList);
+
         return "admin_ta/admin_ta_contirm";
     }
-
-    //근태 마감 처리 함수(fetch사용)
-    @PostMapping("/admin_ta_confirm")
-    @ResponseBody
-    public Map<String, Object> closeAttendance( int sabun, String ym ){
-
-        //결과를 담을 map생성
-        Map<String, Object> map = new HashMap<>();
-        map.put("ym", ym);
-        map.put("sabun", sabun);
-
-        SalaryClosedVO vo = tadao.selectTaConfirm(map);
-
-        return map;
-
-    }
-
 
     @GetMapping("/ta_calendar.do")
     @ResponseBody
