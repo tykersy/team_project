@@ -133,6 +133,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT 
             s.sabun,
             s.saname,
+            d.dname,
             
             -- 1. 출근일수: checkin(출근시간)이 찍힌 날의 총 개수를 구합니다.
             COUNT(ta.checkin) AS worked_days,
@@ -155,6 +156,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM sawon s
         -- 해당 년월(예: 2026-06)의 근태 데이터만 매핑
         LEFT JOIN ta ta ON s.sabun = ta.sabun AND ta.day LIKE CONCAT(#{ym}, '%')
+            JOIN dept d ON s.deptno = d.deptno
+        -- 마감 테이블에 해당 년월 마감 데이터가 있는 사원은 제외
+        WHERE NOT EXISTS ( 
+            SELECT *
+            FROM salary_closed_attendance sca
+            WHERE sca.sabun = s.sabun
+             AND sca.closed_ym = #{ym}
+         )
         GROUP BY s.sabun, s.saname
     </select>
 
