@@ -115,6 +115,7 @@
     </footer>
 
 
+
     <div class="msg_bar">
         <button class="msg_bar-btn" onclick="msgSwitchTab(0)"><div>👥</div>멤버</button>
         <button class="msg_bar-btn" onclick="msgSwitchTab(1)"><div>🗨️</div>채팅</button>
