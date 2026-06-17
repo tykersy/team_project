@@ -11,9 +11,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Alias("chatRoom")
+@Alias("chat")
 public class ChatRoomVO {
-    private int room_id;
+    private int room_id, sabun;
     private String room_type, room_name; // room_type 채팅방 종류 (ONE=1:1채팅, GROUP=단체채팅)
-    private LocalDate created_at;
+    private LocalDate created_at, joined_at;
+    private String last_message;
+    private String last_message_time;
 }

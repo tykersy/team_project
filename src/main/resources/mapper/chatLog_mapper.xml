@@ -4,12 +4,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.project.dao.ChatDAO">
 
-    <select id="selectListChatRoom" resultType="chatRoom">
-        select * from 
-            chat_room as c_room join 
-            chat_member as c_member 
-            on c_room.room_id = c_member.room_id
+    <select id="selectListChatRoom" resultType="chat">
+        select
+            c_room.room_id, c_room.room_type, c_room.room_name,
+            c_room.created_at, c_member.joined_at,
+            lm.content as last_message,
+            DATE_FORMAT(lm.sent_at, '%H:%i') as last_message_time
+        from chat_room as c_room
+            join chat_member as c_member on c_room.room_id = c_member.room_id
+            left join (
+                select room_id, content, sent_at
+                from chat_message
+                where (room_id, message_id) in (
+                    select room_id, max(message_id) from chat_message group by room_id
+                )
+            ) lm on c_room.room_id = lm.room_id
         where c_member.sabun = #{sabun}
+        order by lm.sent_at desc
     </select>
     
     <!--메시지 작성시 로그 저장-->
@@ -34,5 +45,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             order by sent_at desc
             limit #{limit}
     </select>
-    
+
+    <!--특정 방의 멤버 sabun 목록-->
+    <select id="selectRoomMemberSabuns" resultType="int">
+        select sabun from chat_member where room_id = #{room_id}
+    </select>
+
 </mapper>
