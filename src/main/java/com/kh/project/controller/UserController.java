@@ -169,7 +169,8 @@ public class UserController {
     //로그아웃
     @GetMapping("/logout")
     public String logout(){
-        session.removeAttribute("user");
+        session.invalidate(); //전체 세션 삭제
+        // session.removeAttribute("user");
 
         return "redirect:/dashboard";
     }

@@ -7,8 +7,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectListChatRoom" resultType="chat">
         select
             c_room.room_id, c_room.room_type, c_room.room_name,
-            c_room.created_at, c_member.joined_at,
-            lm.content as last_message,
+            c_room.created_at, c_member.joined_at, lm.sent_at,
+            lm.content as last_message, 
             DATE_FORMAT(lm.sent_at, '%H:%i') as last_message_time,
             c_member.liked
         from chat_room as c_room

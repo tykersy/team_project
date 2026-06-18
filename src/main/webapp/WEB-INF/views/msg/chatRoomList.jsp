@@ -17,10 +17,10 @@
                 
                 <span id="chat-liked" class="chat-liked-${status.index}" onclick="chat_like(event,${room.room_id}, ${status.index})">
                     <c:if test="${room.liked}">
-                        ⭐
+                        ❤️
                     </c:if>
                     <c:if test="${not room.liked}">
-                        ☆
+                        🤍
                     </c:if>
                 </span>
 

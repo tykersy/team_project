@@ -86,20 +86,27 @@
 
    .msg_tab.active {
        display: block;
+       flex: 1;
+       overflow-y: auto;
+       scrollbar-width: none;
+   }
+
+   .msg_tab.active::-webkit-scrollbar { display: none; }
+
+   /* 채팅탭은 flex 레이아웃 (입력창 하단 고정) */
+   #msg_chatting.active,
+   #msg_like.active {
+       display: flex;
+       flex-direction: column;
+       overflow: hidden;
    }
 
    /*마우스 스크롤*/
    .msg_content {
        flex: 1;
-       overflow-y: auto;
-       scrollbar-width: none;
-       /* Firefox */
-       -ms-overflow-style: none;
-       /* IE */
-   }
-
-   .msg_content::-webkit-scrollbar {
-       display: none;
+       display: flex;
+       flex-direction: column;
+       overflow: hidden;
    }
 
    /* ── 슬라이드업 모달 ── */

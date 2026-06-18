@@ -266,6 +266,8 @@
                 if (data.senderSabun !== MY_SABUN) {
                     html += '<div class="msg-sender">' + escapeHtml(data.senderName) + '</div>';
                 }
+                console.log(data)
+                html += '<div class="msg-send-time>' + escapeHtml(data.sent_at) + '</div>';
                 html += '<div class="msg-text">' + escapeHtml(data.content) + '</div>';
                 div.innerHTML = html;
 

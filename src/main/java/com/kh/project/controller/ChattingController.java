@@ -44,8 +44,8 @@ public class ChattingController {
 
         chatDAO.updateChatRoomLiked(roomId, sabun, liked);
         
-        if(liked) return "⭐";
-        else return "☆";
+        if(liked) return "❤️";
+        else return "🤍";
 
     }
 
