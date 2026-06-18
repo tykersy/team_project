@@ -5,8 +5,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.kh.project.dao.UserDAO">
     
     <!-- 로그인을 위한 회원 조회 -->
-    <select id="selectUser" parameterType="int" resultType="sawon">
-        select * from sawon where sabun=#{sabun}
+    <select id="selectUser" resultType="sawon">
+    SELECT s.*, d.dname 
+    FROM sawon s 
+    LEFT JOIN dept d ON s.deptno = d.deptno 
+    WHERE s.sabun = #{sabun};
     </select>
 
     <!-- 마이페이지 조회 -->
