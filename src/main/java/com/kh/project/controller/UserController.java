@@ -74,7 +74,7 @@ public class UserController {
                 //로그인 유무를 확인 하기 위한 세션 세팅
                 session.setAttribute("user", sawonInfo.getSabun());
                 
-                session.setAttribute("userId",(long) sawonInfo.getSabun());
+                
                 session.setAttribute("userName", sawonInfo.getSaname());
                 session.setAttribute("roomId", 1L);
             }else{
@@ -169,8 +169,10 @@ public class UserController {
     //로그아웃
     @GetMapping("/logout")
     public String logout(){
-        session.removeAttribute("user");
-        session.removeAttribute("loginMember");
+
+        session.invalidate(); //전체 세션 삭제
+        // session.removeAttribute("user");
+
 
         return "redirect:/dashboard";
     }

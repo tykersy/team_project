@@ -34,18 +34,37 @@
 
     .chat-msg {
         max-width: 75%;
+        display: flex;
+        align-items: flex-end;
+        gap: 4px;
+    }
+    .chat-msg.mine {
+        align-self: flex-end;
+        flex-direction: row-reverse;
+    }
+    .chat-msg.other {
+        align-self: flex-start;
+        flex-direction: row;
+    }
+
+    .chat-bubble {
         padding: 8px 12px;
         border-radius: 12px;
         font-size: 14px;
         word-break: break-word;
     }
-    .chat-msg.mine {
-        align-self: flex-end;
+    .chat-bubble.mine {
         background: #dcf8c6;
     }
-    .chat-msg.other {
-        align-self: flex-start;
+    .chat-bubble.other {
         background: #f1f0f0;
+    }
+
+    .chat-msg-sent_at {
+        font-size: 11px;
+        color: #aaa;
+        white-space: nowrap;
+        margin-bottom: 2px;
     }
     .chat-msg .msg-sender {
         font-size: 11px;
@@ -60,7 +79,6 @@
         padding: 8px;
         border-top: 1px solid #eee;
         gap: 6px;
-        flex-shrink: 0;
     }
     .chat-input-area input {
         flex: 1;
@@ -89,10 +107,13 @@
     <div class="chat-messages" id="chatMessages">
         <c:forEach var="msg" items="${logs}">
             <div class="chat-msg ${msg.sender_sabun == sessionScope.user ? 'mine' : 'other'}">
-                <c:if test="${msg.sender_sabun != sessionScope.user}">
-                    <div class="msg-sender">${msg.saname}</div>
-                </c:if>
-                <div class="msg-text">${fn:escapeXml(msg.content)}</div>
+                <div class="chat-bubble ${msg.sender_sabun == sessionScope.user ? 'mine' : 'other'}">
+                    <c:if test="${msg.sender_sabun != sessionScope.user}">
+                        <div class="msg-sender">${msg.saname}</div>
+                    </c:if>
+                    <div class="msg-text">${fn:escapeXml(msg.content)}</div>
+                </div>
+                <div class="chat-msg-sent_at">${msg.sent_at}</div>
             </div>
         </c:forEach>
     </div>
