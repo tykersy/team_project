@@ -193,6 +193,7 @@
                 </div> <!-- container -->
             </div> <!-- main content -->
         </div>
+        <jsp:include page="/WEB-INF/views/common/msg.jsp" />
         <script>
             
             // ── 탭 전환 ──

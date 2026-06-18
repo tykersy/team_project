@@ -3,84 +3,6 @@
 
         <link rel="stylesheet" href="/css/messenger/msg.css">
 
-        <style>
-            .chat-room-list {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .chat-room {
-                display: flex;
-                padding: 12px;
-                border-bottom: 1px solid #eee;
-                cursor: pointer;
-                transition: background .15s;
-            }
-
-            .chat-room:hover {
-                background: #f7f7f7;
-            }
-
-            .chat-profile {
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
-                object-fit: cover;
-            }
-
-            .chat-info {
-                flex: 1;
-                margin-left: 10px;
-            }
-
-            .chat-top,
-            .chat-bottom {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            .chat-name {
-                font-weight: 600;
-            }
-
-            .chat-time {
-                font-size: 12px;
-                color: #999;
-            }
-
-            .chat-last-msg {
-                color: #666;
-                font-size: 14px;
-                margin-top: 4px;
-            }
-
-            .chat-badge {
-                min-width: 20px;
-                height: 20px;
-                border-radius: 10px;
-                background: #ff3b30;
-                color: white;
-                font-size: 12px;
-                text-align: center;
-                line-height: 20px;
-                padding: 0 6px;
-            }
-            .profile-circle{
-                width:42px;
-                height:42px;
-                margin-top:6px;
-                border-radius:50%;
-                background:#e9eef7;
-                color:#1c2f57;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                font-weight:700;
-                font-size:17px;
-            }
-        </style>
-
         <c:if test="${not empty sessionScope.user}">
             <footer id="messengerTrigger" onclick="toggleMessenger()">
                 <span class="msg_span">
@@ -145,7 +67,7 @@
                 isOpen = !isOpen;
                 document.getElementById('messengerModal').classList.toggle('open', isOpen);
                 if (isOpen && !memberLoaded) {
-                    fetch("msg_member.do")
+                    fetch("/msg_member.do")
                         .then(res => res.text())
                         .then(html => {
                             document.getElementById("msg_member").innerHTML = html;
@@ -171,7 +93,7 @@
 
             function loadChatRoomList() {
                 currentRoomId = null;
-                fetch("msg_chatRoomList")
+                fetch("/msg_chatRoomList")
                     .then(res => res.text())
                     .then(html => {
                         document.getElementById("msg_chatting").innerHTML = html;
