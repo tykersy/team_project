@@ -105,7 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ) lm on c_room.room_id = lm.room_id
         where c_member.sabun = #{sabun} and c_member.liked = true
         order by lm.sent_at desc
-      </select?>
+      </select>
 
     <!--채팅방 생성-->
     <insert id="createRoom"
