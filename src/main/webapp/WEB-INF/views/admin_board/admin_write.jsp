@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%
-    // 간단한 로그인 세션 체크
     if (session.getAttribute("user") == null) {
         response.sendRedirect("/login");
         return;
@@ -22,6 +21,7 @@
         .board-table td { padding: 10px; }
         .input-text { width: 98%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
         #editor-container { height: 300px; background-color: #fff; }
+        .btn-container { margin-top: 30px; padding-bottom: 50px; display: flex; justify-content: flex-end; gap: 10px; }
     </style>
 </head>
 <body>
@@ -58,9 +58,9 @@
                         </tbody>
                     </table>
 
-                    <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 8px;">
-                        <button type="submit" class="btn-custom btn-primary">등록</button>
-                        <a href="/admin/board/list" class="btn-custom btn-secondary">취소</a>
+                    <div class="btn-container">
+                        <button type="button" onclick="submitForm()" class="btn-custom btn-primary" style="cursor:pointer;">등록</button>
+                        <a href="/admin/board/list" class="btn-custom btn-secondary" style="text-decoration:none;">취소</a>
                     </div>
                 </form>
             </div>
@@ -69,7 +69,6 @@
 </div>
 
 <script>
-    
     var quill = new Quill('#editor-container', {
         theme: 'snow',
         modules: {
@@ -84,13 +83,24 @@
         }
     });
 
-    document.getElementById('writeForm').addEventListener('submit', function(e) {
-        document.getElementById('content').value = quill.root.innerHTML;
+    // 폼 강제 전송 함수
+    function submitForm() {
+        var contentField = document.getElementById('content');
+        var quillContent = quill.root.innerHTML;
+        
+        // 1. 내용 유효성 검사
         if (quill.getText().trim() === '') {
             alert('내용을 입력해주세요.');
-            e.preventDefault();
+            return;
         }
-    });
+
+        // 2. 내용 주입
+        contentField.value = quillContent;
+
+        // 3. 폼 제출
+        console.log("폼 제출 시도...");
+        document.getElementById('writeForm').submit();
+    }
 </script>
 
 </body>

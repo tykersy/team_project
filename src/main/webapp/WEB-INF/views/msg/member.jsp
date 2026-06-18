@@ -4,10 +4,17 @@
 
             <link rel="stylesheet" href="/css/messenger/member.css">
 
+            <div class="member-search">
+                <input type="text"
+                    id="memberSearch"
+                    placeholder="🔍 이름 검색"
+                    oninput="searchMember()">
+            </div>
+
             <div class="profile-box">
                 <div class="section-title">내 프로필</div>
 
-                <c:forEach var="vo" items="${list}">
+                <c:forEach var="vo" items="${memberlist}">
                     <c:if test="${vo.sabun == sabun}">
                         <div class="member-item-my-profile">
                             <div class="profile-circle">${fn:substring(vo.saname,0,1)}</div>
@@ -23,9 +30,9 @@
             <div class="member-box">
                 <div class="section-title">멤버 목록</div>
 
-                <c:forEach var="vo" items="${list}">
+                <c:forEach var="vo" items="${memberlist}">
                     <c:if test="${vo.sabun != sabun}">
-                        <div class="member-item" onclick="toggleMemberMenu(this)">
+                        <div class="member-item" data-name="${vo.saname}" onclick="toggleMemberMenu(this)">
 
                             <div class="member-top">
                             <div class="profile-circle">${fn:substring(vo.saname,0,1)}</div>
@@ -62,7 +69,7 @@
                         <div>📞 <span id="profileTel"></span></div>
                     </div>
 
-                    <button class="profile-chat-btn" id="profileChatBtn">메시지 보내기</button>
+                    <button class="profile-chat-btn" id="profileChatBtn" onclick="openChat('${vo.sabun}')">메시지 보내기</button>
                 </div>
             </div>
             <script>
@@ -100,5 +107,40 @@
 
                 function closeProfile() {
                     document.getElementById("profileModal").classList.remove("open");
+                }
+
+                function openChat(sabun){
+
+                    fetch("/make_room.do?sabun=" + sabun,{
+                        method:"POST"
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+
+                        msgSwitchTab(1);
+
+                        openChatRoom(data.roomId);
+                    });
+                }
+
+                function searchMember(){
+
+                    const keyword =
+                        document.getElementById("memberSearch")
+                        .value
+                        .trim()
+                        .toLowerCase();
+
+                    document.querySelectorAll(".member-item")
+                        .forEach(item => {
+
+                            const name =
+                                item.dataset.name.toLowerCase();
+
+                            item.style.display =
+                                name.includes(keyword)
+                                ? "flex"
+                                : "none";
+                        });
                 }
             </script>

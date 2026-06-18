@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.project.dao.ChatDAO;
 import com.kh.project.vo.ChatMessageVO;
+import com.kh.project.vo.ChatRoomVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,4 +38,26 @@ public class ChatService {
         Collections.reverse(logs);
         return logs;
     }
-}
+
+    //채팅방 생성
+    public Integer makeOneRoom(int mySabun, int targetSabun){
+
+        Integer roomId = chatdao.findOneRoom(mySabun, targetSabun);
+
+        if(roomId != null){
+            return roomId;
+        }
+
+        ChatRoomVO room = new ChatRoomVO();
+        room.setRoom_type("ONE");
+
+        chatdao.createRoom(room);
+
+        roomId = room.getRoom_id();
+
+        chatdao.insertChatMember(roomId, mySabun);
+        chatdao.insertChatMember(roomId, targetSabun);
+
+        return roomId;
+    }
+    }
