@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Alias("ta")
 public class TAVO {
     
-    private int sabun;
-    private String day, checkin, checkout;
+    private int sabun; 
+    private String day, checkin, checkout, saname;
     private String status , working_time;
 }

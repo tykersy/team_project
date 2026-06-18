@@ -10,6 +10,9 @@ public interface SawonDAO {
     //사원리스트조회
     List<SawonVO> sawonList(); 
 
+    //사번으로 사원 정보 조회
+    SawonVO selectSawon(int sabun);
+
     //사원별 정보 조회
     SawonVO sawonView( int sabun );
 

@@ -9,6 +9,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select * from sawon
     </select>
 
+    <!-- 사번으로 사원정보 조회 -->
+    <select id="selectSawon"
+            parameterType="int"
+            resultType="sawon">
+        select * from sawon where sabun = #{sabun}
+    </select>
+
     <!-- 사원별 정보 조회 -->
     <select id="sawonView"
             parameterType="int"

@@ -9,15 +9,34 @@
         <link rel="stylesheet" href="/css/admin/sidebar.css">
         <link rel="stylesheet" href="/css/admin/main.css">
         <link rel="stylesheet" href="/css/admin/today_ta.css">
+
     </head>
     <body>
         <div class="manager-container">
             <jsp:include page="/WEB-INF/views/admin_common/admin_sidebar.jsp"/>
             <div class="main-content">
+                
+                <div class="detail-header">
+                    <h2>
+                        ${sawon.saname} ${sawon.sajob} 근태 현황
+                    </h2>
+                </div>
+                
+                <div class="ta-control-bar">
+                    <form action="/admin_main.do/today_ta/view" method="get" class="search-form">
+                        <input type="hidden" name="sabun" value="${param.sabun}">
+                        <label for="search_ym">조회 년월:</label>
+                        <input type="month" id="search_ym" name="ym" value="${ym}">
+                        <button type="submit" class="btn-view">조회</button>
+                    </form>
+
+                    <button type="button" class="btn-ta-modify" 
+                            onclick="location.href='/admin_ta_modify_form?sabun=${sawon.sabun}&ym=${ym}'">
+                        근태 정보 수정하기
+                    </button>
+                </div>
+
                 <table>
-                    <caption>
-                        사원 근태 현황
-                    </caption>
                     <thead>
                         <tr>
                             <th></th>
