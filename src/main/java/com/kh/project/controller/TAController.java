@@ -3,6 +3,7 @@ package com.kh.project.controller;
 
 import java.text.DateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import java.util.HashMap;
@@ -19,10 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.project.common.Calendar;
+import com.kh.project.dao.SawonDAO;
 import com.kh.project.dao.TADAO;
 
 import com.kh.project.vo.SalaryClosedVO;
-
+import com.kh.project.vo.SawonVO;
 import com.kh.project.dao.UserDAO;
 import com.kh.project.vo.CalendarDayVO;
 
@@ -43,6 +45,8 @@ public class TAController {
 
     //userDAO
     private final UserDAO userDao;
+    
+    private final SawonDAO sawonDao;
 
     @Autowired
     HttpSession session;
@@ -167,7 +171,7 @@ public class TAController {
 
         //선택된 ym(년월)이 없다면 오늘날짜 기준으로 세팅
         if( ym == null || ym.equals("") ){
-            ym = String.format("yyyy-MM", LocalDate.now());
+            ym = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
         }
 
         //전체 사원별 해당 년월 TA리스트 불러오기
@@ -224,6 +228,55 @@ public class TAController {
 
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(taJson);
+    }
+
+    //근태 정보 수정페이지
+    @GetMapping("/admin_ta_modify_form")
+    public String taModifyForm(int sabun, String ym, Model model){
+
+        if( ym == null ){
+            
+            //만약 년월 정보가 없다면
+            return "redirect:/admin_main.do/today_ta/view";
+
+        }
+
+        Map<String, Object> info = new HashMap<>();
+        int year;
+        int month;
+
+        //년월 정보가 넘어오지 않았다면 (현재 년월로 조회)
+        if( ym == null || ym.equals("") || ym.trim().equals("")){
+
+            year = LocalDate.now().getYear();
+            month = LocalDate.now().getMonthValue();
+
+            //view.jsp에서 오늘 기준 년월을 뿌려주기 위해 ym에 값 넣어주기
+            ym = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        }else{ //만약 년월 정보가 넘어왔다면(근태 수정중이라면)
+
+            //해당 년월의 해당직원의 근태 정보만 불러오기
+            year = Integer.parseInt(ym.split("-")[0]);
+            month = Integer.parseInt(ym.substring(5,7));
+        }
+
+        info.put("year", year);
+        info.put("month", month);
+        info.put("sabun", sabun);
+        info.put("orderBy", "desc");
+
+        //해당 사원의 해당 년월 출근기록
+        List<TAVO> userTAList = userDao.getMonthlyTA(info);
+        //해당 사원의 이름
+        SawonVO sawon = sawonDao.selectSawon(sabun);
+
+        model.addAttribute("userTaList",userTAList);
+        model.addAttribute("ym", ym);
+        model.addAttribute("sawon", sawon);
+
+        return "admin_ta/admin_ta_modify_form";
+
     }
 
 }
