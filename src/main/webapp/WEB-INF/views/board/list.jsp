@@ -11,10 +11,7 @@
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/board.css">
     <style>
-        /* 표의 모든 셀 내용을 가운데 정렬 */
-        .board-table th, .board-table td {
-            text-align: center;
-        }
+        .board-table th, .board-table td { text-align: center; }
     </style>
 </head>
 <body>
@@ -31,8 +28,7 @@
                             <tr>
                                 <th width="7%">No</th>
                                 <th width="48%">제목</th>
-                                <th width="15%">작성자</th>
-                                <th width="20%">작성일</th>
+                                <th width="15%">작성자</th> <th width="20%">작성일</th>
                                 <th width="10%">조회수</th>
                             </tr>
                         </thead>
@@ -41,9 +37,10 @@
                             <c:forEach var="board" items="${boardList}">
                                 <tr>
                                     <td>${board.idx}</td>
-                                    <td><a href="/board/detail?idx=${board.idx}">${board.title}</a></td>
+                                    <td style="text-align: left; padding-left: 20px;">
+                                        <a href="/board/detail?idx=${board.idx}">${board.title}</a>
+                                    </td>
                                     <td>${board.dept}</td>
-                                    <!-- 시간 제외하고 날짜(10글자)만 출력 -->
                                     <td>${fn:substring(board.created, 0, 10)}</td>
                                     <td>${board.views}</td>
                                 </tr>
@@ -58,34 +55,27 @@
                     </table>
 
                     <div style="display: flex; justify-content: center; margin: 30px 0;">
-                        <form action="/board/list" method="get"
-                            style="display: flex; align-items: center; border: 1px solid #ccc; padding: 0 15px; width: 300px; height: 40px; background: white;">
-                            <input type="text" name="keyword" value="${keyword}" placeholder="Search"
-                                style="border: none; outline: none; width: 100%; height: 100%; padding: 5px; font-size: 14px;">
-                            <button type="submit"
-                                style="border: none; background: none; cursor: pointer; color: #888; font-size: 16px;">
+                        <form action="/board/list" method="get" style="display: flex; align-items: center; border: 1px solid #ccc; padding: 0 15px; width: 300px; height: 40px; background: white;">
+                            <input type="text" name="keyword" value="${keyword}" placeholder="Search" style="border: none; outline: none; width: 100%; height: 100%; padding: 5px; font-size: 14px;">
+                            <button type="submit" style="border: none; background: none; cursor: pointer; color: #888; font-size: 16px;">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </button>
                         </form>
                     </div>
 
                     <div style="text-align: center; margin-bottom: 30px;">
-                        <a href="/board/list?page=${currentPage > 1 ? currentPage - 1 : 1}&keyword=${keyword}"
-                            style="text-decoration: none; color: #333; margin: 0 10px;">&lt;</a>
+                        <a href="/board/list?page=${currentPage > 1 ? currentPage - 1 : 1}&keyword=${keyword}" style="text-decoration: none; color: #333; margin: 0 10px;">&lt;</a>
                         <c:forEach begin="1" end="${totalPages}" var="i">
                             <c:choose>
                                 <c:when test="${currentPage == i}">
-                                    <a href="/board/list?page=${i}&keyword=${keyword}"
-                                        style="margin: 0 8px; text-decoration: none; color: #000; font-weight: bold;">${i}</a>
+                                    <a href="/board/list?page=${i}&keyword=${keyword}" style="margin: 0 8px; text-decoration: none; color: #000; font-weight: bold;">${i}</a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a href="/board/list?page=${i}&keyword=${keyword}"
-                                        style="margin: 0 8px; text-decoration: none; color: #888;">${i}</a>
+                                    <a href="/board/list?page=${i}&keyword=${keyword}" style="margin: 0 8px; text-decoration: none; color: #888;">${i}</a>
                                 </c:otherwise>
                             </c:choose>
                         </c:forEach>
-                        <a href="/board/list?page=${currentPage < totalPages ? currentPage + 1 : totalPages}&keyword=${keyword}"
-                            style="text-decoration: none; color: #333; margin: 0 10px;">&gt;</a>
+                        <a href="/board/list?page=${currentPage < totalPages ? currentPage + 1 : totalPages}&keyword=${keyword}" style="text-decoration: none; color: #333; margin: 0 10px;">&gt;</a>
                     </div>
                 </div>
                 <jsp:include page="/WEB-INF/views/common/msg.jsp" />

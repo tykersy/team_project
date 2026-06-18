@@ -6,8 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <!-- 로그인을 위한 회원 조회 -->
     <select id="selectUser" resultType="sawon">
-    SELECT s.*, d.dname 
-    FROM sawon s 
+    SELECT * FROM sawon s 
     LEFT JOIN dept d ON s.deptno = d.deptno 
     WHERE s.sabun = #{sabun};
     </select>

@@ -1,13 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%
-    // [권한 체크 수정] 로그인 여부만 확인하도록 변경
-    Object userObj = session.getAttribute("user");
-    if (userObj == null) {
-        response.sendRedirect("/login");
-        return;
-    }
-%>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -49,8 +42,8 @@
                             </td>
                         </tr>
                     </table>
-                    <div style="text-align: right; margin-top: 30px;">
-                        <button type="button" onclick="location.href='/admin/board/detail?idx=${board.idx}'" class="btn-custom btn-secondary">취소</button>
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button type="button" onclick="location.href='/admin/board/list'" class="btn-custom btn-secondary">취소</button>
                         <button type="submit" class="btn-custom btn-primary">완료</button>
                     </div>
                 </form>
@@ -59,21 +52,18 @@
     </main>
 </div>
 <script>
-    // [에디터 기능 추가] 툴바 옵션 설정
     var toolbarOptions = [
         [{ 'header': [1, 2, 3, false] }],
         ['bold', 'italic', 'underline', 'strike'],        
         [{ 'color': [] }, { 'background': [] }],          
         [{ 'align': [] }],                                
-        [{ 'list': 'ordered'}, { 'list': 'bullet' }],     
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],    
         ['link', 'image'],                                
-        ['clean']                                         
+        ['clean']                                        
     ];
 
     var quill = new Quill('#editor-container', { 
-        modules: {
-            toolbar: toolbarOptions
-        },
+        modules: { toolbar: toolbarOptions },
         theme: 'snow' 
     });
 

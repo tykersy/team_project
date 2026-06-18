@@ -67,8 +67,11 @@ public class AdminBoardController {
         // 2. 사원 정보 조회 (JOIN을 통해 dname 포함)
         SawonVO member = userDAO.selectUser(sabun);
         
-        // 3. 권한 체크: 사번 1(사장) 또는 직급이 '관리자'인 경우만 접근 허용
-        boolean isAuthorized = (sabun == 1 || "관리자".equals(member.getSajob()));
+        // 3. 권한 체크: 사번 1(사장) 또는 직급이 '팀장'인 경우만 접근 허용
+        boolean isAuthorized = false;
+        if(sabun == 1 || "팀장".equals(member.getSajob())){
+            isAuthorized = true;
+        };
         
         if (!isAuthorized) {
             return "redirect:/admin/board/list"; 
@@ -79,9 +82,16 @@ public class AdminBoardController {
     }
     
     @PostMapping("/write") 
-    public String writePro(BoardVO board) {  
-        boardDAO.insertBoard(board); 
-        return "redirect:/admin/board/list"; 
+    public String writePro(BoardVO board) { 
+    // 세션에서 사번을 가져와서 board 객체에 강제로 설정
+    Integer sabun = (Integer) session.getAttribute("user");
+    board.setSabun(sabun);
+    
+    // 파일이 null인 경우 빈 문자열로 초기화 (에러 방지)
+    if (board.getFile() == null) board.setFile("");
+    
+    boardDAO.insertBoard(board); 
+    return "redirect:/admin/board/list"; 
     }
 
     @GetMapping("/detail") 
@@ -93,6 +103,17 @@ public class AdminBoardController {
     
     @GetMapping("/update") 
     public String updateForm(@RequestParam("idx") int idx, Model model) { 
+
+        // 권한 체크: 로그인 여부 확인
+    Integer userObj = (Integer)session.getAttribute("user");
+    if (userObj == null) {
+        return("/login");
+    }
+    if((int)userObj <= 2000){
+        
+        return"/dashboard/main";
+    }
+
         model.addAttribute("board", boardDAO.getBoard(idx)); 
         return "admin_board/admin_update"; 
     }

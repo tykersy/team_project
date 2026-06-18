@@ -5,26 +5,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.kh.project.dao.BoardDAO">
     
     <select id="getBoardList" parameterType="map" resultType="board">
-    SELECT b.*, s.saname, d.dname AS dept 
-    FROM board b 
-    LEFT JOIN sawon s ON b.sabun = s.sabun 
-    LEFT JOIN dept d ON s.deptno = d.deptno 
-    <where>
-        <if test="keyword != null and keyword != ''">
-            AND b.title LIKE CONCAT('%', #{keyword}, '%')
-        </if>
-    </where>
-    ORDER BY b.idx DESC 
-    LIMIT #{offset}, #{limit}
+        SELECT b.*, s.saname, d.dname AS dept, leader.saname AS leader_name
+        FROM board b 
+        LEFT JOIN sawon s ON b.sabun = s.sabun 
+        LEFT JOIN dept d ON s.deptno = d.deptno
+        LEFT JOIN sawonleader sl ON d.deptno = sl.deptno
+        LEFT JOIN sawon leader ON sl.sabun = leader.sabun
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND b.title LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        ORDER BY b.idx DESC 
+        LIMIT #{offset}, #{limit}
     </select>
 
     <select id="getTotalCount" parameterType="map" resultType="int">
-    SELECT COUNT(*) FROM board
-    <where>
-        <if test="keyword != null and keyword != ''">
-            AND title LIKE CONCAT('%', #{keyword}, '%')
-        </if>
-    </where>
+        SELECT COUNT(*) FROM board
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND title LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
     </select>
 
     <select id="getBoardListAll" resultType="board">
@@ -32,8 +34,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertBoard" parameterType="board">
-        INSERT INTO board (sabun, title, content, file, created, updated)
-        VALUES (#{sabun}, #{title}, #{content}, #{file}, NOW(), NOW())
+        INSERT INTO board (sabun, title, content, file, views, created, updated)
+        VALUES (#{sabun}, #{title}, #{content}, #{file}, 0, NOW(), NOW())
     </insert>
     
     <select id="getBoard" parameterType="int" resultType="com.kh.project.vo.BoardVO">
@@ -42,6 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             b.sabun,
             s.saname,
             d.dname AS dept,
+            leader.saname AS leader_name,
             b.title,
             b.content,
             b.file,
@@ -51,6 +54,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM board b
         LEFT JOIN sawon s ON b.sabun = s.sabun
         LEFT JOIN dept d ON s.deptno = d.deptno
+        LEFT JOIN sawonleader sl ON d.deptno = sl.deptno
+        LEFT JOIN sawon leader ON sl.sabun = leader.sabun
         WHERE b.idx = #{idx}
     </select>
 
