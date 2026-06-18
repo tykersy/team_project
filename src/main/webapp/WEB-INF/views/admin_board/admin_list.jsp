@@ -1,58 +1,48 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>공지사항</title>
+    <title>공지사항 관리</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/css/admin/sidebar.css">
     <style>
-        /* 전체 레이아웃: 사이드바 + 메인 본문 */
-        body { margin: 0; display: flex; min-height: 100vh; background-color: #f4f7f9; font-family: sans-serif; }
-        .sidebar-wrapper { width: 240px; flex-shrink: 0; }
-        .main-content { flex: 1; padding: 40px; }
-        
-        /* 2번째 사진처럼 라운딩 없이 평평한 테이블 스타일 */
-        h1 { text-align: center; margin-bottom: 30px; }
-        .board-table { width: 100%; border-collapse: collapse; background: white; }
-        .board-table th { background-color: #1E3A8A; color: white; padding: 15px; text-align: center; }
-        .board-table td { padding: 15px; border-bottom: 1px solid #eee; text-align: center; }
-        
-        /* 하단 검색 및 버튼 */
-        .controls { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 20px; }
-        .search-area { border: 1px solid #ccc; padding: 5px 10px; display: flex; align-items: center; background: white; }
-        .search-area input { border: none; outline: none; padding: 5px; width: 180px; }
-        .btn-write { background: #1E3A8A; color: white; padding: 8px 20px; text-decoration: none; font-weight: bold; }
-        
-        /* 관리 버튼 */
-        .btn-sm { padding: 4px 10px; text-decoration: none; font-size: 12px; color: white; border: none; cursor: pointer; }
-        .btn-blue { background: #3b82f6; }
-        .btn-red { background: #ef4444; }
+        .main-content { padding: 40px; }
+        .main-content h1 { text-align: center; margin-bottom: 30px; }
+        .main-content .board-table { width: 100%; border-collapse: collapse; background: white; margin-bottom: 30px; }
+        .main-content .board-table th { background-color: #1E3A8A; color: white; padding: 15px; text-align: center; }
+        .main-content .board-table td { padding: 15px; border-bottom: 1px solid #eee; text-align: center; }
+        .main-content .btn-sm { padding: 6px 15px; text-decoration: none; font-size: 14px; color: white; border: none; cursor: pointer; border-radius: 6px; }
+        .main-content .btn-blue { background: #3b82f6; }
+        .main-content .btn-red { background: #ef4444; }
     </style>
 </head>
 <body>
-    <div class="sidebar-wrapper">
-        <jsp:include page="/WEB-INF/views/admin_common/admin_sidebar.jsp" />
-    </div>
 
-    <main class="main-content">
+<div class="layout" style="display: flex;">
+    <jsp:include page="/WEB-INF/views/admin_common/admin_sidebar.jsp" />
+    
+    <main class="main-content" style="flex: 1;">
         <h1>공지사항</h1>
         <table class="board-table">
             <thead>
                 <tr>
-                    <th>No</th><th>제목</th><th>작성자</th><th>작성일자</th><th>조회수</th><th>관리</th>
+                    <th width="6%">No</th>
+                    <th width="27%">제목</th>
+                    <th width="27%">작성 부서</th>
+                    <th width="8%">작성일</th>
+                    <th width="13%">조회수</th>
+                    <th width="12%">관리</th>
                 </tr>
             </thead>
             <tbody>
                 <c:forEach var="board" items="${boardList}">
                     <tr>
                         <td>${board.idx}</td>
-                        <td style="text-align: left; padding-left: 15px;">
-                            <a href="/admin/board/detail?idx=${board.idx}" style="text-decoration:none; color:#333;">${board.title}</a>
-                        </td>
-                        <td>${board.saname}</td>
+                        <td style="text-align: left; padding-left: 15px;"><a href="/admin/board/detail?idx=${board.idx}">${board.title}</a></td>
+                        <td>${board.dept}</td>
                         <td>${fn:substring(board.created, 0, 10)}</td>
                         <td>${board.views}</td>
                         <td>
@@ -64,13 +54,20 @@
             </tbody>
         </table>
 
-        <div class="controls">
-            <form action="/admin/board/list" method="get" class="search-area">
-                <input type="text" name="keyword" value="${keyword}" placeholder="Search">
+        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px; position: relative;">
+            <form action="/admin/board/list" method="get" style="border: 1px solid #ccc; padding: 5px 15px; display: flex; align-items: center; background: white; width: 300px;">
+                <input type="text" name="keyword" value="${keyword}" placeholder="Search" style="border: none; outline: none; width: 100%; padding: 5px;">
                 <button type="submit" style="border:none; background:none; cursor:pointer;"><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
-            <a href="/admin/board/write" class="btn-write">글쓰기</a>
+            <a href="/admin/board/write" style="position: absolute; right: 0; background: #1E3A8A; color: white; padding: 8px 20px; text-decoration: none; font-weight: bold;">글쓰기</a>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px; font-size: 18px;">
+            <a href="/admin/board/list?page=${currentPage > 1 ? currentPage - 1 : 1}&keyword=${keyword}" style="text-decoration: none; color: #333; margin: 0 10px;">&lt;</a>
+            <span style="font-weight: bold; margin: 0 10px;">${currentPage}</span>
+            <a href="/admin/board/list?page=${currentPage < totalPages ? currentPage + 1 : totalPages}&keyword=${keyword}" style="text-decoration: none; color: #333; margin: 0 10px;">&gt;</a>
         </div>
     </main>
+</div> 
 </body>
 </html>

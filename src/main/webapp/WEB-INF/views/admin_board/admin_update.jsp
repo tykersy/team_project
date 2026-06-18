@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%
+    // [권한 체크 수정] 로그인 여부만 확인하도록 변경
     Object userObj = session.getAttribute("user");
-    if (userObj == null || (int)userObj != 1) {
+    if (userObj == null) {
         response.sendRedirect("/login");
         return;
     }
@@ -12,7 +13,7 @@
 <head>
     <meta charset="UTF-8">
     <title>공지사항 수정(관리자용)</title>
-    <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/css/admin/sidebar.css">
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/board.css"> 
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
@@ -37,8 +38,8 @@
                             <td><input type="text" name="title" value="${board.title}" style="width: 100%; padding: 10px;" required></td>
                         </tr>
                         <tr>
-                            <th>작성자</th>
-                            <td>${board.saname} (${board.sabun})</td>
+                            <th>작성 부서</th>
+                            <td>${board.dept}</td>
                         </tr>
                         <tr>
                             <th>내용</th>
@@ -58,11 +59,32 @@
     </main>
 </div>
 <script>
-    var quill = new Quill('#editor-container', { theme: 'snow' });
+    // [에디터 기능 추가] 툴바 옵션 설정
+    var toolbarOptions = [
+        [{ 'header': [1, 2, 3, false] }],
+        ['bold', 'italic', 'underline', 'strike'],        
+        [{ 'color': [] }, { 'background': [] }],          
+        [{ 'align': [] }],                                
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],     
+        ['link', 'image'],                                
+        ['clean']                                         
+    ];
+
+    var quill = new Quill('#editor-container', { 
+        modules: {
+            toolbar: toolbarOptions
+        },
+        theme: 'snow' 
+    });
+
     quill.root.innerHTML = document.getElementById('origin-content').value;
+
     document.getElementById('updateForm').addEventListener('submit', function(e) {
         document.getElementById('content').value = quill.root.innerHTML;
-        if (quill.getText().trim() === '') { alert('내용을 입력해주세요.'); e.preventDefault(); }
+        if (quill.getText().trim() === '') { 
+            alert('내용을 입력해주세요.'); 
+            e.preventDefault(); 
+        }
     });
 </script>
 </body>
