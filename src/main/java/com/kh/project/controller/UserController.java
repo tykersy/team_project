@@ -170,6 +170,7 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(){
         session.removeAttribute("user");
+        session.removeAttribute("loginMember");
 
         return "redirect:/dashboard";
     }
