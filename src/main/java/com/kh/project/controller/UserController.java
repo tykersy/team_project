@@ -74,7 +74,7 @@ public class UserController {
                 //로그인 유무를 확인 하기 위한 세션 세팅
                 session.setAttribute("user", sawonInfo.getSabun());
                 
-                session.setAttribute("userId",(long) sawonInfo.getSabun());
+                
                 session.setAttribute("userName", sawonInfo.getSaname());
                 session.setAttribute("roomId", 1L);
             }else{

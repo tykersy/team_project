@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.project.dao.ChatDAO;
 import com.kh.project.service.ChatService;
@@ -32,5 +33,20 @@ public class ChattingController {
         return "/msg/chatRoom";
     }
     
+    //채팅방 즐겨찾기
+    @GetMapping("/msg_chatRoomList/liked")
+    @ResponseBody
+    public String chatRoomLiked(int sabun, int roomId){
+
+        boolean liked = chatDAO.selectRoomLikedCheck(roomId, sabun);
+
+        liked = !liked;
+
+        chatDAO.updateChatRoomLiked(roomId, sabun, liked);
+        
+        if(liked) return "⭐";
+        else return "☆";
+
+    }
 
 }

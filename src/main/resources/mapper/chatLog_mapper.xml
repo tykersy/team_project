@@ -9,7 +9,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             c_room.room_id, c_room.room_type, c_room.room_name,
             c_room.created_at, c_member.joined_at,
             lm.content as last_message,
-            DATE_FORMAT(lm.sent_at, '%H:%i') as last_message_time
+            DATE_FORMAT(lm.sent_at, '%H:%i') as last_message_time,
+            c_member.liked
         from chat_room as c_room
             join chat_member as c_member on c_room.room_id = c_member.room_id
             left join (
@@ -49,6 +50,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!--특정 방의 멤버 sabun 목록-->
     <select id="selectRoomMemberSabuns" resultType="int">
         select sabun from chat_member where room_id = #{room_id}
+    </select>
+
+    <!-- 즐겨찾기를 위한 조회 -->
+    <select id="selectRoomLikedCheck">
+        select liked from chat_member where room_id=#{room_id} and sabun=#{sabun}
+    </select>
+
+    <!-- 즐겨찾기 수정 -->
+    <update id="updateChatRoomLiked">
+        update chat_member set liked=#{liked}
+            where room_id=#{room_id} and sabun=#{sabun}
+    </update>
+
+    <!-- 즐겨찾기 해놓은 채팅방 조회 -->
+    <select id="selectListLikedChatRoom" resultType="chat">
+        select
+            c_room.room_id, c_room.room_type, c_room.room_name,
+            c_room.created_at, c_member.joined_at,
+            lm.content as last_message,
+            DATE_FORMAT(lm.sent_at, '%H:%i') as last_message_time,
+            c_member.liked
+        from chat_room as c_room
+            join chat_member as c_member on c_room.room_id = c_member.room_id
+            left join (
+                select room_id, content, sent_at
+                from chat_message
+                where (room_id, message_id) in (
+                    select room_id, max(message_id) from chat_message group by room_id
+                )
+            ) lm on c_room.room_id = lm.room_id
+        where c_member.sabun = #{sabun} and c_member.liked = true
+        order by lm.sent_at desc
     </select>
 
 </mapper>

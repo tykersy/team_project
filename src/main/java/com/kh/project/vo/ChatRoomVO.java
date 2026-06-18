@@ -18,4 +18,5 @@ public class ChatRoomVO {
     private LocalDate created_at, joined_at;
     private String last_message;
     private String last_message_time;
+    private boolean liked;
 }

@@ -51,6 +51,7 @@ public class MsgController {
         return sawondao.memberView(sabun);
     }
 
+    //채팅방 리스트
     @GetMapping("/msg_chatRoomList")
     public String msgChatRoom(Model model){
         
@@ -61,7 +62,18 @@ public class MsgController {
         model.addAttribute("chatRooms", list);
 
         return "msg/chatRoomList";
-
     }
+
+    //즐겨찾기 채팅방 리스트
+    @GetMapping("/msg_LikedChatRoomList")
+    public String msgLikedChatRoomList(Model model){
+        int sabun = (int)session.getAttribute("user");
+
+        List<ChatRoomVO> list = chatdao.selectListLikedChatRoom(sabun);
+
+        model.addAttribute("chatRooms", list);
+        return "msg/chatRoomList";
+    }
+    
 
 }

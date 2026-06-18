@@ -123,7 +123,7 @@
                 </div>
 
                 <div class="msg_tab" id="msg_like">
-                    즐겨찾기 탭
+                    <jsp:include page="/WEB-INF/views/msg/chatRoomList.jsp" />
                 </div>
             </div>
 
@@ -136,6 +136,7 @@
             let chatRoomLoaded = false;
             let currentRoomId = null;
             let ws = null;
+            let roomListType = "";
 
             let MY_SABUN = ${sessionScope.user};
             let MY_NAME = '${sessionScope.userName}';
@@ -165,7 +166,11 @@
                 });
 
                 if (index === 1) {
+                    roomListType = "msg_chatting";
                     loadChatRoomList();
+                }else if(index === 2){
+                    roomListType = "msg_like";
+                    loadLikedChatRoomList();
                 }
             }
 
@@ -175,6 +180,15 @@
                     .then(res => res.text())
                     .then(html => {
                         document.getElementById("msg_chatting").innerHTML = html;
+                    });
+            }
+            
+            function loadLikedChatRoomList(){
+                currentRoomId = null;
+                fetch("msg_LikedChatRoomList")
+                    .then(res => res.text())
+                    .then(html => {
+                        document.getElementById("msg_like").innerHTML = html;
                     });
             }
 
@@ -219,15 +233,10 @@
                 fetch("msg_chatRoom/" + roomId)
                     .then(res => res.text())
                     .then(html => {
-                        document.getElementById("msg_chatting").innerHTML = html;
+                        document.getElementById(roomListType).innerHTML = html;
                         var msgBox = document.getElementById('chatMessages');
                         if (msgBox) msgBox.scrollTop = msgBox.scrollHeight;
                     });
-            }
-
-            /* ── 채팅방 목록으로 돌아가기 ── */
-            function backToChatList() {
-                loadChatRoomList();
             }
 
             /* ── 메시지 전송 ── */
@@ -279,6 +288,19 @@
                 let div = document.createElement('div');
                 div.textContent = text;
                 return div.innerHTML;
+            }
+
+            /* 채팅방 즐겨찾기 */
+            async function chat_like(event,roomId,index){
+                event.stopPropagation();
+
+                await fetch("msg_chatRoomList/liked?roomId="+roomId+"&sabun="+MY_SABUN)
+                    .then(res => res.text())
+                    .then(html => {
+                        document.querySelectorAll('.chat-liked-'+index).forEach((b, i) => {
+                            b.innerText = html;
+                        });
+                    });
             }
 
         </script>
