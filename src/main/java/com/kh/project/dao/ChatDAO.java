@@ -3,6 +3,7 @@ package com.kh.project.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.kh.project.vo.ChatMessageVO;
 import com.kh.project.vo.ChatRoomVO;
@@ -21,5 +22,13 @@ public interface ChatDAO {
 
     // 특정 방의 멤버 sabun 목록 조회
     public List<Integer> selectRoomMemberSabuns(int room_id);
+
+    Integer findOneRoom(@Param("mySabun") int mySabun,
+                        @Param("targetSabun") int targetSabun);
+
+    void createRoom(ChatRoomVO room);
+
+    void insertChatMember(@Param("roomId") int roomId,
+                        @Param("sabun") int sabun);
 
 }

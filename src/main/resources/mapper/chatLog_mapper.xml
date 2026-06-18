@@ -5,22 +5,44 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.kh.project.dao.ChatDAO">
 
     <select id="selectListChatRoom" resultType="chat">
-        select
-            c_room.room_id, c_room.room_type, c_room.room_name,
-            c_room.created_at, c_member.joined_at,
-            lm.content as last_message,
-            DATE_FORMAT(lm.sent_at, '%H:%i') as last_message_time
-        from chat_room as c_room
-            join chat_member as c_member on c_room.room_id = c_member.room_id
-            left join (
-                select room_id, content, sent_at
-                from chat_message
-                where (room_id, message_id) in (
-                    select room_id, max(message_id) from chat_message group by room_id
-                )
-            ) lm on c_room.room_id = lm.room_id
-        where c_member.sabun = #{sabun}
-        order by lm.sent_at desc
+         SELECT
+            c_room.room_id,
+            c_room.room_type,
+
+            CASE
+                WHEN c_room.room_type = 'ONE' THEN other_sawon.saname
+                ELSE c_room.room_name
+            END AS room_name,
+
+            c_room.created_at,
+            c_member.joined_at,
+            lm.content AS last_message,
+            DATE_FORMAT(lm.sent_at, '%H:%i') AS last_message_time
+        FROM chat_room c_room
+
+        JOIN chat_member c_member
+            ON c_room.room_id = c_member.room_id
+
+        LEFT JOIN chat_member other_member
+            ON c_room.room_id = other_member.room_id
+            AND other_member.sabun != #{sabun}
+
+        LEFT JOIN sawon other_sawon
+            ON other_member.sabun = other_sawon.sabun
+
+        LEFT JOIN (
+            SELECT room_id, content, sent_at
+            FROM chat_message
+            WHERE (room_id, message_id) IN (
+                SELECT room_id, MAX(message_id)
+                FROM chat_message
+                GROUP BY room_id
+            )
+        ) lm
+            ON c_room.room_id = lm.room_id
+
+        WHERE c_member.sabun = #{sabun}
+        ORDER BY lm.sent_at DESC
     </select>
     
     <!--메시지 작성시 로그 저장-->
@@ -49,6 +71,46 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!--특정 방의 멤버 sabun 목록-->
     <select id="selectRoomMemberSabuns" resultType="int">
         select sabun from chat_member where room_id = #{room_id}
+    </select>
+
+    <!--채팅방 생성-->
+    <insert id="createRoom"
+            parameterType="chat"
+            useGeneratedKeys="true"
+            keyProperty="room_id">
+
+        INSERT INTO chat_room(room_type)
+        VALUES(#{room_type})
+
+    </insert>
+
+    <!--채팅상대-->
+    <insert id="insertChatMember">
+
+        INSERT INTO chat_member(
+            room_id,
+            sabun
+        )
+        VALUES(
+            #{roomId},
+            #{sabun}
+        )
+
+    </insert>
+
+    <!--채팅방 조회(이미 존재하는 채팅방인지)-->
+    <select id="findOneRoom"
+            resultType="int">
+
+        SELECT cr.room_id
+        FROM chat_room cr
+        JOIN chat_member cm1 ON cr.room_id = cm1.room_id
+        JOIN chat_member cm2 ON cr.room_id = cm2.room_id
+        WHERE cr.room_type = 'ONE'
+            AND cm1.sabun = #{mySabun}
+            AND cm2.sabun = #{targetSabun}
+        LIMIT 1
+
     </select>
 
 </mapper>
