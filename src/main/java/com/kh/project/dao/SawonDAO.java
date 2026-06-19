@@ -39,4 +39,6 @@ public interface SawonDAO {
 
     SawonVO memberView(int sabun);
 
+    String selectSajob(int sabun);
+
 } 

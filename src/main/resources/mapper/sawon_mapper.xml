@@ -115,4 +115,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     </select>
 
+    <select id="selectSajob"
+            parameterType="int"
+            resultType="String">
+        select sajob from sawon where sabun=#{sabun}
+    </select>
+
 </mapper>
