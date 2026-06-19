@@ -51,4 +51,6 @@ public interface SleaveDAO {
 
     //연차 사용 신청 반려
     int reject(Map<String, Object> map);
+
+    
 }

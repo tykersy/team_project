@@ -48,4 +48,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update sleave_log set approve = 2 , reject_reason = #{reject_reason}
         WHERE log_id = #{log_id}
     </update>
+
+    
 </mapper>

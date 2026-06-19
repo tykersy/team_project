@@ -167,6 +167,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         GROUP BY s.sabun, s.saname
     </select>
 
-    
+    <!-- 해당 사원의 해당 년월의 근태 마감 여부 확인 -->
+    <select id="alreadyApproved"
+            parameterType="java.util.Map"
+            resultType="String">
+        select status from salary_closed_attendance
+        where sabun = #{sabun} and closed_ym = #{ym}
+    </select>
+
+    <!-- 해당 사원의 근태 기록 수정 -->
+    <update id="updateTaReport"
+            parameterType="ta">
+        <foreach collection="userTaList" item="item" separator=";">
+            update ta set
+                checkin = #{item.checkin}, checkout = #{item.checkout}
+            where sabun = #{sabun} and day = #{item.day}
+        </foreach>
+    </update>
     
 </mapper>

@@ -279,4 +279,17 @@ public class TAController {
 
     }
 
+    //근태 기록 수정
+    @PostMapping("/admin_update_ta_list")
+    @ResponseBody
+    public boolean updateTAReport(String ym, TAVO ta){
+
+        //확인용
+        System.out.println("수정할 대상 사번 : " + ta.getSabun() );
+        System.out.println("수정할 행 개수 : " + ta.getUserTaList().size());
+
+        return tadao.updateTaReport(ta);
+
+    }
+
 }
