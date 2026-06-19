@@ -14,16 +14,12 @@
     <link rel="stylesheet" href="/css/admin/sidebar.css">
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/board.css">
+    <link rel="stylesheet" href="/css/admin/board-editor.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
-    <style>
-        .board-table th { width: 15%; text-align: center; vertical-align: middle; }
-        .board-table td { padding: 10px; }
-        .input-text { width: 98%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        #editor-container { height: 300px; background-color: #fff; }
-        .btn-container { margin-top: 30px; padding-bottom: 50px; display: flex; justify-content: flex-end; gap: 10px; }
-    </style>
 </head>
+
 <body>
 
 <div class="layout">
@@ -69,10 +65,23 @@
 </div>
 
 <script>
+    // 1. 폰트 설정
+    var Font = Quill.import('formats/font');
+    Font.whitelist = [false, 'malgun-gothic', 'nanum-gothic', 'serif', 'monospace']; 
+    Quill.register(Font, true);
+
+    // 2. 사이즈 설정
+    var Size = Quill.import('formats/size');
+    Size.whitelist = ['10', '12', '14', '16', '18', '20'];
+    Quill.register(Size, true);
+
+    // 3. 에디터 초기화 및 툴바 상세 설정
     var quill = new Quill('#editor-container', {
         theme: 'snow',
         modules: {
             toolbar: [
+                [{ 'font': [false, 'malgun-gothic', 'nanum-gothic', 'serif', 'monospace'] }],
+                [{ 'size': ['10', '12', '14', '16', '18', '20'] }], 
                 [{ 'header': [1, 2, 3, false] }],
                 ['bold', 'italic', 'underline', 'strike'],
                 [{ 'color': [] }, { 'background': [] }],
@@ -83,22 +92,17 @@
         }
     });
 
-    // 폼 강제 전송 함수
+    // 4. 폼 전송
     function submitForm() {
         var contentField = document.getElementById('content');
         var quillContent = quill.root.innerHTML;
         
-        // 1. 내용 유효성 검사
         if (quill.getText().trim() === '') {
             alert('내용을 입력해주세요.');
             return;
         }
 
-        // 2. 내용 주입
         contentField.value = quillContent;
-
-        // 3. 폼 제출
-        console.log("폼 제출 시도...");
         document.getElementById('writeForm').submit();
     }
 </script>
