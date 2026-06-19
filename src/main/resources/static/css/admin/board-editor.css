@@ -1,0 +1,32 @@
+/* 폰트 및 레이아웃 관련 스타일 */
+.board-table th { width: 15%; text-align: center; vertical-align: middle; }
+.board-table td { padding: 10px; }
+.input-text { width: 98%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+#editor-container { height: 300px; background-color: #fff; }
+.btn-container { margin-top: 30px; padding-bottom: 50px; display: flex; justify-content: flex-end; gap: 10px; }
+
+/* 폰트 적용 */
+.ql-font-malgun-gothic { font-family: 'Malgun Gothic', sans-serif; }
+.ql-font-nanum-gothic { font-family: 'Nanum Gothic', sans-serif; }
+
+/* 글자 크기 정의 */
+.ql-size-10 { font-size: 10px; }
+.ql-size-12 { font-size: 12px; }
+.ql-size-14 { font-size: 14px; }
+.ql-size-16 { font-size: 16px; }
+.ql-size-18 { font-size: 18px; }
+.ql-size-20 { font-size: 20px; }
+
+/* 툴바 드롭다운 메뉴 글자 표시 */
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="10"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="10"]::before { content: '10'; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="12"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="12"]::before { content: '12'; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="14"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="14"]::before { content: '14'; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="16"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="16"]::before { content: '16'; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="18"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="18"]::before { content: '18'; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="20"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="20"]::before { content: '20'; }
