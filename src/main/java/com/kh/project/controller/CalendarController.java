@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.project.dao.CalendarDAO;
+import com.kh.project.dao.SawonDAO;
 import com.kh.project.vo.DcalendarVO;
 import com.kh.project.vo.ScalendarVO;
 
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class CalendarController {
 
     private final CalendarDAO calendardao;
+    private final SawonDAO sawondao;
 
     @Autowired
     HttpSession session;
@@ -52,6 +54,7 @@ public class CalendarController {
         LocalDate next = firstDay.plusMonths(1);
 
         int deptno = calendardao.selectDeptnoBySabun(sabun);
+        String sajob = sawondao.selectSajob(sabun);
 
         LocalDate monthStart = LocalDate.of(year, month, 1);
         LocalDate monthEnd = monthStart.withDayOfMonth(monthStart.lengthOfMonth());
@@ -105,6 +108,7 @@ public class CalendarController {
         int totalCell = startBlank + lastDay;
         int endBlank = totalCell % 7 == 0 ? 0 : 7 - (totalCell % 7);
 
+        model.addAttribute("sajob", sajob);
         model.addAttribute("prevLastDay", prevLastDay);
         model.addAttribute("endBlank", endBlank);
 

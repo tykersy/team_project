@@ -25,9 +25,11 @@
                             <!--일정 추가-->
                             <div>
                                 <div class="bottom-menu" id="bottomMenu">
-                                    <button onclick="location.href='dcal_insert.do'">
-                                        <span>부서일정 추가</span>
-                                    </button>
+                                    <c:if test="${deptno=='1' || sajob=='팀장'}">
+                                        <button onclick="location.href='dcal_insert.do'">
+                                            <span>부서일정 추가</span>
+                                        </button>
+                                    </c:if>
 
                                     <button onclick="location.href='scal_insert.do'">
                                         <span>개인일정 추가</span>
