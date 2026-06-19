@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.kh.project.vo.SalaryClosedVO;
 import com.kh.project.vo.SalaryLedgerVO;
+import com.kh.project.vo.SleaveLogVO;
 import com.kh.project.vo.TAVO;
 
 public interface TADAO {
@@ -36,5 +37,11 @@ public interface TADAO {
     int insertClosedAttendance(SalaryClosedVO vo);
 
     int insertSalaryLedger(SalaryLedgerVO vo);
+
+    //해당 년월의 근태 마감 여부 확인
+    String alreadyApproved(Map<String, Object> map);
+
+    //해당 사원의 근태기록 수정
+    boolean updateTaReport(TAVO ta);
 
 } 

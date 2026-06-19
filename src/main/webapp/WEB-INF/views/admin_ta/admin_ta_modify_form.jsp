@@ -21,7 +21,7 @@
                 // URLSearchParams를 이용하여 폼 데이터를 전송에 적합한 쿼리 스트링으로 가공
                 let urlEncoded = new URLSearchParams(formData).toString();
 
-                fetch("/admin/salary/update_ta_list", {
+                fetch("/admin_update_ta_list", { 
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: urlEncoded
@@ -30,7 +30,7 @@
                 .then(data => {
                     if(data === true) {
                         alert("근태 기록이 성공적으로 수정되었습니다.");
-                        location.reload();
+                        history.back();
                     } else {
                         alert("저장 중 오류가 발생했습니다.");
                     }
@@ -85,16 +85,16 @@
                                             <td>${status.count}</td>
                                             <td>
                                                 ${ta.day}
-                                                <input type="hidden" name="taList[${status.index}].day" value="${ta.day}">
+                                                <input type="hidden" name="userTaList[${status.index}].day" value="${ta.day}">
                                             </td>
                                             <td>
-                                                <input type="time" class="input-time" name="taList[${status.index}].checkin" value="${ta.checkin}">
+                                                <input type="time" class="input-time" name="userTaList[${status.index}].checkin" value="${ta.checkin}">
                                             </td>
                                             <td>
-                                                <input type="time" class="input-time" name="taList[${status.index}].checkout" value="${ta.checkout}">
+                                                <input type="time" class="input-time" name="userTaList[${status.index}].checkout" value="${ta.checkout}">
                                             </td>
                                             <td>
-                                                <select class="select-status" name="taList[${status.index}].status">
+                                                <select class="select-status" name="userTaList[${status.index}].status">
                                                     <option value="normal" ${ta.status eq 'normal' ? 'selected' : ''}>정상</option>
                                                     <option value="late" ${ta.status eq 'late' ? 'selected' : ''}>지각</option>
                                                     <option value="absent" ${ta.status eq 'absent' ? 'selected' : ''}>결근</option>

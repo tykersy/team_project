@@ -30,10 +30,13 @@
                         <button type="submit" class="btn-view">조회</button>
                     </form>
 
-                    <button type="button" class="btn-ta-modify" 
-                            onclick="location.href='/admin_ta_modify_form?sabun=${sawon.sabun}&ym=${ym}'">
-                        근태 정보 수정하기
-                    </button>
+                    <!-- 근태가 아직 마감되지 않은 사원만 수정버튼 보여주기 -->
+                    <c:if test="${approved == 'show'}">
+                        <button type="button" class="btn-ta-modify" 
+                                onclick="location.href='/admin_ta_modify_form?sabun=${sawon.sabun}&ym=${ym}'">
+                            근태 정보 수정하기
+                        </button>
+                    </c:if>
                 </div>
 
                 <table>
