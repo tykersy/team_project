@@ -37,7 +37,8 @@
                 </div>
                 
                 <div style="margin-top: 20px; text-align: center;">
-                    <a href="/admin/board/list" class="action-btn" style="background:#666; color:white; padding:10px; text-decoration:none;">목록으로</a>
+                    <a href="/admin/board/list" class="btn-custom btn-secondary" style="text-decoration:none;">취소</a>
+                    <button type="button" class="btn-custom btn-primary" onclick="location.href='/admin/board/update?idx=${board.idx}'">수정</button>
                 </div>
             </div>
         </div>
