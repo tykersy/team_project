@@ -30,7 +30,7 @@
                 .then(data => {
                     if(data === true) {
                         alert("근태 기록이 성공적으로 수정되었습니다.");
-                        history.back();
+                        location.href="/admin_main.do/today_ta/view?sabun="+form.sabun.value;
                     } else {
                         alert("저장 중 오류가 발생했습니다.");
                     }

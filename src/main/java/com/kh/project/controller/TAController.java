@@ -288,7 +288,9 @@ public class TAController {
         System.out.println("수정할 대상 사번 : " + ta.getSabun() );
         System.out.println("수정할 행 개수 : " + ta.getUserTaList().size());
 
-        return tadao.updateTaReport(ta);
+        boolean res = tadao.updateTaReport(ta);
+
+        return res;
 
     }
 
