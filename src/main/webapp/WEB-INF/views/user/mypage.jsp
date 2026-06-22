@@ -71,6 +71,18 @@
                     </div>
                 </div>
             </div>
+            <!-- 서명 대기중인 근로계약건이 있을 경우에만 보여주게 설정할 예정(수정필요) -->
+            <div class="card">
+                <div class="card-title"><span class="dot"></span>서명 대기중인 근로계약건</div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>계약서</label>
+                        <div class="val"> 
+                            <a href="/user_sign_contract?sabun=${info.sabun}" class="pw-edit-link">서명하기</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <!-- ─────────────────────────────── TAB 2: 출/퇴근 ─── -->

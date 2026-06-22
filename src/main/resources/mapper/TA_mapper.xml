@@ -179,9 +179,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateTaReport"
             parameterType="ta">
         <foreach collection="userTaList" item="item" separator=";">
-            update ta set
-                checkin = #{item.checkin}, checkout = #{item.checkout}
-            where sabun = #{sabun} and day = #{item.day}
+            insert into ta (sabun, day, checkin, checkout)
+            values( #{sabun}, #{item.day}, 
+            <choose>
+                <when test="item.checkin != null and item.checkin != ''">
+                    concat(#{item.day},' ', #{item.checkin}, ':00')
+                </when>
+                <otherwise>null</otherwise>
+            </choose>,
+            <choose>
+                <when test="item.checkout != null and item.checkout != ''">    
+                    concat(#{item.day}, ' ', #{item.checkout}, ':00')
+                </when>
+                <otherwise>null</otherwise>
+            </choose>
+            )
+            on duplicate key update
+            checkin = values(checkin),
+            checkout = values(checkout)
         </foreach>
     </update>
     

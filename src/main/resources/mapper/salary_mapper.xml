@@ -33,5 +33,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{income_tax}, #{local_income_tax}, #{net_pay}, '대기'
         )
     </insert>
+
+    <!-- 사원의 가장 최근 근로 계약 정보 조회하기 -->
+    <select id="getContractBySabun"
+            parameterType="int"
+            resultType="contract">
+        select base_salary,
+               meal_allowance,
+        from salary_contract
+        where sabun = #{sabun}
+            and (end_date is not null and now() between start_date)
+            and (end_date is null and now() &gt;= start_date)
+        order by created_at DESC 
+        limit 1
+    </select>
+
+    <!-- 새로운 근로 계약 정보 등록 -->
+    <insert id="insertContract"
+            parameterType="contract">
+        insert into salary_contract( sabun, base_salary, meal_allowance, start_date, end_date )
+        values( #{sabun}, #{base_salary}, #{meal_allowance}, #{start_date}, #{end_date} )
+    </insert>
     
 </mapper>

@@ -5,12 +5,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kh.project.dao.SalaryDAO;
+import com.kh.project.dao.SawonDAO;
 import com.kh.project.dao.TADAO;
 import com.kh.project.vo.SalaryClosedVO;
+import com.kh.project.vo.SalaryContractVO;
 import com.kh.project.vo.SalaryLedgerVO;
+import com.kh.project.vo.SawonVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,8 +25,10 @@ import lombok.RequiredArgsConstructor;
 public class SalaryController {
     
     private final TADAO tadao;
+    private final SalaryDAO salaryDao;
+    private final SawonDAO sawonDao;
 
-    //근태 마감 처리 함수(fetch사용)
+    //근태 마감 처리 (한명)
     @PostMapping("/admin_taclose")
     @ResponseBody
     public boolean closeEmployeeAttendance(String ym, String sabun){
@@ -70,9 +78,23 @@ public class SalaryController {
         //세팅된 정보를 salary_closed_attendance테이블에 저장
         tadao.insertClosedAttendance(sawon);
 
+        //사원의 연봉계약 정보 가져오기
+        SalaryContractVO contract = salaryDao.getContractBySabun(Integer.parseInt(sabun));
+
         //사원의 연봉에 따른 급여 계산
-        long baseSalary = 3000000; //기본급 300만원으로 가정 (임시데이터 사용해서 DB에서 불러와보기***)
-        long mealAllowance = 200000; //식대 20만원으로 가정
+        long baseSalary = 0;
+        long mealAllowance = 0; 
+
+        if( contract != null ){
+            //해당 사번의 계약서가 존재한다면
+            baseSalary = contract.getBase_salary();
+            mealAllowance = contract.getMeal_allowance();
+        }else{
+            //해당 사번의 계약서가 존재하지 않는다면
+            System.out.println(sabun + "번 사원의 유효한 계약 정보가 없습니다. 기본 값으로 계산 됩니다.");
+            baseSalary = 2500000; //최저 기본급 (***가능하면 시스템에서 수정 가능하게끔? 구현예정)
+            mealAllowance = 200000; //기본 식대 설정 (***가능하면 시스템에서 수정 가능하게끔? 구현예정)
+        }
 
         //결근 일수에 따른 기본급 차감 
         long absenceDeduction = (baseSalary / standardDays ) * absenceDays;
@@ -122,6 +144,7 @@ public class SalaryController {
         return true;
     }
 
+    // 근태 마감 대기자 전부 마감하기
     @PostMapping("/admin_ta_close_all")
     @ResponseBody
     public boolean closeAllTA( String ym ){
@@ -155,9 +178,23 @@ public class SalaryController {
 
             //마감 DB에 정상적으로 데이터 입력 후 월급 명세서 DB에도 데이터 넣기
 
+            //사원의 연봉계약 정보 가져오기
+            SalaryContractVO contract = salaryDao.getContractBySabun(sawon.getSabun());
+
             //사원의 연봉에 따른 급여 계산
-            long baseSalary = 3000000; //기본급 300만원으로 가정 (임시데이터 사용해서 DB에서 불러와보기***)
-            long mealAllowance = 200000; //식대 20만원으로 가정
+            long baseSalary = 0; 
+            long mealAllowance = 0; 
+
+            if( contract != null ){
+                //해당 사번의 계약서가 존재한다면
+                baseSalary = contract.getBase_salary();
+                mealAllowance = contract.getMeal_allowance();
+            }else{
+                //해당 사번의 계약서가 존재하지 않는다면
+                System.out.println(sawon.getSabun() + "번 사원의 유효한 계약 정보가 없습니다. 기본 값으로 계산 됩니다.");
+                baseSalary = 2500000; //최저 기본급 (***가능하면 시스템에서 수정 가능하게끔? 구현예정)
+                mealAllowance = 200000; //기본 식대 설정 (***가능하면 시스템에서 수정 가능하게끔? 구현예정)
+            }
 
             //결근 일수에 따른 기본급 차감 
             long absenceDeduction = (baseSalary / standardDays ) * absenceDays;
@@ -209,4 +246,33 @@ public class SalaryController {
         return true;
 
     }
+
+    //전자 계약 추가 페이지로 이동
+    @GetMapping("/admin_set_contract")
+    public String setContractPage( Model model ){
+
+        //전체 사원번호+이름 리스트 불러오기
+        List<SawonVO> sawonList = sawonDao.sawonList();
+
+        //바인딩 및 포워딩
+        model.addAttribute("sawonList", sawonList);
+
+        return "admin_salary/admin_set_contract";
+    }
+
+    //전자 계약 등록(추가)
+    @PostMapping("/admin_register_contract")
+    @ResponseBody
+    public boolean registerContract(SalaryContractVO vo){
+
+        System.out.println("계약 요청 사번 : " + vo.getSabun());
+        System.out.println("기본급 : " + vo.getBase_salary());
+
+        int res = salaryDao.insertContract(vo);
+
+        //성공시 true, 실패시 false반환
+        return res > 0;
+
+    }
+
 }
