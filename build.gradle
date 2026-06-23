@@ -21,6 +21,15 @@ repositories {
 dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+    // Spring Web (MVC - Controller 용)
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+	
+	// WebClient (Gemini 호출용)
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	
+	// JSON 처리
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
 	//WebSocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	
