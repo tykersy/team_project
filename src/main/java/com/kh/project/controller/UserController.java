@@ -8,15 +8,19 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kh.project.dao.SalaryDAO;
 import com.kh.project.dao.SleaveDAO;
 import com.kh.project.dao.UserDAO;
 import com.kh.project.vo.CalendarDayVO;
+import com.kh.project.vo.SalaryContractVO;
+import com.kh.project.vo.SalaryLedgerVO;
 import com.kh.project.vo.SawonVO;
 import com.kh.project.vo.SleaveLogVO;
 import com.kh.project.vo.SleaveVO;
@@ -43,6 +47,8 @@ public class UserController {
     private final PwdSecurity pwdSecurity;
     //캘린더
     private final Calendar calendar;
+    //계약서
+    private final SalaryDAO salaryDao;
 
     //세션으로 로그인 유무 확인 
     @Autowired
@@ -98,16 +104,20 @@ public class UserController {
             return "redirect:/login";
         }
 
+        System.out.println("11111111");
+
         //세션에 저장된 사번으로 유저 정보 조회
         int sabun = (int) session.getAttribute("user");
         
         //오늘 년/월을 구하여 포멧을 지정
         LocalDate now = LocalDate.now();
+        String ym = now.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         Map<String, Object> monthlyTAMap = new HashMap<>();
         monthlyTAMap.put("sabun", sabun);
         monthlyTAMap.put("year", now.getYear());
         monthlyTAMap.put("month", now.getMonthValue()); 
+        monthlyTAMap.put("ym", ym);
         monthlyTAMap.put("orderBy", "desc");
 
         UserVO userInfo = userDao.userMyPage(sabun); // 사원 기본 정보
@@ -115,6 +125,9 @@ public class UserController {
         Map<String,String> userTotalTA = userDao.userTotalTa(sabun); // 총 근무 시간, 일
         SleaveVO userSleave = sleaveDAO.sawonLeave(sabun); // 사원 연차 조회
         List<SleaveLogVO> userSleaveLog = sleaveDAO.sleaveLogSelect(sabun); //사원 연차 사용 조회
+        SalaryLedgerVO userSalary = salaryDao.getLedgerinfo(monthlyTAMap); //사원 이번달 월급 정보 조회
+
+        System.out.println("년월" + ym);
         
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월");
         String today = now.format(formatter);
@@ -125,6 +138,7 @@ public class UserController {
         model.addAttribute("today", today);
         model.addAttribute("sleave", userSleave);
         model.addAttribute("leaveLogList", userSleaveLog);
+        model.addAttribute("userSalary", userSalary);
         
 
         return "user/mypage";
@@ -247,8 +261,42 @@ public class UserController {
 
     }
 
+    //근로&연봉 계약서 사인폼으로 이동
+    @GetMapping("/user_sign_contract")
+    public String SignContractForm( Model model , String sabun ){
 
+        //사번이 제대로 넘어 왔다면
+        if( sabun != null || !sabun.trim().equals("") ){
+            
+            int realSabun = Integer.parseInt(sabun);
+            SalaryContractVO contract = salaryDao.getContractBySabun(realSabun);
 
+            model.addAttribute("contract", contract);
+        }else{ //사번이 제대로 넘어오지 않았다면
+        System.out.println("해당 사원의 사번 정보가 없습니다");
+        }
+        return "user/signContractForm";
 
+    }
+
+    //계약서 서명
+    @PostMapping("/user_sign_contract")
+    @ResponseBody
+    public boolean signContract( SalaryContractVO contract ){
+
+        System.out.println("전자 서명 제출중, 계약서 ID : " + contract.getContract_id());
+
+        //서명 데이터가 정상적으로 넘어왔는지 확인
+        if( contract.getSignature_data() == null || contract.getSignature_data().trim().equals("") ){
+            System.out.println("서명 데이터가 정상적으로 전달되지 않았습니다");
+            return false;
+        }
+
+        //계약서 DB에 사인데이터 넣기
+        int res = salaryDao.updateSignature( contract );
+
+        return res > 0;
+
+    }
     
 }

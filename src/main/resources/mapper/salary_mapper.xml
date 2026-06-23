@@ -2,48 +2,20 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kh.project.dao.TADAO">
+<mapper namespace="com.kh.project.dao.SalaryDAO">
     
-    <!-- 근태 마감후 테이블에 정산된 값 넣기 -->
-    <insert id="insertClosedAttendance"
-            parameterType="salaryclosed">
-        INSERT INTO salary_closed_attendance(
-            closed_ym, sabun, standard_days, worked_days, absence_days, leave_days,
-            overtime_hours, status, updated_at)
-        VALUES( #{closed_ym}, #{sabun}, #{standard_days}, #{worked_days}, #{absence_days}, #{leave_days},
-            #{overtime_hours}, '완료', NOW() )
-        ON DUPLICATE KEY UPDATE
-            worked_days = #{worked_days},
-            absence_days = #{absence_days},
-            overtime_hours = #{overtime_hours},
-            status = "완료"
-    </insert>
-
-    <!-- 근태 마감 후 월급 명세서 테이블에 정산된 값 넣기 -->
-    <insert id="insertSalaryLedger"
-            parameterType="ledger">
-        INSERT INTO salary_ledger(
-            pay_ym, sabun, base_pay, overtime_pay, meal_pay,
-            national_pension, health_insurance, long_term_care, employment_insurance,
-            income_tax, local_income_tax, net_pay, status
-        )
-        VALUES (
-            #{pay_ym}, #{sabun}, #{base_pay}, #{overtime_pay}, #{meal_pay},
-            #{national_pension}, #{health_insurance}, #{long_term_care}, #{employment_insurance},
-            #{income_tax}, #{local_income_tax}, #{net_pay}, '대기'
-        )
-    </insert>
-
     <!-- 사원의 가장 최근 근로 계약 정보 조회하기 -->
     <select id="getContractBySabun"
             parameterType="int"
             resultType="contract">
-        select base_salary,
-               meal_allowance,
+        select *
         from salary_contract
         where sabun = #{sabun}
-            and (end_date is not null and now() between start_date)
-            and (end_date is null and now() &gt;= start_date)
+            AND (
+          (end_date IS NOT NULL AND NOW() BETWEEN start_date AND end_date)
+          OR
+          (end_date IS NULL AND NOW() &gt;= start_date)
+                )
         order by created_at DESC 
         limit 1
     </select>
@@ -52,7 +24,77 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertContract"
             parameterType="contract">
         insert into salary_contract( sabun, base_salary, meal_allowance, start_date, end_date )
-        values( #{sabun}, #{base_salary}, #{meal_allowance}, #{start_date}, #{end_date} )
+        values( #{sabun}, #{base_salary}, #{meal_allowance}, #{start_date}, #{end_date, jdbcType=DATE} )
     </insert>
+
+    <!-- 계약서에 서명정보 추가 -->
+    <update id="updateSignature"
+            parameterType="contract">
+        update salary_contract set signature_data = #{signature_data},
+            signed_at = now()
+        where contract_id = #{contract_id}
+    </update>
+
+    <!-- 사원의 월급 명세서 정보 조회 -->
+    <select id="getLedgerbySabun"
+            parameterType="int"
+            resultType="ledger">
+        select * from salary_ledger
+        where sabun = #{sabun}
+    </select>
+
+    <!-- 사원의 정산 완료된 이번달 명세서 조회 -->
+    <select id="getLedgerinfo"
+            parameterType="java.util.Map"
+            resultType="ledger">
+        select * from salary_ledger
+        where sabun = #{sabun} and status = '완료' and pay_ym = #{ym}
+    </select>
+
+    <!-- 해당 년월 모든 월급 정산 대상 명세서 리스트 조회 -->
+    <select id="needConfirmLedgerList"
+            parameterType="String"
+            resultType="ledger">
+        select l.salary_id,
+               l.pay_ym,
+               l.sabun,
+               s.saname,
+               d.dname,
+               l.base_pay,
+               l.overtime_pay,
+               l.meal_pay,
+               l.national_pension,
+               l.health_insurance,
+               l.long_term_care,
+               l.employment_insurance,
+               l.income_tax,
+               l.local_income_tax,
+               l.net_pay,
+               l.status,
+               l.created_at
+        from salary_ledger l
+        join sawon s on s.sabun = l.sabun 
+        join dept d on s.deptno = d.deptno
+        where l.pay_ym = #{ym} and l.status = '대기'
+        order by sabun
+    </select>
+
+    <!-- 해당 년월 정산 대상 명세서 수 -->
+    <select id="getCountLedgers"
+            parameterType="String"
+            resultType="int">
+        select count(salary_id)
+        from salary_ledger
+        where status = '대기' and pay_ym = #{ym}
+    </select>
+
+    <!-- 해당 년월 정산 완료 명세서 수 -->
+    <select id="getCountConfirmedLedgers"
+            parameterType="String"
+            resultType="int">
+        select count(salary_id)
+        from salary_ledger
+        where status = '완료' and pay_ym = #{ym}
+    </select>
     
 </mapper>

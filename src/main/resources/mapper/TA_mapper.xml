@@ -199,5 +199,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             checkout = values(checkout)
         </foreach>
     </update>
+
+    <!-- 근태 마감후 테이블에 정산된 값 넣기 -->
+    <insert id="insertClosedAttendance"
+            parameterType="salaryclosed">
+        INSERT INTO salary_closed_attendance(
+            closed_ym, sabun, standard_days, worked_days, absence_days, leave_days,
+            overtime_hours, status, updated_at)
+        VALUES( #{closed_ym}, #{sabun}, #{standard_days}, #{worked_days}, #{absence_days}, #{leave_days},
+            #{overtime_hours}, '완료', NOW() )
+        ON DUPLICATE KEY UPDATE
+            worked_days = #{worked_days},
+            absence_days = #{absence_days},
+            overtime_hours = #{overtime_hours},
+            status = "완료"
+    </insert>
+
+    <!-- 근태 마감 후 월급 명세서 테이블에 정산된 값 넣기 -->
+    <insert id="insertSalaryLedger"
+            parameterType="ledger">
+        INSERT INTO salary_ledger(
+            pay_ym, sabun, base_pay, overtime_pay, meal_pay,
+            national_pension, health_insurance, long_term_care, employment_insurance,
+            income_tax, local_income_tax, net_pay, status
+        )
+        VALUES (
+            #{pay_ym}, #{sabun}, #{base_pay}, #{overtime_pay}, #{meal_pay},
+            #{national_pension}, #{health_insurance}, #{long_term_care}, #{employment_insurance},
+            #{income_tax}, #{local_income_tax}, #{net_pay}, '대기'
+        )
+    </insert>
+
+    
     
 </mapper>

@@ -1,8 +1,12 @@
 package com.kh.project.controller;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.print.attribute.HashAttributeSet;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -263,16 +267,44 @@ public class SalaryController {
     //전자 계약 등록(추가)
     @PostMapping("/admin_register_contract")
     @ResponseBody
-    public boolean registerContract(SalaryContractVO vo){
+    public Map<String, Object> registerContract(SalaryContractVO vo){
 
         System.out.println("계약 요청 사번 : " + vo.getSabun());
         System.out.println("기본급 : " + vo.getBase_salary());
 
         int res = salaryDao.insertContract(vo);
 
-        //성공시 true, 실패시 false반환
-        return res > 0;
+        Map<String, Object> map = new HashMap<>();
+        map.put("res", res);
 
+        //성공시 1, 실패시 0반환
+        return map;
+
+    }
+
+    //급여 정산 페이지
+    @GetMapping("/admin_salary_confirm")
+    public String adminSalaryMain( Model model , String ym){
+
+        //파라미터로 넘어온 날짜 정보가 없을 경우 년월을 현재 기준으로 조회
+        if( ym == null || ym.equals("") ){
+            ym = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        }
+
+        //해당 년월의 월급 정산 대상 리스트
+        List<SalaryLedgerVO> ledgerList = salaryDao.needConfirmLedgerList(ym);
+        //해당 년월의 정산 대상 명세서 수
+        int countLedgers = salaryDao.getCountLedgers(ym);
+        //해당 년월의 정산 완료 명세서 수
+        int countConfirmedLedgers = salaryDao.getCountConfirmedLedgers(ym);
+
+        //포워딩
+        model.addAttribute("ledgerList", ledgerList);
+        model.addAttribute("ym", ym);
+        model.addAttribute("countLedgers", countLedgers);
+        model.addAttribute("countConfirmedLedgers", countConfirmedLedgers);
+
+        return "admin_salary/admin_confirm_salary";
     }
 
 }

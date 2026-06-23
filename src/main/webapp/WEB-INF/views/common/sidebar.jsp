@@ -23,8 +23,8 @@
         </nav>
         
         <div class="admin-section">
-
-            <a href="/admin_main.do" class="admin-btn">⚙️관리자</a>
-
+            <c:if test="${user eq 1}">
+                <a href="/admin_main.do" class="admin-btn">⚙️관리자</a>
+            </c:if>
         </div>
     </aside>
