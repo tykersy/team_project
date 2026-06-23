@@ -134,9 +134,9 @@
                         <div class="ta-card">
                             <div class="card-title"><span class="dot"></span>이번 달 근태 요약</div>
                             <div class="attend-grid">
-                                <div class="attend-stat"><span class="n green">${yearlyTA[0].normalCount}</span><span class="lbl">정상 출근</span></div>
-                                <div class="attend-stat"><span class="n yellow">${yearlyTA[0].lateCount}</span><span class="lbl">지각</span></div>
-                                <div class="attend-stat"><span class="n red">${yearlyTA[0].absentCount}</span><span class="lbl">결근</span></div>
+                                <div class="attend-stat"><span class="n green">${yearlyTA[0]['normalCount']}</span><span class="lbl">정상 출근</span></div>
+                                <div class="attend-stat"><span class="n yellow">${yearlyTA[0]['lateCount']}</span><span class="lbl">지각</span></div>
+                                <div class="attend-stat"><span class="n red">${yearlyTA[0]['absentCount']}</span><span class="lbl">결근</span></div>
                             </div>
                         </div>
                         <div class="ta-card">

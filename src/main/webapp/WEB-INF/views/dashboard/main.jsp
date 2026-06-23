@@ -99,7 +99,7 @@
                                     </c:when>
 
                                     <c:otherwise>
-                                        <button class="check-btn" onclick="location.href='/mypage?tab=1'">근무내역
+                                        <button class="check-btn" onclick="location.href='/ta_main.do'">근무내역
                                             확인</button>
                                     </c:otherwise>
                                 </c:choose>
