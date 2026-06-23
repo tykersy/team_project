@@ -39,4 +39,7 @@ public interface ChatDAO {
     void insertChatMember(@Param("roomId") int roomId,
                         @Param("sabun") int sabun);
 
+    //채팅방 나가기
+    public boolean deleteUserRoomLeave(int room_id, int sabun);
+
 }

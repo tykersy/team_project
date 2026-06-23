@@ -1,11 +1,13 @@
 package com.kh.project.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.project.dao.ChatDAO;
@@ -47,6 +49,16 @@ public class ChattingController {
         if(liked) return "❤️";
         else return "🤍";
 
+    }
+
+    //채팅방 나가기
+    @GetMapping("/msg_chatRoom/leave/{roomId}")
+    @ResponseBody
+    public boolean chatRoomLeave(@PathVariable int roomId, int sabun){
+
+        boolean res = chatDAO.deleteUserRoomLeave(roomId, sabun);
+        
+        return res;
     }
 
 }
