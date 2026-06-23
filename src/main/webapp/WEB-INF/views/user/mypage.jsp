@@ -142,17 +142,17 @@
             <div class="card">
             <div class="salary-hero">
                 <div class="month">${today} 급여</div>
-                <div class="amount"><fmt:formatNumber value="${info.sapay}" pattern="#,###" /></div>
+                <div class="amount"><fmt:formatNumber value="${userSalary.net_pay}" pattern="#,###" /></div>
                 <div class="unit"> 원 (실수령액)</div>
             </div>
             <div class="salary-breakdown">
-                <div class="breakdown-row"><span class="name">기본급</span><span class="amt">3,200,000</span></div>
-                <div class="breakdown-row"><span class="name">초과근무수당</span><span class="amt">280,000</span></div>
-                <div class="breakdown-row deduct"><span class="name">국민연금</span><span class="amt">-144,000</span></div>
-                <div class="breakdown-row deduct"><span class="name">건강보험</span><span class="amt">-111,760</span></div>
-                <div class="breakdown-row deduct"><span class="name">고용보험</span><span class="amt">-28,800</span></div>
-                <div class="breakdown-row deduct"><span class="name">소득세</span><span class="amt">-15,440</span></div>
-                <div class="breakdown-row total"><span class="name">실수령액</span><span class="amt">3,380,000</span></div>
+                <div class="breakdown-row"><span class="name">기본급</span><span class="amt"><fmt:formatNumber value="${userSalary.base_pay}" pattern="#,###"/></span></div>
+                <div class="breakdown-row"><span class="name">초과근무수당</span><span class="amt"><fmt:formatNumber value="${userSalary.overtime_pay}" pattern="#,###"/></span></div>
+                <div class="breakdown-row deduct"><span class="name">국민연금</span><span class="amt">-<fmt:formatNumber value="${userSalary.national_pension}" pattern="#,###"/></span></div>
+                <div class="breakdown-row deduct"><span class="name">건강보험</span><span class="amt">-<fmt:formatNumber value="${userSalary.health_insurance}" pattern="#,###"/></span></div>
+                <div class="breakdown-row deduct"><span class="name">고용보험</span><span class="amt">-<fmt:formatNumber value="${userSalary.employment_insurance}" pattern="#,###"/></span></div>
+                <div class="breakdown-row deduct"><span class="name">소득세</span><span class="amt">-<fmt:formatNumber value="${userSalary.income_tax + userSalary.local_income_tax}" pattern="#,###"/></span></div>
+                <div class="breakdown-row total"><span class="name">실수령액</span><span class="amt"><fmt:formatNumber value="${userSalary.net_pay}" pattern="#,###"/></span></div>
             </div>
             </div>
         

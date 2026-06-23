@@ -28,17 +28,18 @@
         </div>
 
         <div class="menu-group dropdown">
-            <div class="sidebar-item">전자결재 & 계약</div>
+            <div class="sidebar-item">전자 계약 관리</div>
             <ul class="submenu">
-                <li><a href="">결재 대기 문서</a></li>
-                <li><a href="">전자 계약 관리</a></li>
+                <li><a href="/admin_set_contract">전자 근로 계약 생성</a></li>
+                <li><a href="">전자 계약 리스트</a></li>
             </ul>
         </div>
 
         <div class="menu-group dropdown">
             <div class="sidebar-item">급여/정산 관리</div>
             <ul class="submenu">
-                <li><a href="/admin_TA_confirm_main">근태 정산 마감</a></li>
+                <li><a href="/admin_TA_confirm_main">근태 마감</a></li>
+                <li><a href="/admin_salary_confirm">급여 정산</a></li>
             </ul>
         </div>
 
