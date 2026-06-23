@@ -1,5 +1,6 @@
 package com.kh.project.common;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,12 +79,15 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             chatService.saveMessage(roomId, senderSabun, senderName, content);
 
             // 응답 JSON 생성
+            String sentTime = LocalDate.now().toString();
+
             Map<String, Object> outgoing = new HashMap<>();
             outgoing.put("type", "chat");
             outgoing.put("roomId", roomId);
             outgoing.put("senderSabun", senderSabun);
             outgoing.put("senderName", senderName);
             outgoing.put("content", content);
+            outgoing.put("sentTime", sentTime);
 
             String outJson = objectMapper.writeValueAsString(outgoing);
 

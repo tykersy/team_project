@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.project.dao.ChatDAO;
@@ -95,6 +96,24 @@ public class MsgController {
         Map<String,Object> map =
             new HashMap<>();
 
+        map.put("roomId", roomId);
+
+        return map;
+    }
+
+    @PostMapping("/make_group_room")
+    @ResponseBody
+    public Map<String, Integer> makeGroupRoom(@RequestBody Map<String, Object> request){
+        List<Integer> sabuns = (List<Integer>) request.get("sabuns");
+
+        int mySabun = (Integer)session.getAttribute("user");
+
+        sabuns.add(mySabun);
+
+        String room_name = (String) request.get("room_name");
+        Integer roomId = chatservice.makeGroupRoom(sabuns, room_name);
+
+        Map<String, Integer> map = new HashMap<>();
         map.put("roomId", roomId);
 
         return map;

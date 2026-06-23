@@ -8,7 +8,9 @@
                 <input type="text"
                     id="memberSearch"
                     placeholder="🔍 이름 검색"
-                    oninput="searchMember()">
+                    oninput="searchMember()" />
+                <button type="button"
+                    onclick="openMemberChattingModal()">그룹<br/>채팅</button>
             </div>
 
             <div class="profile-box">

@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.kh.project.dao.ChatDAO">
 
     <select id="selectListChatRoom" resultType="chat">
-         SELECT
+        SELECT
             c_room.room_id,
             c_room.room_type,
 
@@ -18,18 +18,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             c_member.joined_at,
             lm.sent_at,
             lm.content AS last_message,
-            DATE_FORMAT(lm.sent_at, '%H:%i') AS last_message_time
+            DATE_FORMAT(lm.sent_at, '%H:%i') AS last_message_time,
+            c_member.liked
         FROM chat_room c_room
 
         JOIN chat_member c_member
             ON c_room.room_id = c_member.room_id
 
         LEFT JOIN chat_member other_member
-            ON c_room.room_id = other_member.room_id
-            AND other_member.sabun != #{sabun}
-
-        LEFT JOIN sawon other_sawon
-            ON other_member.sabun = other_sawon.sabun
+		    ON c_room.room_type = 'ONE'
+		    AND c_room.room_id = other_member.room_id
+		    AND other_member.sabun != #{sabun}
+		
+		LEFT JOIN sawon other_sawon
+		    ON c_room.room_type = 'ONE'
+		    AND other_member.sabun = other_sawon.sabun
 
         LEFT JOIN (
             SELECT room_id, content, sent_at
@@ -41,9 +44,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             )
         ) lm
             ON c_room.room_id = lm.room_id
-
+		
         WHERE c_member.sabun = #{sabun}
-        ORDER BY lm.sent_at DESC
+        
+        ORDER BY lm.sent_at desc
     </select>
     
     <!--메시지 작성시 로그 저장-->
@@ -88,23 +92,48 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!-- 즐겨찾기 해놓은 채팅방 조회 -->
     <select id="selectListLikedChatRoom" resultType="chat">
-        select
-            c_room.room_id, c_room.room_type, c_room.room_name,
-            c_room.created_at, c_member.joined_at,
-            lm.content as last_message,
-            DATE_FORMAT(lm.sent_at, '%H:%i') as last_message_time,
+        SELECT
+            c_room.room_id,
+            c_room.room_type,
+
+            CASE
+                WHEN c_room.room_type = 'ONE' THEN other_sawon.saname
+                ELSE c_room.room_name
+            END AS room_name,
+
+            c_room.created_at,
+            c_member.joined_at,
+            lm.sent_at,
+            lm.content AS last_message,
+            DATE_FORMAT(lm.sent_at, '%H:%i') AS last_message_time,
             c_member.liked
-        from chat_room as c_room
-            join chat_member as c_member on c_room.room_id = c_member.room_id
-            left join (
-                select room_id, content, sent_at
-                from chat_message
-                where (room_id, message_id) in (
-                    select room_id, max(message_id) from chat_message group by room_id
-                )
-            ) lm on c_room.room_id = lm.room_id
-        where c_member.sabun = #{sabun} and c_member.liked = true
-        order by lm.sent_at desc
+        FROM chat_room c_room
+
+        JOIN chat_member c_member
+            ON c_room.room_id = c_member.room_id
+
+        LEFT JOIN chat_member other_member
+		    ON c_room.room_type = 'ONE'
+		    AND c_room.room_id = other_member.room_id
+		    AND other_member.sabun != #{sabun}
+		
+		LEFT JOIN sawon other_sawon
+		    ON c_room.room_type = 'ONE'
+		    AND other_member.sabun = other_sawon.sabun
+
+        LEFT JOIN (
+            SELECT room_id, content, sent_at
+            FROM chat_message
+            WHERE (room_id, message_id) IN (
+                SELECT room_id, MAX(message_id)
+                FROM chat_message
+                GROUP BY room_id
+            )
+        ) lm
+            ON c_room.room_id = lm.room_id
+
+        WHERE c_member.sabun = #{sabun} and c_member.liked = true
+        ORDER BY lm.sent_at DESC
       </select>
 
     <!--채팅방 생성-->
@@ -113,8 +142,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             useGeneratedKeys="true"
             keyProperty="room_id">
 
-        INSERT INTO chat_room(room_type)
-        VALUES(#{room_type})
+        INSERT INTO chat_room(room_type, room_name)
+        VALUES(#{room_type}, #{room_name})
 
     </insert>
 
@@ -146,5 +175,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         LIMIT 1
 
     </select>
+
+    <!-- 채팅방 나가기 -->
+    <delete id="deleteUserRoomLeave">
+        delete from chat_member where sabun=#{sabun} and room_id=#{room_id}
+    </delete>
 
 </mapper>

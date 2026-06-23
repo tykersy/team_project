@@ -39,7 +39,7 @@ public class ChatService {
         return logs;
     }
 
-    //채팅방 생성
+    // one 채팅방 생성
     public Integer makeOneRoom(int mySabun, int targetSabun){
 
         Integer roomId = chatdao.findOneRoom(mySabun, targetSabun);
@@ -60,4 +60,21 @@ public class ChatService {
 
         return roomId;
     }
+
+    // GROUP 채팅방 생성
+    public Integer makeGroupRoom(List<Integer> sabuns, String room_name){
+        ChatRoomVO room = new ChatRoomVO();
+        room.setRoom_type("GROUP");
+        room.setRoom_name(room_name);
+
+        chatdao.createRoom(room);
+
+        Integer roomId = room.getRoom_id();
+
+        for(Integer sabun : sabuns){
+            chatdao.insertChatMember(roomId, sabun);
+        }
+
+        return roomId;
     }
+}

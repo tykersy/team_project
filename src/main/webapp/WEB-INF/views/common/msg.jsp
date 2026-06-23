@@ -51,6 +51,42 @@
 
         </div>
 
+        <!-- 멤버 선택 모달 (채팅방 만들기) -->
+        <div class="member-select-modal" id="memberSelectModal">
+            <div class="member-select-card">
+                <div class="member-select-header">
+                    <span>대화 상대 선택</span>
+                    <button class="member-select-close" onclick="closeMemberSelectModal()">&times;</button>
+                </div>
+                <div class="member-select-search">
+                    <input type="text" id="memberSelectSearch" placeholder="이름으로 검색"
+                           oninput="filterMemberSelectList(this.value)" />
+                </div>
+                <div class="member-select-list" id="memberSelectList"></div>
+                <div class="member-select-footer">
+                    <button class="member-select-confirm" id="memberSelectConfirm"
+                            onclick="showRoomNameStep()" disabled>선택 완료</button>
+                </div>
+
+                <!-- 채팅방 이름 설정 단계 -->
+                <div class="member-select-room-name" id="roomNameStep" style="display:none;">
+                    <div class="member-select-header">
+                        <span>채팅방 이름</span>
+                        <button class="member-select-close" onclick="backToMemberSelect()">&times;</button>
+                    </div>
+                    <div class="room-name-body">
+                        <input type="text" id="roomNameInput" placeholder="채팅방 이름을 입력하세요"
+                               onkeydown="if(event.key==='Enter') confirmMemberSelect();" />
+                        <p class="room-name-hint">미입력 시 멤버 이름으로 자동 설정됩니다.</p>
+                    </div>
+                    <div class="member-select-footer">
+                        <button class="member-select-confirm" onclick="confirmMemberSelect()">만들기</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
         <script>
 
             let isOpen = false;
@@ -184,13 +220,14 @@
                 let div = document.createElement('div');
                 div.className = 'chat-msg ' + (data.senderSabun === MY_SABUN ? 'mine' : 'other');
 
-                let html = '';
+                let html = '<div class="chat-bubble '+ (data.senderSabun === MY_SABUN ? 'mine' : 'other')+'">';
                 if (data.senderSabun !== MY_SABUN) {
                     html += '<div class="msg-sender">' + escapeHtml(data.senderName) + '</div>';
                 }
                 console.log(data)
-                html += '<div class="msg-send-time>' + escapeHtml(data.sent_at) + '</div>';
-                html += '<div class="msg-text">' + escapeHtml(data.content) + '</div>';
+                html += '<div class="msg-text">' + escapeHtml(data.content) + '</div></div>';
+                html += '<div class="chat-msg-sent_at">' + escapeHtml(data.sentTime) + '</div>';
+                
                 div.innerHTML = html;
 
                 msgBox.appendChild(div);
@@ -214,6 +251,49 @@
                 return div.innerHTML;
             }
 
+            /* ── + 버튼 서랍 메뉴 토글 ── */
+            function toggleChatMorePanel() {
+                let overlay = document.getElementById('chatDrawerOverlay');
+                let drawer = document.getElementById('chatDrawer');
+                if (overlay && drawer) {
+                    overlay.classList.toggle('open');
+                    drawer.classList.toggle('open');
+                }
+            }
+
+            function inviteMember() {
+                toggleChatMorePanel();
+                // TODO: 초대 로직 구현
+                console.log('초대하기 - roomId:', currentRoomId);
+            }
+
+            function showLeaveConfirm() {
+                let overlay = document.getElementById('leaveConfirmOverlay');
+                if (overlay) overlay.classList.add('open');
+            }
+
+            function closeLeaveConfirm() {
+                let overlay = document.getElementById('leaveConfirmOverlay');
+                if (overlay) overlay.classList.remove('open');
+            }
+
+            function leaveChatRoom(roomId) {
+                closeLeaveConfirm();
+                toggleChatMorePanel();
+                
+                fetch("/msg_chatRoom/leave/"+roomId+"?sabun="+MY_SABUN)
+                    .then(res => res.json())
+                    .then(data => {
+                        if(data){
+                            console.log("채팅방 나가기 성공");
+                            msgSwitchTab(1);
+                        }else{
+                            console.log("채팅방 나가기 실패");
+                        }
+                    });
+
+            }
+
             /* 채팅방 즐겨찾기 */
             async function chat_like(event,roomId,index){
                 event.stopPropagation();
@@ -224,6 +304,132 @@
                         document.querySelectorAll('.chat-liked-'+index).forEach((b, i) => {
                             b.innerText = html;
                         });
+                    });
+            }
+
+            /* ── 멤버 선택 모달 ── */
+            let memberSelectData = [];
+            let selectedMembers = [];
+
+            function openMemberChattingModal() {
+                selectedMembers = [];
+                document.getElementById('memberSelectSearch').value = '';
+                document.getElementById('memberSelectModal').classList.add('open');
+
+                fetch("msg_member.do")
+                    .then(res => res.text())
+                    .then(html => {
+                        let parser = new DOMParser();
+                        let doc = parser.parseFromString(html, 'text/html');
+                        let items = doc.querySelectorAll('.member-item');
+
+                        memberSelectData = [];
+                        items.forEach(item => {
+                            let name = item.querySelector('.member-name')?.textContent?.trim() || '';
+                            let dept = item.querySelector('.member-dept')?.textContent?.trim() || '';
+                            let onclick = item.querySelector('button')?.getAttribute('onclick') || '';
+                            let sabunMatch = onclick.match(/openChat\('(\d+)'\)/);
+                            let sabun = sabunMatch ? parseInt(sabunMatch[1]) : 0;
+                            if (sabun && sabun !== MY_SABUN) {
+                                memberSelectData.push({ sabun: sabun, name: name, dept: dept });
+                            }
+                        });
+
+                        renderMemberSelectList(memberSelectData);
+                        updateMemberSelectTags();
+                    });
+            }
+
+            function closeMemberSelectModal() {
+                document.getElementById('memberSelectModal').classList.remove('open');
+            }
+
+            function renderMemberSelectList(list) {
+                let html = '';
+                list.forEach(m => {
+                    let isSelected = selectedMembers.some(s => s.sabun === m.sabun);
+                    html += '<div class="member-select-item' + (isSelected ? ' selected' : '') + '"'
+                         +  ' onclick="toggleMemberSelect(' + m.sabun + ',\'' + escapeHtml(m.name) + '\',\'' + escapeHtml(m.dept) + '\')">'
+                         +  '  <div class="member-select-check">' + (isSelected ? '&#10003;' : '') + '</div>'
+                         +  '  <div class="profile-circle">' + escapeHtml(m.name.charAt(0)) + '</div>'
+                         +  '  <div class="member-select-info">'
+                         +  '    <div class="member-name">' + escapeHtml(m.name) + '</div>'
+                         +  '    <div class="member-dept">' + escapeHtml(m.dept) + '</div>'
+                         +  '  </div>'
+                         +  '</div>';
+                });
+                document.getElementById('memberSelectList').innerHTML = html;
+            }
+
+            function toggleMemberSelect(sabun, name, dept) {
+                let idx = selectedMembers.findIndex(m => m.sabun === sabun);
+                if (idx >= 0) {
+                    selectedMembers.splice(idx, 1);
+                } else {
+                    selectedMembers.push({ sabun: sabun, name: name, dept: dept });
+                }
+                renderMemberSelectList(
+                    filterByKeyword(memberSelectData, document.getElementById('memberSelectSearch').value)
+                );
+                updateMemberSelectTags();
+            }
+
+            function updateMemberSelectTags() {
+                document.getElementById('memberSelectConfirm').disabled = selectedMembers.length < 2;
+            }
+
+            function filterMemberSelectList(keyword) {
+                renderMemberSelectList(filterByKeyword(memberSelectData, keyword));
+            }
+
+            function filterByKeyword(list, keyword) {
+                if (!keyword) return list;
+                keyword = keyword.toLowerCase();
+                return list.filter(m => m.name.toLowerCase().includes(keyword) || m.dept.toLowerCase().includes(keyword));
+            }
+
+            function showRoomNameStep() {
+                document.getElementById('roomNameStep').style.display = 'flex';
+                let defaultName = selectedMembers.map(m => m.name).join(', ');
+                document.getElementById('roomNameInput').placeholder = defaultName;
+                document.getElementById('roomNameInput').value = '';
+                document.getElementById('roomNameInput').focus();
+            }
+
+            function backToMemberSelect() {
+                document.getElementById('roomNameStep').style.display = 'none';
+            }
+
+            function confirmMemberSelect() {
+                let sabuns = selectedMembers.map(m => m.sabun);
+                let roomName = document.getElementById('roomNameInput').value.trim();
+                if (!roomName) {
+                    roomName = selectedMembers.map(m => m.name).join(', ');
+                }
+                closeMemberSelectModal();
+                document.getElementById('roomNameStep').style.display = 'none';
+
+                // sabuns, roomName을 사용해서 채팅방 생성 로직 구현
+                console.log('선택된 멤버 sabun:', sabuns, '방 이름:', roomName);
+
+                fetch("/make_group_room",{
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(
+                            {
+                                "sabuns" : sabuns,
+                                "room_name" : roomName
+                            }
+                        )
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+
+                        msgSwitchTab(1);
+
+                        openChatRoom(data.roomId);
                     });
             }
 

@@ -8,12 +8,30 @@
 
         <div class="chat-info">
             <div class="chat-top">
-                <span class="chat-name">${room.room_name}</span>
+                <span class="chat-name" title="${room.room_name}">
+                <c:choose>
+                    <c:when test="${fn:length(room.room_name) > 20}">
+                        ${fn:substring(room.room_name, 0, 20)}...
+                    </c:when>
+                    <c:otherwise>
+                        ${room.room_name}
+                    </c:otherwise>
+                </c:choose>
+                </span>
                 <span class="chat-time">${room.last_message_time}</span>
             </div>
 
             <div class="chat-bottom">
-                <span class="chat-last-msg">${fn:escapeXml(room.last_message)}</span>
+                <span class="chat-last-msg">
+                <c:choose>
+                    <c:when test="${fn:length(fn:escapeXml(room.last_message)) > 20}">
+                        ${fn:substring(fn:escapeXml(room.last_message), 0, 20)}...
+                    </c:when>
+                    <c:otherwise>
+                        ${fn:escapeXml(room.last_message)}
+                    </c:otherwise>
+                </c:choose>
+                </span>
                 
                 <span id="chat-liked" class="chat-liked-${status.index}" onclick="chat_like(event,${room.room_id}, ${status.index})">
                     <c:if test="${room.liked}">
