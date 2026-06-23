@@ -130,7 +130,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM calendar c
         LEFT JOIN ta t 
             ON t.sabun = #{sabun} 
-            AND t.day = c.day
+            AND DATE(t.day) = c.day
         LEFT JOIN sleave_log sl 
             ON t.sabun = sl.sabun 
             AND t.day = sl.use_date 
