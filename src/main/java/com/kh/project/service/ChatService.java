@@ -27,8 +27,12 @@ public class ChatService {
         return log;
     }
 
+    public void saveSystemMessage(int room_id, String content){
+        chatdao.insertSystemLog(room_id, content);
+    }
+
     public List<ChatMessageVO> getRecentLogs(int room_id){
-        List<ChatMessageVO> logs = chatdao.selectRecentLogs(room_id, 100);
+        List<ChatMessageVO> logs = chatdao.selectRecentLogs(room_id, 50);
         Collections.reverse(logs);
         return logs;
     }

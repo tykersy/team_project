@@ -3,7 +3,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <c:forEach var="room" items="${chatRooms}" varStatus="status">
-    <div class="chat-room" data-room-id="${room.room_id}" onclick="openChatRoom(${room.room_id})">
+    <div class="chat-room" data-room-id="${room.room_id}" onclick="openChatRoom(${room.room_id},'${room.room_type}')">
         <div class="profile-circle">${fn:substring(room.room_name,0,1)}</div>
 
         <div class="chat-info">

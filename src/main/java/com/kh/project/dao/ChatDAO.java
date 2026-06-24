@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.kh.project.vo.ChatMessageVO;
 import com.kh.project.vo.ChatRoomVO;
+import com.kh.project.vo.SawonVO;
 
 @Mapper
 public interface ChatDAO {
@@ -39,7 +40,16 @@ public interface ChatDAO {
     void insertChatMember(@Param("roomId") int roomId,
                         @Param("sabun") int sabun);
 
+    // 1:1 채팅방 나가기 전 이름 저장
+    public int updateRoomNameBeforeLeave(int room_id, int sabun);
+
     //채팅방 나가기
     public boolean deleteUserRoomLeave(int room_id, int sabun);
+
+    // 시스템 메시지 저장
+    public int insertSystemLog(int room_id, String content);
+
+    // 채팅방에 들어와 있는 유저 리스트
+    public List<SawonVO> selectRoomSawonList(int room_id);
 
 }

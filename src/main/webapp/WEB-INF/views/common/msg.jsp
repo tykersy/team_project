@@ -51,11 +51,11 @@
 
         </div>
 
-        <!-- 멤버 선택 모달 (채팅방 만들기) -->
+        <!-- 그룹채팅 멤버 선택 모달 -->
         <div class="member-select-modal" id="memberSelectModal">
             <div class="member-select-card">
                 <div class="member-select-header">
-                    <span>대화 상대 선택</span>
+                    <span id="memberSelectTitle">대화 상대 선택</span>
                     <button class="member-select-close" onclick="closeMemberSelectModal()">&times;</button>
                 </div>
                 <div class="member-select-search">
@@ -68,7 +68,6 @@
                             onclick="showRoomNameStep()" disabled>선택 완료</button>
                 </div>
 
-                <!-- 채팅방 이름 설정 단계 -->
                 <div class="member-select-room-name" id="roomNameStep" style="display:none;">
                     <div class="member-select-header">
                         <span>채팅방 이름</span>
@@ -83,7 +82,6 @@
                         <button class="member-select-confirm" onclick="confirmMemberSelect()">만들기</button>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -98,6 +96,7 @@
 
             let MY_SABUN = ${sessionScope.user};
             let MY_NAME = '${sessionScope.userName}';
+
 
             /* ── 열기/닫기 토글 ── */
             window.toggleMessenger = function () {
@@ -166,12 +165,14 @@
                         let data = JSON.parse(e.data);
 
                         if (data.type === 'chat') {
-                            // 현재 열려있는 채팅방의 메시지면 화면에 추가
                             if (currentRoomId && data.roomId === currentRoomId) {
                                 appendMessage(data);
                             }
-                            // 채팅방 목록의 마지막 메시지 업데이트
                             updateChatRoomPreview(data);
+                        } else if (data.type === 'system') {
+                            if (currentRoomId && data.roomId === currentRoomId) {
+                                appendSystemMessage(data.content);
+                            }
                         }
                     };
 
@@ -186,14 +187,76 @@
             })();
 
             /* ── 채팅방 열기 ── */
-            function openChatRoom(roomId) {
+            let loadingMore = false;
+            let noMoreLogs = false;
+
+            function openChatRoom(roomId, room_type) {
                 currentRoomId = roomId;
-                fetch("msg_chatRoom/" + roomId)
+                loadingMore = false;
+                noMoreLogs = false;
+
+                fetch("msg_chatRoom/" + roomId + "?room_type=" + room_type)
                     .then(res => res.text())
                     .then(html => {
                         document.getElementById(roomListType).innerHTML = html;
                         var msgBox = document.getElementById('chatMessages');
-                        if (msgBox) msgBox.scrollTop = msgBox.scrollHeight;
+                        if (msgBox) {
+                            msgBox.scrollTop = msgBox.scrollHeight;
+                            msgBox.addEventListener('scroll', onChatScroll);
+                        }
+                    });
+            }
+
+            function onChatScroll() {
+                let msgBox = document.getElementById('chatMessages');
+                if (!msgBox || loadingMore || noMoreLogs) return;
+                if (msgBox.scrollTop > 50) return;
+
+                let firstMsg = msgBox.querySelector('[data-msg-id]');
+                if (!firstMsg) return;
+
+                let lastLogId = firstMsg.getAttribute('data-msg-id');
+                loadingMore = true;
+
+                fetch("msg_chatRoom/" + currentRoomId + "/more?lastLogId=" + lastLogId)
+                    .then(res => res.json())
+                    .then(logs => {
+                        if (logs.length === 0) {
+                            noMoreLogs = true;
+                            loadingMore = false;
+                            return;
+                        }
+
+                        let prevHeight = msgBox.scrollHeight;
+                        let fragment = document.createDocumentFragment();
+
+                        logs.forEach(msg => {
+                            let el;
+                            if (msg.sender_sabun === null) {
+                                el = document.createElement('div');
+                                el.className = 'chat-system-msg';
+                                el.setAttribute('data-msg-id', msg.message_id);
+                                el.textContent = msg.content;
+                            } else {
+                                let isMine = msg.sender_sabun === MY_SABUN;
+                                el = document.createElement('div');
+                                el.className = 'chat-msg ' + (isMine ? 'mine' : 'other');
+                                el.setAttribute('data-msg-id', msg.message_id);
+
+                                let html = '<div class="chat-bubble ' + (isMine ? 'mine' : 'other') + '">';
+                                if (!isMine) {
+                                    html += '<div class="msg-sender">' + escapeHtml(msg.saname) + '</div>';
+                                }
+                                html += '<div class="msg-text">' + escapeHtml(msg.content) + '</div></div>';
+                                html += '<div class="chat-msg-sent_at">' + (msg.sent_at || '') + '</div>';
+                                el.innerHTML = html;
+                            }
+                            fragment.appendChild(el);
+                        });
+
+                        msgBox.insertBefore(fragment, msgBox.firstChild);
+                        msgBox.scrollTop = msgBox.scrollHeight - prevHeight;
+                        loadingMore = false;
                     });
             }
 
@@ -224,7 +287,7 @@
                 if (data.senderSabun !== MY_SABUN) {
                     html += '<div class="msg-sender">' + escapeHtml(data.senderName) + '</div>';
                 }
-                console.log(data)
+
                 html += '<div class="msg-text">' + escapeHtml(data.content) + '</div></div>';
                 html += '<div class="chat-msg-sent_at">' + escapeHtml(data.sentTime) + '</div>';
                 
@@ -244,11 +307,50 @@
                 }
             }
 
+            /* ── 시스템 메시지 표시 ── */
+            function appendSystemMessage(text) {
+                let msgBox = document.getElementById('chatMessages');
+                if (!msgBox) return;
+
+                let div = document.createElement('div');
+                div.className = 'chat-system-msg';
+                div.textContent = text;
+                msgBox.appendChild(div);
+                msgBox.scrollTop = msgBox.scrollHeight;
+            }
+
             /* ── HTML 이스케이프 ── */
             function escapeHtml(text) {
                 let div = document.createElement('div');
                 div.textContent = text;
                 return div.innerHTML;
+            }
+
+            /* ── 대화상대 목록 패널 ── */
+            function showDrawerMembers() {
+                document.getElementById('drawerMembersPanel').classList.add('open');
+                // TODO: 여기서 멤버 목록을 가져와서 drawerMembersList에 렌더링
+                fetch("/msg_chatRoom/members/list/"+ currentRoomId)
+                    .then(res => res.json())
+                    .then(data => {
+                        let html = '';
+                        data.forEach( e => {
+                            html += '<div class="drawer-member-item">'
+                            html +=    '<div class="profile-circle">'+ e.saname.substring(0, 1) +'</div><div>'
+                            html +=        '<div class="drawer-member-name">'+ e.saname +'</div>'
+                            html +=        '<div class="drawer-member-dept">'+ e.dname +'</div></div>'
+                            if(e.sabun == MY_SABUN){
+                                html += '<span class="drawer-member-me">나</span>'
+                            }
+                            html += '</div>'
+                        });
+                        
+                        document.getElementById('drawerMembersList').innerHTML = html;
+                    })
+            }
+
+            function hideDrawerMembers() {
+                document.getElementById('drawerMembersPanel').classList.remove('open');
             }
 
             /* ── + 버튼 서랍 메뉴 토글 ── */
@@ -261,12 +363,6 @@
                 }
             }
 
-            function inviteMember() {
-                toggleChatMorePanel();
-                // TODO: 초대 로직 구현
-                console.log('초대하기 - roomId:', currentRoomId);
-            }
-
             function showLeaveConfirm() {
                 let overlay = document.getElementById('leaveConfirmOverlay');
                 if (overlay) overlay.classList.add('open');
@@ -277,18 +373,21 @@
                 if (overlay) overlay.classList.remove('open');
             }
 
-            function leaveChatRoom(roomId) {
+            function leaveChatRoom() {
                 closeLeaveConfirm();
                 toggleChatMorePanel();
                 
-                fetch("/msg_chatRoom/leave/"+roomId+"?sabun="+MY_SABUN)
+                fetch("/msg_chatRoom/leave/"+currentRoomId+"?sabun="+MY_SABUN)
                     .then(res => res.json())
                     .then(data => {
-                        if(data){
-                            console.log("채팅방 나가기 성공");
+                        if (data && ws && ws.readyState === WebSocket.OPEN) {
+                            ws.send(JSON.stringify({
+                                type: 'system',
+                                roomId: currentRoomId,
+                                content: MY_NAME + '님이 나가셨습니다.'
+                            }));
+
                             msgSwitchTab(1);
-                        }else{
-                            console.log("채팅방 나가기 실패");
                         }
                     });
 
@@ -307,7 +406,7 @@
                     });
             }
 
-            /* ── 멤버 선택 모달 ── */
+            /* ── 그룹채팅 멤버 선택 모달 ── */
             let memberSelectData = [];
             let selectedMembers = [];
 
@@ -342,6 +441,84 @@
 
             function closeMemberSelectModal() {
                 document.getElementById('memberSelectModal').classList.remove('open');
+            }
+
+            /* ── 채팅방 초대 모달 ── */
+            let inviteData = [];
+            let inviteSelected = [];
+            let inviteExistingMembers = [];
+
+            function inviteMember() {
+                toggleChatMorePanel();
+                inviteSelected = [];
+
+                fetch("/msg_chatRoom/members/" + currentRoomId)
+                    .then(res => res.json())
+                    .then(existingSabuns => {
+                        inviteExistingMembers = existingSabuns;
+                        document.getElementById('inviteSearch').value = '';
+                        document.getElementById('inviteModalOverlay').classList.add('open');
+                        document.getElementById('inviteConfirmBtn').disabled = true;
+
+                        fetch("msg_member.do")
+                            .then(res => res.text())
+                            .then(html => {
+                                let parser = new DOMParser();
+                                let doc = parser.parseFromString(html, 'text/html');
+                                let items = doc.querySelectorAll('.member-item');
+
+                                inviteData = [];
+                                items.forEach(item => {
+                                    let name = item.querySelector('.member-name')?.textContent?.trim() || '';
+                                    let dept = item.querySelector('.member-dept')?.textContent?.trim() || '';
+                                    let onclick = item.querySelector('button')?.getAttribute('onclick') || '';
+                                    let sabunMatch = onclick.match(/openChat\('(\d+)'\)/);
+                                    let sabun = sabunMatch ? parseInt(sabunMatch[1]) : 0;
+                                    if (sabun && sabun !== MY_SABUN) {
+                                        inviteData.push({ sabun: sabun, name: name, dept: dept });
+                                    }
+                                });
+                                renderInviteList(inviteData);
+                            });
+                    });
+            }
+
+            function closeInviteModal() {
+                document.getElementById('inviteModalOverlay').classList.remove('open');
+            }
+
+            function renderInviteList(list) {
+                let html = '';
+                list.forEach(m => {
+                    let isExisting = inviteExistingMembers.includes(m.sabun);
+                    let isSelected = isExisting || inviteSelected.some(s => s.sabun === m.sabun);
+                    let cls = 'member-select-item' + (isSelected ? ' selected' : '') + (isExisting ? ' disabled' : '');
+                    let click = isExisting ? '' : ' onclick="toggleInviteSelect(' + m.sabun + ',\'' + escapeHtml(m.name) + '\',\'' + escapeHtml(m.dept) + '\')"';
+
+                    html += '<div class="' + cls + '"' + click + '>'
+                         +  '  <div class="member-select-check">' + (isSelected ? '&#10003;' : '') + '</div>'
+                         +  '  <div class="profile-circle">' + escapeHtml(m.name.charAt(0)) + '</div>'
+                         +  '  <div class="member-select-info">'
+                         +  '    <div class="member-name">' + escapeHtml(m.name) + '</div>'
+                         +  '    <div class="member-dept">' + escapeHtml(m.dept) + '</div>'
+                         +  '  </div>'
+                         +  '</div>';
+                });
+                document.getElementById('inviteMemberList').innerHTML = html;
+            }
+
+            function toggleInviteSelect(sabun, name, dept) {
+                let idx = inviteSelected.findIndex(m => m.sabun === sabun);
+                if (idx >= 0) inviteSelected.splice(idx, 1);
+                else inviteSelected.push({ sabun: sabun, name: name, dept: dept });
+
+                let keyword = document.getElementById('inviteSearch').value;
+                renderInviteList(filterByKeyword(inviteData, keyword));
+                document.getElementById('inviteConfirmBtn').disabled = inviteSelected.length === 0;
+            }
+
+            function filterInviteList(keyword) {
+                renderInviteList(filterByKeyword(inviteData, keyword));
             }
 
             function renderMemberSelectList(list) {
@@ -409,9 +586,6 @@
                 closeMemberSelectModal();
                 document.getElementById('roomNameStep').style.display = 'none';
 
-                // sabuns, roomName을 사용해서 채팅방 생성 로직 구현
-                console.log('선택된 멤버 sabun:', sabuns, '방 이름:', roomName);
-
                 fetch("/make_group_room",{
                         method: 'POST',
                         headers: {
@@ -431,6 +605,28 @@
 
                         openChatRoom(data.roomId);
                     });
+            }
+
+            function confirmInviteMembers() {
+                let sabuns = inviteSelected.map(m => m.sabun);
+                let names = inviteSelected.map(m => m.name).join(', ');
+                closeInviteModal();
+
+                fetch("/msg_chatRoom/invite/" + currentRoomId, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(sabuns)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data && ws && ws.readyState === WebSocket.OPEN) {
+                        ws.send(JSON.stringify({
+                            type: 'system',
+                            roomId: currentRoomId,
+                            content: names + '님이 초대되었습니다.'
+                        }));
+                    }
+                });
             }
 
         </script>

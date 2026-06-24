@@ -10,7 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             c_room.room_type,
 
             CASE
-                WHEN c_room.room_type = 'ONE' THEN other_sawon.saname
+                WHEN c_room.room_type = 'ONE' THEN COALESCE(other_sawon.saname, c_room.room_name)
                 ELSE c_room.room_name
             END AS room_name,
 
@@ -97,7 +97,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             c_room.room_type,
 
             CASE
-                WHEN c_room.room_type = 'ONE' THEN other_sawon.saname
+                WHEN c_room.room_type = 'ONE' THEN COALESCE(other_sawon.saname, c_room.room_name)
                 ELSE c_room.room_name
             END AS room_name,
 
@@ -176,9 +176,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     </select>
 
+    <!--1:1 채팅방 나가기 전, 나가는 사람 이름을 room_name에 저장-->
+    <update id="updateRoomNameBeforeLeave">
+        UPDATE chat_room
+        SET room_name = (SELECT saname FROM sawon WHERE sabun = #{sabun})
+        WHERE room_id = #{room_id} AND room_type = 'ONE'
+    </update>
+
+    <!--시스템 메시지 저장 (sender_sabun = NULL)-->
+    <insert id="insertSystemLog">
+        insert into chat_message(room_id, sender_sabun, saname, content, sent_at)
+            values(#{room_id}, NULL, NULL, #{content}, now())
+    </insert>
+
     <!-- 채팅방 나가기 -->
     <delete id="deleteUserRoomLeave">
         delete from chat_member where sabun=#{sabun} and room_id=#{room_id}
     </delete>
+
+    <!-- 현재 채팅방에 있는 유저 목록 -->
+    <select id="selectRoomSawonList" resultType="sawon" parameterType="int">
+        select s.saname , s.sabun, d.dname  from 
+            chat_member cm join sawon s
+            on cm.sabun = s.sabun
+            join dept d
+            on d.deptno = s.deptno
+        where cm.room_id =  #{room_id};
+    </select>
 
 </mapper>

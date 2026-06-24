@@ -13,7 +13,8 @@ import lombok.NoArgsConstructor;
 @Data
 @Alias("chatMsg")
 public class ChatMessageVO {
-    private int message_id, room_id, sender_sabun;
+    private int message_id, room_id;
+    private Integer sender_sabun;
     private String content, saname;
     private LocalDate sent_at;
 }
