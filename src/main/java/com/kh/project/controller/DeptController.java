@@ -36,6 +36,13 @@ public class DeptController {
         return "dept/org_chart"; 
     }
 
+    @GetMapping("/api/orgList")
+    @ResponseBody
+    public List<Map<String, Object>> getOrgChartData() {
+        
+        return deptdao.getOrgChartData();
+    }
+
     //관리자-부서 관리 페이지 
     @GetMapping("/admin_deptlist")
     public String adminDeptMain(Model model){

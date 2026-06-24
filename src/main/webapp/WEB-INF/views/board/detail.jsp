@@ -46,14 +46,40 @@
                     <c:out value="${board.content}" escapeXml="false" />
                 </div>
 
-                <div style="margin: 30px 0; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
-                    <div style="margin-bottom: 10px;">
-                        <button type="button" onclick="callAi('summary')" class="btn-custom btn-primary">AI 요약</button>
-                        <button type="button" onclick="callAi('translate')" class="btn-custom btn-primary">번역하기</button>
+                <div class="ai-box">
+
+                    <div class="ai-toolbar">
+
+                        <!-- AI 기능 -->
+                        <select id="aiType" class="ai-select">
+                            <option value="summary">🤖 AI 요약</option>
+                            <option value="translate">🌍 AI 번역</option>
+                        </select>
+
+                        <!-- 번역 언어 -->
+                        <select id="language" class="ai-select">
+                            <option value="영어">English</option>
+                            <option value="일본어">日本語</option>
+                            <option value="중국어">中文</option>
+                            <option value="프랑스어">Français</option>
+                            <option value="독일어">Deutsch</option>
+                            <option value="스페인어">Español</option>
+                        </select>
+
+                        <button
+                            type="button"
+                            onclick="callAi()"
+                            class="btn-custom btn-primary">
+                            실행
+                        </button>
+
                     </div>
-                    <div id="ai-result">AI 기능을 사용하려면 버튼을 클릭하세요.</div>
+
+                    <div id="ai-result">
+                        AI 기능을 선택한 후 실행 버튼을 눌러주세요.
+                    </div>
+
                 </div>
-                            
                 <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e5e7eb;">
                 
                 <div style="text-align: center; margin-top: 20px;">
@@ -65,26 +91,60 @@
 </div>
 
 <script>
-    function callAi(type) {
-        const content = document.querySelector('.post-content').innerText;
-        const resultDiv = document.getElementById("ai-result");
-        
-        resultDiv.innerText = "AI가 분석 중입니다... 잠시만 기다려주세요.";
+function callAi() {
 
-        fetch('/board/ai-process', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: content, type: type })
+    const content = document.querySelector(".post-content").innerText;
+    const resultDiv = document.getElementById("ai-result");
+
+    const type = document.getElementById("aiType").value;
+    const language = document.getElementById("language").value;
+
+    const button = document.querySelector(".btn-primary");
+    const selects = document.querySelectorAll(".ai-select");
+
+    button.disabled = true;
+    selects.forEach(s => s.disabled = true);
+
+    resultDiv.innerText = "AI가 분석 중입니다... 잠시만 기다려주세요.";
+
+    fetch("/board/ai-process", {
+        method: "POST",
+        headers: {
+            "Content-Type":"application/json"
+        },
+        body: JSON.stringify({
+            content: content,
+            type: type,
+            language: language
         })
-        .then(response => response.json())
-        .then(data => {
-            resultDiv.innerText = data.result;
-        })
-        .catch(error => {
-            resultDiv.innerText = "처리 중 오류가 발생했습니다. 다시 시도해 주세요.";
-            console.error('Error:', error);
-        });
-    }
+    })
+    .then(res => res.json())
+    .then(data => {
+        resultDiv.innerText = data.result;
+    })
+    .catch(err => {
+        console.error(err);
+        resultDiv.innerText = "처리 중 오류가 발생했습니다.";
+    })
+    .finally(() => {
+        button.disabled = false;
+        selects.forEach(s => s.disabled = false);
+
+        // AI 요약 상태면 언어 선택 다시 비활성화
+        toggleLanguage();
+    });
+}
+
+const aiType = document.getElementById("aiType");
+const language = document.getElementById("language");
+
+function toggleLanguage() {
+    language.disabled = (aiType.value === "summary");
+}
+
+aiType.addEventListener("change", toggleLanguage);
+toggleLanguage();
+
 </script>
 </body>
 </html>
