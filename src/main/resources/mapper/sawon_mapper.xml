@@ -121,4 +121,49 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select sajob from sawon where sabun=#{sabun}
     </select>
 
+    <!-- 각팀별 팀장(관리자) 리스트 조회 -->
+    <select id="getLeaderList"
+            resultType="sawon">
+        select sl.sabun, s.saname, d.deptno, d.dname
+        from dept d
+        left join sawonleader sl on d.deptno = sl.deptno
+        left join sawon s on sl.sabun = s.sabun
+        order by d.deptno asc
+    </select>
+
+    <!-- 기존 팀장 정보 삭제 -->
+    <update id="deleteLeader"
+            parameterType="int">
+        update sawonleader set sabun = null
+        where deptno = #{deptno}
+    </update>
+
+    <!-- 팀장(관리자) 변경 -->
+    <update id="insertLeader"
+            parameterType="java.util.Map">
+        update sawonleader set sabun = #{sabun}
+        where deptno = #{deptno}
+    </update>
+
+    <!-- 접근 권한 체크용 쿼리 -->
+    <select id="checkRole"
+            parameterType="int"
+            resultType="String">
+        select case
+            when sl.sabun in null the 'user'
+            when sl.deptno = 10 then 'admin'
+            else 'manager'
+            end as current_role
+        from sawon s
+        join sawonleader sl on s.sabun - sl.sabun
+        where s.sabun = #{sabun}
+    </select>
+
+    <!-- 부서별 사원 목록 -->
+    <select id="getDeptSawonList"
+            parameterType="int"
+            resultType="sawon">
+        select sabun, saname from sawon where deptno = #{deptno}
+    </select>
+
 </mapper>
