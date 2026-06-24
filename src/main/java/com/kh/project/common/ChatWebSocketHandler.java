@@ -92,12 +92,28 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             String outJson = objectMapper.writeValueAsString(outgoing);
 
             // 해당 방의 모든 멤버에게 전송
-            List<Integer> memberSabuns = chatDAO.selectRoomMemberSabuns(roomId);
-            for (int memberSabun : memberSabuns) {
-                WebSocketSession memberSession = userSessions.get(memberSabun);
-                if (memberSession != null && memberSession.isOpen()) {
-                    memberSession.sendMessage(new TextMessage(outJson));
-                }
+            sendToRoom(roomId, outJson);
+        } else if ("system".equals(type)) {
+            int roomId = ((Number) incoming.get("roomId")).intValue();
+            String content = (String) incoming.get("content");
+
+            chatService.saveSystemMessage(roomId, content);
+
+            Map<String, Object> outgoing = new HashMap<>();
+            outgoing.put("type", "system");
+            outgoing.put("roomId", roomId);
+            outgoing.put("content", content);
+
+            sendToRoom(roomId, objectMapper.writeValueAsString(outgoing));
+        }
+    }
+
+    private void sendToRoom(int roomId, String json) throws Exception {
+        List<Integer> memberSabuns = chatDAO.selectRoomMemberSabuns(roomId);
+        for (int memberSabun : memberSabuns) {
+            WebSocketSession memberSession = userSessions.get(memberSabun);
+            if (memberSession != null && memberSession.isOpen()) {
+                memberSession.sendMessage(new TextMessage(json));
             }
         }
     }
