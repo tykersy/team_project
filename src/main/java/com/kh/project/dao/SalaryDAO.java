@@ -32,4 +32,7 @@ public interface SalaryDAO {
     //해당 년월 정산 완료 명세서 수
     int getCountConfirmedLedgers(String ym);
 
+    //월급 정산 마감
+    int salaryStatusComplete(int salary_id);
+
 }

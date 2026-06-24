@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.support.HttpRequestHandlerServlet;
 
@@ -137,8 +138,59 @@ public class AdminController {
         return "admin_ta/admin_ta_view";
     }
 
+    @GetMapping("/admin_system_role")
+    public String adminSystemControlForRole( Model model ){
 
-    
-    
+        //각팀별 팀장 조회
+        List<SawonVO> leaderList = sawondao.getLeaderList();
+
+        //바인딩
+        model.addAttribute("leaderList", leaderList);
+
+        return "admin_system/admin_role";
+    }
+
+    @PostMapping("/admin_reposition_leader")
+    @ResponseBody
+    public Map<String, Integer> changeLeader( int deptno, String sabun ){
+
+        //파라미터를 담을 map
+        Map<String, Integer> map = new HashMap<>();
+
+        //기존 팀장(관리자) 사번 비우기
+            int Ares = sawondao.deleteLeader(deptno);
+
+        //사번이 잘 넘어왔다면 로직 실행
+        if( sabun != null && !sabun.trim().equals("") ){
+
+            map.put("deptno", deptno);
+            map.put("sabun", Integer.parseInt(sabun));
+
+            //새로운 팀장(관리자) 사번 업데이트
+            Ares += sawondao.insertLeader(map);
+
+        }
+
+        //반환할 결과 map에 주입 (result : 변경 성공시 2, 비우기 성공시 1, 실패시 0)
+        map.put("result", Ares);
+
+        return map;
+
+    }
+
+    //부서별 사원 목록 가져오기
+    @GetMapping("/admin_read_dept_sawon")
+    @ResponseBody
+    public Map<String, Object> getDeptSawonList(int deptno){
+
+        //부서별 사원 목록 조회
+        List<SawonVO> deptSawonList = sawondao.getDeptSawonList(deptno);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("deptSawonList", deptSawonList);
+
+        return map;
+
+    }
 
 }

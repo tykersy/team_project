@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.project.dao.SalaryDAO;
@@ -305,6 +306,43 @@ public class SalaryController {
         model.addAttribute("countConfirmedLedgers", countConfirmedLedgers);
 
         return "admin_salary/admin_confirm_salary";
+    }
+
+    //급여 마감 비동기 처리
+    @PostMapping("/admin_salary_complete")
+    @ResponseBody
+    public Map<String, Object> salaryComplete( @RequestBody List<String> salaryIds ){
+
+        Map<String, Object> map = new HashMap<>();
+
+        //유효성 체크(방어코드)
+        if( salaryIds == null || salaryIds.isEmpty() ){
+            map.put("result", false);
+            map.put("msg", "선택된 정산 대상이 없습니다");
+
+            return map;
+        }
+
+        //선택된 월급 명세서 데이터가 잘 넘어 왔다면
+        int updateRows = 0;
+        for( String s : salaryIds ){
+
+            if( s == null || s.equals("") ){
+                map.put("result", false);
+                map.put("msg", "예기치 못한 오류로 정산이 불가능합니다. 다시 시도해주세요.");
+                return map;
+            }
+
+            int salary_id = Integer.parseInt(s);
+            updateRows += salaryDao.salaryStatusComplete(salary_id);
+
+        }
+
+        map.put("result", true);
+        map.put("msg", "총 " + updateRows + "건의 급여 정산이 확정되었습니다.");
+
+        return map;
+
     }
 
 }

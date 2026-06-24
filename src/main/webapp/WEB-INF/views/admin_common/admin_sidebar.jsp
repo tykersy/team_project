@@ -21,7 +21,7 @@
         <div class="menu-group dropdown">
             <div class="sidebar-item">근태/휴가 관리</div>
             <ul class="submenu">
-                <li><a href="/admin_main.do/today_ta">일일 근태 현황</a></li>
+                <li><a href="/admin_main.do/today_ta">근태 현황</a></li>
                 <li><a href="/admin_leave">휴가/연차 관리</a></li>
                 <li><a href="/admin_calendar">캘린더</a></li>
             </ul>
@@ -47,7 +47,7 @@
             <a href="/admin/board/list" class="sidebar-item">공지사항</a>
         </div>
         <div class="menu-group">
-            <a href="/admin/system/list" class="sidebar-item">시스템 관리</a>
+            <a href="admin_system_role" class="sidebar-item">시스템 관리</a>
         </div>
     </nav>
 

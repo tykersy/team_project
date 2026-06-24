@@ -41,4 +41,19 @@ public interface SawonDAO {
 
     String selectSajob(int sabun);
 
+    //각 부서 팀장(관리자) 리스트
+    List<SawonVO> getLeaderList ();
+
+    //부서 관리자(팀장) 삭제
+    int deleteLeader(int deptno);
+
+    //부서 관리자(팀장) 임명
+    int insertLeader (Map<String, Integer> map);
+
+    //접근 권한 체크용 쿼리
+    String checkRole(int sabun);
+
+    //부서별 사원 목록
+    List<SawonVO> getDeptSawonList(int deptno);
+
 } 

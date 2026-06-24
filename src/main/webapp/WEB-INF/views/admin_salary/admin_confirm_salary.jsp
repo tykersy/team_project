@@ -134,42 +134,59 @@
         </div>
 
     <script>
-    // 체크박스 전체 선택/해제 기능
-    document.getElementById('checkAll')?.addEventListener('change', function() {
-        const checkboxes = document.querySelectorAll('input[name="salaryCheck"]');
-        checkboxes.forEach(cb => cb.checked = this.checked);
-    });
+        // 체크박스 전체 선택/해제 기능
+        document.getElementById('checkAll')?.addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('input[name="salaryCheck"]');
+            checkboxes.forEach(cb => cb.checked = this.checked);
+        });
 
-    // 개별 정산 확정 비동기 통신 처리
-    function approveSalary(salaryId) {
-        if(!confirm("해당 사원의 당월 급여 정산을 확정하시겠습니까?\n확정 후에는 수정이 불가능합니다.")) return;
-        
-        // Fetch API 등을 활용해 백엔드로 전송 (status를 '완료'로 업데이트하는 컨트롤러 호출)
-        sendSalarySettlement([salaryId]);
-    }
-
-    // 선택 사원 일괄 정산 확정
-    function approveAllSalary() {
-        const checkedBoxes = document.querySelectorAll('input[name="salaryCheck"]:checked');
-        if(checkedBoxes.length === 0) {
-            alert("정산 확정할 사원을 최소 한 명 이상 선택하세요.");
-            return;
+        // 개별 정산 확정 비동기 통신 처리
+        function approveSalary(salaryId) {
+            if(!confirm("해당 사원의 당월 급여 정산을 확정하시겠습니까?\n확정 후에는 수정이 불가능합니다.")) return;
+            
+            // Fetch API 등을 활용해 백엔드로 전송 (status를 '완료'로 업데이트하는 컨트롤러 호출)
+            sendSalarySettlement([salaryId]);
         }
-        
-        if(!confirm(`선택한 ${checkedBoxes.length}명 사원의 급여 정산을 일괄 확정하시겠습니까?`)) return;
-        
-        const salaryIds = Array.from(checkedBoxes).map(cb => cb.value);
-        sendSalarySettlement(salaryIds);
-    }
 
-    // 공통 전송 함수 예시
-    function sendSalarySettlement(ids) {
-        // 백엔드 구현에 맞추어 ajax / fetch 구현 진행
-        console.log("정산 처리 ID 배열: ", ids);
-        // 성공 시 location.reload(); 처리하여 상단 카운트 및 테이블 동기화
-    }
+        // 선택 사원 일괄 정산 확정
+        function approveAllSalary() {
+            const checkedBoxes = document.querySelectorAll('input[name="salaryCheck"]:checked');
+            
+            //유효성 체크
+            if(checkedBoxes.length === 0) {
+                alert("정산 확정할 사원을 최소 한 명 이상 선택하세요.");
+                return;
+            }
+            
+            if(!confirm(`선택한 ${checkedBoxes.length}명 사원의 급여 정산을 일괄 확정하시겠습니까?`)) return;
+            
+            //선택된 명세서들을 map을 사용해 각각 정산 확정 시켜준다
+            const salaryIds = Array.from(checkedBoxes).map(cb => cb.value);
+            sendSalarySettlement(salaryIds);
+        }
 
-    // 숫자를 화폐 단위로 포맷팅하는 헬퍼 함수
+        // 비동기로 월급 정산 처리 하는 핵심 함수
+        function sendSalarySettlement(ids) {
+            // 백엔드 구현에 맞추어 ajax / fetch 구현 진행
+            fetch( "/admin_salary_complete", {
+                method:"POST",
+                headers: {
+                    "Content-Type": "application/json" // 🌟 이 헤더 설정이 반드시 필요합니다!
+                },
+                body:JSON.stringify(ids)
+            } )
+            .then(res => res.json())
+            .then( data => {
+                if( data.result ){
+                    alert(data.msg);
+                    location.reload();
+                }else{
+                    alert("실패 : " + data.msg);
+                }
+            })
+        }
+
+        // 숫자를 화폐 단위로 포맷팅하는 헬퍼 함수
         function formatWon(value) {
             let num = Number(value) || 0;
             return num.toLocaleString() + " 원";

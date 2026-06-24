@@ -96,5 +96,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from salary_ledger
         where status = '완료' and pay_ym = #{ym}
     </select>
+
+    <!-- 사원 월급 정산 마감-->
+    <update id="salaryStatusComplete"
+            parameterType="int">
+        update salary_ledger set status = '완료'
+        where salary_id = #{salary_id}
+    </update>
     
 </mapper>

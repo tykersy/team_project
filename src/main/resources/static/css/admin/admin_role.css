@@ -1,0 +1,217 @@
+/* ==========================================
+   Linked ERP - 시스템 권한 관리 프리미엄 스타일
+   ========================================== */
+
+/* 1. 기본 레이아웃 및 타이틀 세팅 */
+.main-content {
+    padding: 40px;
+    background-color: #F8FAFC; /* Slate 50 */
+    min-height: 100vh;
+    font-family: 'Pretendard', -apple-system, sans-serif;
+}
+
+.page-title-section {
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.page-title-section h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0 0 6px 0;
+}
+
+.page-title-section p {
+    font-size: 14px;
+    color: #64748B;
+    margin: 0 0 20px 0;
+}
+
+.title-divider {
+    border: 0;
+    height: 1px;
+    background-color: #E2E8F0;
+    margin: 0;
+}
+
+/* 2. 대시보드형 상단 요약 카드 */
+.status-card-wrapper {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.status-card {
+    flex: 1;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.status-card .card-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748B;
+    margin-bottom: 6px;
+}
+
+.status-card .card-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0F172A;
+}
+
+/* 3. 데이터 테이블 스타일 관리 */
+.table-container {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02), 0 2px 4px -1px rgba(0,0,0,0.01);
+    overflow: hidden;
+    padding: 8px;
+}
+
+.erp-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.erp-table th {
+    padding: 14px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    background-color: #F8FAFC;
+    border-bottom: 2px solid #E2E8F0;
+}
+
+.erp-table td {
+    padding: 16px 16px;
+    font-size: 14px;
+    color: #334155;
+    border-bottom: 1px solid #F1F5F9;
+    vertical-align: middle;
+}
+
+.erp-table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.erp-table tbody tr:hover {
+    background-color: #F8FAFC;
+}
+
+/* 4. 권한 등급 배지(Badge) */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.badge-admin {
+    color: #DC2626;
+    background-color: #FEE2E2;
+}
+
+.badge-manager {
+    color: #2563EB;
+    background-color: #EFF6FF;
+}
+
+.badge-none {
+    color: #64748B;
+    background-color: #F1F5F9;
+}
+
+.text-muted {
+    color: #94A3B8;
+}
+
+/* 5. 버튼 스타일 컴포넌트 */
+.btn-salary-secondary {
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    background-color: #FFFFFF;
+    color: #334155;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-salary-secondary:hover {
+    background-color: #0F172A;
+    color: #FFFFFF;
+    border-color: #0F172A;
+}
+
+/* 6. 모달 팝업 레이아웃 */
+.role-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.4);
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+
+.role-modal-content {
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 420px;
+    padding: 28px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.select-leader-box {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #CBD5E1;
+    font-size: 14px;
+    color: #334155;
+    background-color: #F8FAFC;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.select-leader-box:focus {
+    border-color: #475569;
+    background-color: #FFFFFF;
+}
+
+.modal-btn {
+    padding: 9px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.btn-close { background: #F1F5F9; color: #475569; }
+.btn-close:hover { background: #E2E8F0; }
+.btn-save { background: #0F172A; color: #fff; }
+.btn-save:hover { background: #1E293B; }
