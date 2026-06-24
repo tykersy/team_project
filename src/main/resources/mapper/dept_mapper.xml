@@ -39,6 +39,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ORDER BY d.deptno, s.sabun
     </select>
 
+    <!-- '조직도 라이브러리'를 위한 데이터 -->
+    <select id="getOrgChartData" resultType="map">
+    SELECT id, pid, name, title FROM (
+        SELECT 'COMPANY' AS id, NULL AS pid, 'CEO' AS name, '본부' AS title
+        UNION ALL
+        SELECT CONCAT('DEPT_', deptno), 'COMPANY', dname, '부서' FROM dept
+        UNION ALL
+        SELECT CAST(s.sabun AS CHAR), CONCAT('DEPT_', s.deptno), s.saname, s.sajob 
+        FROM sawon s WHERE s.deptno IS NOT NULL
+    ) AS org_chart
+    </select>
+    
     <!-- 부서별 인원 조회 -->
     <select id="memberCount"
             resultType="java.util.Map">

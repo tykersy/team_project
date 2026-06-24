@@ -21,6 +21,9 @@ public interface DeptDAO {
     //조직도 관련 정보
     List<Map<String, Object>> getDeptOrgChart();
 
+    //조직도 데이터를 로드하기 위한 메서드
+    List<Map<String, Object>> getOrgChartData();
+
     //부서별 인원 조회
     Map<String,Object> memberCount();
 
