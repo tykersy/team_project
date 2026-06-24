@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.kh.project.dao.DeptDAO;
 import com.kh.project.dao.SawonDAO;
 import com.kh.project.vo.DeptVO;
+import com.kh.project.vo.OrgChartVO;
+import com.kh.project.vo.SawonVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -122,6 +124,16 @@ public class DeptController {
 
         return map;
 
+    }
+
+    //조직도
+    @GetMapping("dept_chart.do")
+    public String showChart(Model model){
+        List<OrgChartVO> chartList = deptdao.chartList();
+
+        model.addAttribute("chartList", chartList);
+
+        return"dept/dept_chart";
     }
 
 }
