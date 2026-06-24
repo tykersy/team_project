@@ -119,9 +119,14 @@
                     .then(res => res.json())
                     .then(data => {
 
+                        const roomId = data.roomId;
+
                         msgSwitchTab(1);
 
-                        openChatRoom(data.roomId);
+                        setTimeout(() => {
+                            openChatRoom(roomId);
+                        }, 10);
+
                     });
                 }
 

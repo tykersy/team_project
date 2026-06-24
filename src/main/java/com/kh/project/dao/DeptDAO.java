@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.kh.project.vo.DeptVO;
+import com.kh.project.vo.OrgChartVO;
+import com.kh.project.vo.SawonVO;
 
 public interface DeptDAO {
     
@@ -39,4 +41,6 @@ public interface DeptDAO {
 
     //부서 삭제
     int deleteDept(String dname);
+
+    List<OrgChartVO> chartList();
 }
