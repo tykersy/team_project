@@ -116,15 +116,12 @@
         <div class="role-modal-content">
             <h3 id="modalDeptName">부서 관리자 임명</h3>
             <p>새로운 팀장을 지정하면 기존 권한은 자동으로 회수됩니다.</p>
-            
             <input type="hidden" id="modalDeptNo">
-            
-            <select id="selectSabun" class="select-leader-box">
-                <option value="">-- 관리자 미지정(권한 회수) --</option>
-                <option value="2026001">홍길동 (2026001)</option>
                 
+            <select id="selectSabun" class="select-leader-box">
+                    
             </select>
-            
+                
             <div class="modal-btn-group" style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 8px;">
                 <button type="button" class="modal-btn btn-close" onclick="closeRoleModal()">취소</button>
                 <button type="button" class="modal-btn btn-save" onclick="submitRoleChange()">변경 저장</button>
@@ -135,31 +132,50 @@
     function openRoleModal(deptno, dname, currentSabun) {
         document.getElementById('modalDeptNo').value = deptno;
         document.getElementById('modalDeptName').innerText = dname + " 관리자 임명";
-        document.getElementById('selectSabun').value = currentSabun || "";
         document.getElementById('roleModal').style.display = 'flex';
 
-        //선택된 부서 사원 목록 가져오기
-        // fetch( "/admin/read_dept_sawon?deptno="+deptno )
-        // .then( res => res.json() )
-        // .then( data => {
+        let optionStr = `<option value="">-- 관리자 미지정(권한 회수) --</option>`;
 
-        // } )
+        //선택된 부서 사원 목록 가져오기
+        fetch( "/admin_read_dept_sawon?deptno="+deptno )
+        .then( res => res.json() )
+        .then( data => {
+            console.log("받아온 데이터 확인:", data)
+            if( data.deptSawonList != null ){
+                data.deptSawonList.forEach( function(sawon){
+                    optionStr += '<option value="' + sawon.sabun + '">'+ sawon.saname + '(' + 
+                        sawon.sabun + ')</option>';
+                });
+            }
+            document.getElementById('selectSabun').innerHTML = optionStr;
+
+            //지정된 관리자가 이미 있다면 select박스에서 기본으로 선택되어져 있게 설정
+            if( currentSabun ){
+                document.getElementById('selectSabun').value = currentSabun;
+            }
+        } )
+
+
+
     }
 
     function closeRoleModal() {
         document.getElementById('roleModal').style.display = 'none';
     }
 
-    function submitRoleChange() {
+    function submitRoleChange(f) {
         const deptno = document.getElementById('modalDeptNo').value;
         const sabun = document.getElementById('selectSabun').value;
-        
-        fetch('/admin/reposition_leader', {
+
+
+        let formData = new FormData();
+        formData.set("deptno", deptno)
+        formData.set("sabun", sabun);
+
+        fetch('/admin_reposition_leader', {
+
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ deptno: deptno, sabun: sabun })
+            body: formData
         })
         .then(res => res.json())
         .then(data => {

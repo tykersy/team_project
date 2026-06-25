@@ -20,6 +20,7 @@ import com.kh.project.dao.SleaveDAO;
 import com.kh.project.dao.TADAO;
 import com.kh.project.dao.UserDAO;
 import com.kh.project.vo.DeptVO;
+import com.kh.project.vo.SalaryContractVO;
 import com.kh.project.vo.SawonVO;
 import com.kh.project.vo.SleaveLogVO;
 import com.kh.project.vo.TAVO;
@@ -39,6 +40,9 @@ public class AdminController {
     private final SleaveDAO sleavedao;
     private final SalaryDAO salarydao;
     
+    //관리자 로그인 확인용 session
+    @Autowired
+    private HttpSession session;
 
     @GetMapping("/main")
     public String toMain(Model model) {
@@ -161,7 +165,7 @@ public class AdminController {
     @PostMapping("/reposition_leader")
     @ResponseBody
     public Map<String, Integer> changeLeader( int deptno, String sabun ){
-
+        
         //파라미터를 담을 map
         Map<String, Integer> map = new HashMap<>();
 
@@ -201,4 +205,75 @@ public class AdminController {
 
     }
 
+    //전자 계약 현황 페이지
+    @GetMapping("/admin_contract_list")
+    public String contractListMain( Model model ){
+
+        //부서리스트 조회 및 바인딩
+        List<DeptVO> deptList = deptdao.selectAll();
+        model.addAttribute("deptList", deptList);
+
+        //페이지가 로드 될 때 리스트를 사번 순으로 출력하기 위한 바인딩
+        Map<String, Object> map = new HashMap<>();
+        map.put("sortType", null);
+
+        //대시보드 상단 카운트 박스 정보조회 및 바인딩
+        Map<String, Object> counts = salarydao.getCountsContract();
+        model.addAttribute("pending_count", counts.get("pendingCount"));
+        model.addAttribute("renewal_count", counts.get("renewalCount"));
+        System.out.println(counts.get("pendingCount"));
+        System.out.println(counts.get("renewalCount"));
+
+        //사원번호 순으로 정렬된 계약서 리스트 조회 및 바인딩
+        List<SalaryContractVO> contractList = salarydao.getfilteredList(map);
+        model.addAttribute("contractList", contractList);
+
+        return "admin_salary/admin_contract_list";
+    }
+
+    //전자 계약 현황 리스트 필터링
+    @GetMapping("/admin_contract_status")
+    public String filertingContractList( Model model, String saname, String sortType, String deptno){
+
+        //대시보드 상단 카운트 박스 정보조회 및 바인딩
+        Map<String, Object> counts = salarydao.getCountsContract();
+        model.addAttribute("pending_count", counts.get("pendingCount"));
+        model.addAttribute("renewal_count", counts.get("renewalCount"));
+
+        //검색 조건 필터링 조건 map에 담기
+        Map<String, Object> filter = new HashMap<>();
+        filter.put("deptno", deptno);
+        filter.put("sortType", sortType);
+        filter.put("saname", saname);
+
+        //조건으로 조회하기+ 결과 바인딩하기
+        List<SalaryContractVO> contractList = salarydao.getfilteredList(filter);
+        model.addAttribute("contractList", contractList);
+
+        return "admin_salary/admin_contract_list";
+    }
+
+    //이름 클릭시 사원(최근) 계약서 상세보기 페이지
+    @GetMapping("/admin_contract_detail")
+    @ResponseBody
+    public Map<String, Object> showDetailOfContract(String sabun){
+
+        int i_sabun = 0;
+        SalaryContractVO contract;
+        Map<String, Object> map = new HashMap<>();
+
+        //방어 코드
+        if( sabun != null && sabun != ""){
+            i_sabun = Integer.parseInt(sabun);
+            contract = salarydao.getContractBySabun(i_sabun);
+            
+            map.put("contract", contract);
+
+        }else{
+            map.put("contract", null);
+        }
+
+        return map;
+        
+    }
 }
