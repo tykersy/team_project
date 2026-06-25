@@ -23,7 +23,7 @@ public class SleaveController {
     private final SleaveDAO sleaveDao;
 
     //관리자 : 연차 관리 메인페이지
-    @GetMapping("/admin_leave")
+    @GetMapping("/admin/leave")
     public String admingLeaveMain( Model model ){
         
         //미승인 상태 연차 갯수 조회
@@ -56,7 +56,7 @@ public class SleaveController {
     }
 
     // 연차 사용 승인
-    @GetMapping("/admin_leave_approval")
+    @GetMapping("/admin/leave_approval")
     public String leaveApproval(int log_id){
 
         //파라미터로 받은 log_id로 승인할 연차정보 불러오기
@@ -68,12 +68,12 @@ public class SleaveController {
         //승인된 연차 사용 사원의 연차 갯수 차감
         int res = sleaveDao.sleaveApplyUpdate(vo);
 
-        return "redirect:/admin_leave";
+        return "redirect:/admin/leave";
 
     }
 
     // 휴가 사용 신청 반려
-    @GetMapping("/admin_leave_reject")
+    @GetMapping("/admin/leave_reject")
     @ResponseBody
     public Map<String, Object> reject( int log_id, String reject_reason ){
 
@@ -89,7 +89,7 @@ public class SleaveController {
     }
 
     //검색한 사원의 연차사용 히스토리 
-    @GetMapping("/admin_leave_search_history")
+    @GetMapping("/admin/leave_search_history")
     @ResponseBody
     public Map<String, Object> search_leave_history(String search_name){
 

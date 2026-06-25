@@ -57,12 +57,9 @@ public class AdminBoardController {
         return "admin_board/admin_list"; 
     }
 
-    @GetMapping("/write") 
-    public String writeForm(Model model) { 
+    @GetMapping("/write")
+    public String writeForm(Model model) {
         Integer sabun = (Integer) session.getAttribute("user");
-        
-        // 1. 로그인 체크
-        if (sabun == null) return "redirect:/login";
 
         // 2. 사원 정보 조회 (JOIN을 통해 dname 포함)
         SawonVO member = userDAO.selectUser(sabun);
@@ -104,11 +101,7 @@ public class AdminBoardController {
     @GetMapping("/update") 
     public String updateForm(@RequestParam("idx") int idx, Model model) { 
 
-        // 권한 체크: 로그인 여부 확인
     Integer userObj = (Integer)session.getAttribute("user");
-    if (userObj == null) {
-        return("/login");
-    }
     if((int)userObj <= 2000){
         
         return"/dashboard/main";

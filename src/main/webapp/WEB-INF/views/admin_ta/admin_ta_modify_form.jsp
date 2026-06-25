@@ -21,7 +21,7 @@
                 // URLSearchParams를 이용하여 폼 데이터를 전송에 적합한 쿼리 스트링으로 가공
                 let urlEncoded = new URLSearchParams(formData).toString();
 
-                fetch("/admin_update_ta_list", { 
+                fetch("/admin/update_ta_list", { 
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: urlEncoded
@@ -30,7 +30,7 @@
                 .then(data => {
                     if(data === true) {
                         alert("근태 기록이 성공적으로 수정되었습니다.");
-                        location.href="/admin_main.do/today_ta/view?sabun="+form.sabun.value;
+                        location.href="/admin/today_ta/view?sabun="+form.sabun.value;
                     } else {
                         alert("저장 중 오류가 발생했습니다.");
                     }

@@ -14,14 +14,14 @@
                 today_ta(1);
             }
             function today_ta(deptno){ // 부서별 근태현황
-                fetch('/admin_main.do/today_ta/data?deptno=' + deptno)
+                fetch('/admin/today_ta/data?deptno=' + deptno)
                     .then(res => res.json())
                     .then(data =>{
                         let tbody = document.getElementById('ta-tbody');
                         tbody.innerHTML = data.map(d => `
                             <tr>
                                 <td>
-                                    <a href="/admin_main.do/today_ta/view?sabun=\${d.sabun}">\${d.saname}</a>
+                                    <a href="/admin/today_ta/view?sabun=\${d.sabun}">\${d.saname}</a>
                                 </td>
                                 <td>\${d.sahire}</td>
                                 <td class="tag normal">\${d.normalCount}</td>

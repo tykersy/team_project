@@ -34,7 +34,7 @@ public class SalaryController {
     private final SawonDAO sawonDao;
 
     //근태 마감 처리 (한명)
-    @PostMapping("/admin_taclose")
+    @PostMapping("/admin/taclose")
     @ResponseBody
     public boolean closeEmployeeAttendance(String ym, String sabun){
 
@@ -150,7 +150,7 @@ public class SalaryController {
     }
 
     // 근태 마감 대기자 전부 마감하기
-    @PostMapping("/admin_ta_close_all")
+    @PostMapping("/admin/ta_close_all")
     @ResponseBody
     public boolean closeAllTA( String ym ){
 
@@ -253,7 +253,7 @@ public class SalaryController {
     }
 
     //전자 계약 추가 페이지로 이동
-    @GetMapping("/admin_set_contract")
+    @GetMapping("/admin/set_contract")
     public String setContractPage( Model model ){
 
         //전체 사원번호+이름 리스트 불러오기
@@ -266,7 +266,7 @@ public class SalaryController {
     }
 
     //전자 계약 등록(추가)
-    @PostMapping("/admin_register_contract")
+    @PostMapping("/admin/register_contract")
     @ResponseBody
     public Map<String, Object> registerContract(SalaryContractVO vo){
 
@@ -284,7 +284,7 @@ public class SalaryController {
     }
 
     //급여 정산 페이지
-    @GetMapping("/admin_salary_confirm")
+    @GetMapping("/admin/salary_confirm")
     public String adminSalaryMain( Model model , String ym){
 
         //파라미터로 넘어온 날짜 정보가 없을 경우 년월을 현재 기준으로 조회
@@ -309,7 +309,7 @@ public class SalaryController {
     }
 
     //급여 마감 비동기 처리
-    @PostMapping("/admin_salary_complete")
+    @PostMapping("/admin/salary_complete")
     @ResponseBody
     public Map<String, Object> salaryComplete( @RequestBody List<String> salaryIds ){
 

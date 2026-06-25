@@ -54,10 +54,6 @@ public class TAController {
     @GetMapping("/ta_main.do")
     public String taMain(Model model) {
 
-        if(session.getAttribute("user") == null){
-            return "redirect:/login";
-        }
-
         int sabun = (Integer)session.getAttribute("user");
 
         //오늘 년/월을 구하여 포멧을 지정
@@ -103,11 +99,6 @@ public class TAController {
 
         Map<String, Object> map = new HashMap<>();
 
-        if(session.getAttribute("user") == null){
-            map.put("result", "login");
-            return map;
-        }
-
         int sabun = (Integer)session.getAttribute("user");
 
         TAVO today = tadao.selectToday(sabun);
@@ -133,11 +124,6 @@ public class TAController {
     public Map<String, Object> checkOut() {
 
         Map<String, Object> map = new HashMap<>();
-
-        if(session.getAttribute("user") == null){
-            map.put("result", "login");
-            return map;
-        }
 
         int sabun = (Integer)session.getAttribute("user");
 
@@ -166,7 +152,7 @@ public class TAController {
 
 
     //근태 정산/마감 메인 페이지
-    @GetMapping("/admin_TA_confirm_main")
+    @GetMapping("/admin/ta_confirm")
     public String adminTAMain( String ym, Model model ){
 
         //선택된 ym(년월)이 없다면 오늘날짜 기준으로 세팅
@@ -231,13 +217,13 @@ public class TAController {
     }
 
     //근태 정보 수정페이지
-    @GetMapping("/admin_ta_modify_form")
+    @GetMapping("/admin/ta_modify_form")
     public String taModifyForm(int sabun, String ym, Model model){
 
         if( ym == null ){
             
             //만약 년월 정보가 없다면
-            return "redirect:/admin_main.do/today_ta/view";
+            return "redirect:/admin/today_ta/view";
 
         }
 
@@ -280,7 +266,7 @@ public class TAController {
     }
 
     //근태 기록 수정
-    @PostMapping("/admin_update_ta_list")
+    @PostMapping("/admin/update_ta_list")
     @ResponseBody
     public boolean updateTAReport(String ym, TAVO ta){
 

@@ -121,7 +121,7 @@
 
                     // Controller로 보낼 URL 생성 (파라미터 포함)
                     
-                    const url = "/schedule_view.do?deptno="+cur_deptno
+                    const url = "/admin/schedule_view?deptno="+cur_deptno
                                 +"&date="+clickedDate;
                     
                     //미니 팝업 띄우기
@@ -148,7 +148,7 @@
                 isSearched = false;
                 }
 
-                fetch( "/schedule_deptSchedule.do?deptno="+deptno  )
+                fetch( "/admin/schedule_dept?deptno="+deptno  )
                 .then( res => res.json() )
                 .then( data => {
                     
@@ -193,7 +193,7 @@
                 isSearched = false;
                 }
 
-                fetch( "/schedule_all.do" )
+                fetch( "/admin/schedule_all" )
                 .then( res => res.json() )
                 .then( data => {
 
@@ -238,7 +238,7 @@
 
                 searchbox.innerHTML = "" //기존 검색결과 초기화
 
-                fetch( "/schedule_search.do?search_name="+search_name )
+                fetch( "/admin/schedule_search?search_name="+search_name )
                 .then( res => res.json() )
                 .then( data => {
 

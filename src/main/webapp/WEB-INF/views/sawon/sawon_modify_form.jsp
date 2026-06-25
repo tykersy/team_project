@@ -6,7 +6,7 @@
 
     <head>
         <link rel="stylesheet" href="/css/admin/sawon_modify_form.css"/>
-        <link rel="stylesheet" href="css/admin/sidebar.css" />
+        <link rel="stylesheet" href="/css/admin/sidebar.css" />
 
         <script>
 
@@ -120,7 +120,7 @@
                 if( new_pwd != '' ){
 
                     //1.기존 비밀번호와 같은지 확인
-                    fetch( "/admin_check_pwd", { method:'post', body:formData } )
+                    fetch( "/admin/check_pwd", { method:'post', body:formData } )
                     .then( res => res.json() )
                     .then( data => {
 
@@ -134,14 +134,14 @@
                 }
 
 
-                fetch( "/admin_sawon_modify", { method:"post", body:formData } )
+                fetch( "/admin/sawon_modify", { method:"post", body:formData } )
                 .then( res => res.json() )
                 .then( data => {
 
 
                     if( data.result == 1 ){
                         alert(saname+"사원의 정보가 성공적으로 변경 되었습니다")
-                        location.href="/sawon_view.do?sabun="+sabun;
+                        location.href="/admin/sawon_view?sabun="+sabun;
                     }else{
                         alert(saname+"사원 정보 수정에 실패했습니다. 다시 시도해주세요")
                     }

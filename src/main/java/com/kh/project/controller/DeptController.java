@@ -51,7 +51,7 @@ public class DeptController {
     }
 
     //관리자-부서 관리 페이지 
-    @GetMapping("/admin_deptlist")
+    @GetMapping("/admin/deptlist")
     public String adminDeptMain(Model model){
 
         //전체 부서 리스트 조회
@@ -74,7 +74,7 @@ public class DeptController {
     }
 
     //관리자-부서정보 수정
-    @PostMapping("/admin_update_dept")
+    @PostMapping("/admin/update_dept")
     @ResponseBody
     public Map<String, Object> updDept(DeptVO vo, String ori_deptno){
 
@@ -91,7 +91,7 @@ public class DeptController {
     }
 
     //관리자-부서 번호, 부서이름 중복체크
-    @GetMapping("/admin_add_dept")
+    @GetMapping("/admin/add_dept")
     @ResponseBody
     public Map<String, Object> check(DeptVO vo){
 
@@ -111,7 +111,7 @@ public class DeptController {
     }
 
     //관리자- 부서 등록
-    @PostMapping("/admin_add_dept")
+    @PostMapping("/admin/add_dept")
     @ResponseBody
     public Map<String, Object> insertDept( DeptVO vo ){
 
@@ -125,7 +125,7 @@ public class DeptController {
     }
 
     //부서 삭제
-    @GetMapping("/admin_delete_dept")
+    @GetMapping("/admin/delete_dept")
     @ResponseBody
     public Map<String, Integer> deleteDept( String dname ){
 

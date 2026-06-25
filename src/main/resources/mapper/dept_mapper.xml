@@ -35,7 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             s.saname AS saname,
             s.sajob AS sajob
         FROM dept d
-        LEFT JOIN sawon s ON d.deptno = s.deptno
+        LEFT JOIN sawon s ON d.deptno = s.deptno AND s.sastatus = '재직'
         ORDER BY d.deptno, s.sabun
     </select>
 
@@ -47,7 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT CONCAT('DEPT_', deptno), 'COMPANY', dname, '부서' FROM dept
         UNION ALL
         SELECT CAST(s.sabun AS CHAR), CONCAT('DEPT_', s.deptno), s.saname, s.sajob 
-        FROM sawon s WHERE s.deptno IS NOT NULL
+        FROM sawon s WHERE s.deptno IS NOT NULL AND s.sastatus = '재직'
     ) AS org_chart
     </select>
     
@@ -57,7 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select d.dname, count(s.sabun) cnt
         from dept d
         left join sawon s
-        on d.deptno = s.deptno
+        on d.deptno = s.deptno and s.sastatus = '재직'
         group by d.dname
     </select>
 
@@ -74,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         COUNT(s.sabun) AS sawonCount
         FROM dept d
         LEFT JOIN sawon s
-        ON d.deptno = s.deptno
+        ON d.deptno = s.deptno AND s.sastatus = '재직'
         GROUP BY d.deptno, d.dname
         ORDER BY sawonCount DESC
     </select>
@@ -116,7 +116,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 s.saemail,
                 s.satel
         FROM dept d
-        LEFT JOIN sawon s ON d.deptno = s.deptno
+        LEFT JOIN sawon s ON d.deptno = s.deptno AND s.sastatus = '재직'
         ORDER BY d.deptno, s.sabun
     </select>
 

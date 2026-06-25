@@ -79,6 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             DAYOFWEEK(c.day) NOT IN (1, 7)
             AND c.day &lt;= CURDATE()
             AND s.deptno = #{deptno}
+            AND s.sastatus = '재직'
         GROUP BY s.sabun, s.saname, s.sahire, s.deptno
         ORDER BY s.deptno, s.sabun
     </select>
@@ -119,11 +120,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM sawon s
         LEFT JOIN ta t
             ON t.sabun = s.sabun
-            AND t.day = CURDATE()           -- 오늘 날짜만
+            AND date(t.day) = CURDATE()           -- 오늘 날짜만
         LEFT JOIN sleave_log sl
             ON sl.sabun = s.sabun
             AND sl.approve = true
             AND sl.use_date = CURDATE()     -- 오늘 날짜만
+        WHERE s.sastatus = '재직'
     </select>
 
     <!-- 해당 년월의 사원들의 출근 일수 조회하기 -->
@@ -158,7 +160,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         LEFT JOIN ta ta ON s.sabun = ta.sabun AND ta.day LIKE CONCAT(#{ym}, '%')
             JOIN dept d ON s.deptno = d.deptno
         -- 마감 테이블에 해당 년월 마감 데이터가 있는 사원은 제외
-        WHERE NOT EXISTS ( 
+        WHERE s.sastatus = '재직'
+        AND NOT EXISTS (
             SELECT *
             FROM salary_closed_attendance sca
             WHERE sca.sabun = s.sabun
@@ -230,6 +233,63 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         )
     </insert>
 
+    <!-- 부서별 연차 소진율 -->
+    <select id="selectDeptAnnualUseAvg">
+        SELECT 
+            d.dname,
+            COUNT(DISTINCT s.sabun) AS sawonCount,
+            ROUND(AVG(
+                IFNULL(used.totaluse, 0) / 15.0 * 100
+            ), 1) AS useAvg
+        FROM sawon s
+        JOIN dept d ON s.deptno = d.deptno
+        LEFT JOIN (
+            SELECT sabun, SUM(use_days) AS totaluse
+            FROM sleave_log
+            WHERE leave_type = 'annual' AND approve = 1
+            AND YEAR(use_date) = YEAR(CURDATE())
+            GROUP BY sabun
+        ) used ON s.sabun = used.sabun
+        WHERE s.sastatus = '재직'
+        GROUP BY d.deptno, d.dname
+        ORDER BY useAvg DESC;
+    </select>
+
+    <!-- 당일 회사 출근율 -->
+    <select id="selectTodayCommuteAvg" resultType="Double">
+        SELECT 
+            ROUND(
+                COUNT(CASE WHEN t.checkin IS NOT NULL THEN 1 END) 
+                / COUNT(*) * 100
+            , 1) AS commuteAvg
+        FROM sawon s
+        LEFT JOIN ta t
+            ON t.sabun = s.sabun
+            AND DATE(t.day) = CURDATE()
+        WHERE s.sastatus = '재직';
+    </select>
+
+    <!-- 해당 월 퇴사자 조회 -->
+    <select id="selectMonthLeaveSawon" resultType="int">
+        SELECT 
+            count(*) as leave_sawon
+        FROM sawon s
+        JOIN dept d ON s.deptno = d.deptno
+        WHERE s.sastatus = '퇴직'
+        AND DATE_FORMAT(s.saretire, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+        ORDER BY s.saretire DESC;
+    </select>
+
+    <!-- 해당 월 입사자 조회-->
+    <select id="selectMonthJoinedSawon" resultType="int">
+        SELECT 
+            count(*) as joined_sawon
+        FROM sawon s
+        JOIN dept d ON s.deptno = d.deptno
+        WHERE s.sastatus = '재직'
+        AND DATE_FORMAT(s.sahire, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+        ORDER BY s.saretire DESC;
+    </select>
     
     
 </mapper>

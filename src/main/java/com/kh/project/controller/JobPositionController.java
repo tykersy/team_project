@@ -30,7 +30,7 @@ public class JobPositionController {
     private final SawonDAO sawonDao;
 
     //관리자-부서/직급 관리 페이지
-    @GetMapping("/admin_hr")
+    @GetMapping("/admin/hr")
     public String hrMain(Model model){
 
         //전체 직급 목록 조회
@@ -58,7 +58,7 @@ public class JobPositionController {
 
     }
 
-    @GetMapping("/admin_job_position")
+    @GetMapping("/admin/job_position")
     public String jobPositionMain(Model model){
 
         //직급별 사원 수 조회
@@ -81,7 +81,7 @@ public class JobPositionController {
     }
 
     //직급 추가 전 id,직급명 중복 체크
-    @GetMapping("/admin_add_job_position")
+    @GetMapping("/admin/add_job_position")
     @ResponseBody
     public Map<String, Object> add_idCheck( JobPositionVO vo ){
 
@@ -95,7 +95,7 @@ public class JobPositionController {
     }
 
     //직급 추가
-    @PostMapping("/admin_add_job_position")
+    @PostMapping("/admin/add_job_position")
     @ResponseBody
     public Map<String, Integer> add_job_position( JobPositionVO vo ){
 
@@ -109,7 +109,7 @@ public class JobPositionController {
     }
 
     //직급 정보 수정
-    @PostMapping("/admin_update_job_position")
+    @PostMapping("/admin/update_job_position")
     @ResponseBody
     public Map<String, Object> updatePosition(JobPositionVO vo, String ori_job_id){
 
@@ -132,12 +132,12 @@ public class JobPositionController {
     }
 
     //직급 삭제
-    @GetMapping("/admin_del_job_position")
+    @GetMapping("/admin/del_job_position")
     public String deleteJobPosition(int job_id){
 
         int res = jobPositionDao.delete(job_id);
 
-        return "redirect:/admin_job_position";
+        return "redirect:/admin/job_position";
 
     }
 

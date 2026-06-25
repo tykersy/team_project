@@ -260,13 +260,13 @@
                     formData.set("ori_job_id", ori_job_id); 
                     formData.set("job_id", job_id); // 사용자가 새로 바꾼 job_id가 있다면 담아서 전송
 
-                    fetch("/admin_update_job_position", { method: "POST", body: formData })
+                    fetch("/admin/update_job_position", { method: "POST", body: formData })
                     .then(res => res.json())
                     .then(data => {
                         if(data.result == 1) {
                             alert("직급 정보가 수정되었습니다.");
                             closeModal();
-                            location.href = "/admin_job_position";
+                            location.href = "/admin/job_position";
                         } else {
                             alert("수정에 실패했습니다.");
                         }
@@ -281,18 +281,18 @@
                 //버튼이 등록일 때 동일한 직급명, 동일한 id체크
                 if(mode === "insert") {
                     
-                    fetch( "/admin_add_job_position?job_id="+job_id+"&sajob="+sajob )
+                    fetch( "/admin/add_job_position?job_id="+job_id+"&sajob="+sajob )
                     .then( res => res.json() )
                     .then( data => {
                         if( data.result == null ){ 
                             let formData = new FormData(f);
-                            fetch( "/admin_add_job_position", { method:"POST", body:formData } )
+                            fetch( "/admin/add_job_position", { method:"POST", body:formData } )
                             .then( res => res.json() )
                             .then( postData => {
                                 if( postData.result == 1 ){
                                     alert("직급이 정상적으로 추가되었습니다.");
                                     closeModal();
-                                    location.href="/admin_job_position";
+                                    location.href="/admin/job_position";
                                 }
                             } );
                         } else { 
@@ -310,7 +310,7 @@
                     return;
                 }
 
-                location.href="/admin_del_job_position?job_id="+job_id+
+                location.href="/admin/del_job_position?job_id="+job_id+
                     "&sajob="+sajob;
 
             }

@@ -267,13 +267,13 @@
                     formData.set("deptno", deptno); // 사용자가 새로 바꾼 부서번호 있다면 담아서 전송
                     formData.set("dtel", dtel);
 
-                    fetch("/admin_update_dept", { method: "POST", body: formData })
+                    fetch("/admin/update_dept", { method: "POST", body: formData })
                     .then(res => res.json())
                     .then(data => {
                         if(data.result == 1) {
                             alert("부서 정보가 수정되었습니다.");
                             closeModal();
-                            location.href = "/admin_deptlist";
+                            location.href = "/admin/deptlist";
                         } else {
                             alert("부서 정보 수정에 실패했습니다.");
                         }
@@ -288,19 +288,19 @@
                 //버튼이 등록일 때 동일한 부서명, 동일한 부서번호 체크
                 if(mode === "insert") {
                     
-                    fetch( "/admin_add_dept?deptno="+deptno+"&dname="+dname )
+                    fetch( "/admin/add_dept?deptno="+deptno+"&dname="+dname )
                     .then( res => res.json() )
                     .then( data => {
                         if( data.result == 'can' ){  //부서번호가 중복되지 않을 경우 if문 실행
                             
                             let formData = new FormData(f);
-                            fetch( "/admin_add_dept", { method:"POST", body:formData } )
+                            fetch( "/admin/add_dept", { method:"POST", body:formData } )
                             .then( res => res.json() )
                             .then( postData => {
                                 if( postData.result == 1 ){
                                     alert("부서가 정상적으로 추가되었습니다.");
                                     closeModal();
-                                    location.href="/admin_deptlist";
+                                    location.href="/admin/deptlist";
                                 }
                             } );
                         } else { 
@@ -317,12 +317,12 @@
                     return;
                 }
 
-                fetch( "/admin_delete_dept?dname="+dname )
+                fetch( "/admin/delete_dept?dname="+dname )
                 .then( res => res.json() )
                 .then( data => {
                     if( data.result == 1 ){
                         alert(dname+"가 정상적으로 삭제 되었습니다.");
-                        location.href="/admin_deptlist";
+                        location.href="/admin/deptlist";
                     } else {
                         alert("부서 삭제 실패. 다시 시도해주세요");
                     }
