@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import com.kh.project.vo.DeptVO;
 import com.kh.project.vo.OrgChartVO;
 import com.kh.project.vo.SawonVO;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -26,6 +28,9 @@ public class DeptController {
     private final DeptDAO deptdao;
     //사원DAO
     private final SawonDAO sawonDao;
+
+    @Autowired
+    HttpSession session;
     
     // 조직도 화면을 보여주는 컨트롤러 메서드
     @GetMapping("/org_chart")
@@ -136,6 +141,11 @@ public class DeptController {
     //조직도
     @GetMapping("dept_chart.do")
     public String showChart(Model model){
+
+        if(session.getAttribute("user") == null){
+            return "redirect:/login";
+        }
+
         List<OrgChartVO> chartList = deptdao.chartList();
 
         model.addAttribute("chartList", chartList);
