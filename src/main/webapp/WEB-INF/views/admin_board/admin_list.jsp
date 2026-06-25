@@ -12,7 +12,7 @@
         .main-content { padding: 40px; }
         .main-content h1 { text-align: center; margin-bottom: 30px; }
         .main-content .board-table { width: 100%; border-collapse: collapse; background: white; margin-bottom: 30px; }
-        .main-content .board-table th { background-color: #1E3A8A; color: white; padding: 15px; text-align: center; }
+        .main-content .board-table th { background-color: #111827; color: white; padding: 15px; text-align: center; }
         .main-content .board-table td { padding: 15px; border-bottom: 1px solid #eee; text-align: center; }
         .main-content .btn-sm { padding: 6px 15px; text-decoration: none; font-size: 14px; color: white; border: none; cursor: pointer; border-radius: 6px; }
         .main-content .btn-blue { background: #3b82f6; }
@@ -59,7 +59,7 @@
                 <input type="text" name="keyword" value="${keyword}" placeholder="Search" style="border: none; outline: none; width: 100%; padding: 5px;">
                 <button type="submit" style="border:none; background:none; cursor:pointer;"><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
-            <a href="/admin/board/write" style="position: absolute; right: 0; background: #1E3A8A; color: white; padding: 8px 20px; text-decoration: none; font-weight: bold;">글쓰기</a>
+            <a href="/admin/board/write" style="position: absolute; right: 0; background: #111827; color: white; padding: 8px 20px; text-decoration: none; font-weight: bold;">글쓰기</a>
         </div>
 
         <div style="text-align: center; margin-top: 20px; font-size: 18px;">

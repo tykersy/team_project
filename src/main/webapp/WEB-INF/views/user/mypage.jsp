@@ -282,6 +282,19 @@
                     p.classList.toggle('active', i === idx);
                 });
             }
+
+            // ── URL 파라미터 확인 및 자동 탭 전환 ──
+            window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tab = urlParams.get('tab');
+
+            // 'leave' 파라미터가 있다면 4번째 탭(인덱스 3)으로 전환
+            if (tab === 'leave') {
+                switchTab(3);
+            }
+            // 필요에 따라 다른 탭도 추가 가능
+            // else if (tab === 'salary') { switchTab(2); }
+        });
         </script>
     </body>
 </html>
