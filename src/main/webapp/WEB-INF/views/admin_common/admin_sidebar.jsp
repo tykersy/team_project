@@ -31,7 +31,7 @@
             <div class="sidebar-item">전자 계약 관리</div>
             <ul class="submenu">
                 <li><a href="/admin_set_contract">전자 근로 계약 생성</a></li>
-                <li><a href="">전자 계약 리스트</a></li>
+                <li><a href="/admin_contract_list">전자 계약 현황</a></li>
             </ul>
         </div>
 
@@ -47,7 +47,7 @@
             <a href="/admin/board/list" class="sidebar-item">공지사항</a>
         </div>
         <div class="menu-group">
-            <a href="admin_system_role" class="sidebar-item">시스템 관리</a>
+            <a href="${pageContext.request.contextPath}/admin_system_role" class="sidebar-item">시스템 관리</a>
         </div>
     </nav>
 

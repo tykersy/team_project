@@ -35,4 +35,12 @@ public interface SalaryDAO {
     //월급 정산 마감
     int salaryStatusComplete(int salary_id);
 
+    //필터별 계약서 갯수 조회
+    Map<String, Object> getCountsContract();
+
+    //해당 사원의 계약서 디테일 뷰
+    SalaryContractVO getContractDetail(int sabun);
+
+    //필터링 된 계약서 리스트 조회
+    List<SalaryContractVO> getfilteredList(Map<String, Object> filter);
 }
