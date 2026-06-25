@@ -17,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         COUNT(s.sabun) cnt
         FROM job_position p
         LEFT JOIN sawon s
-        ON p.sajob = s.sajob
+        ON p.sajob = s.sajob AND s.sastatus = '재직'
         GROUP BY p.sajob;
     </select>
 

@@ -139,7 +139,7 @@
         document.getElementById('roleModal').style.display = 'flex';
 
         //선택된 부서 사원 목록 가져오기
-        // fetch( "/admin_read_dept_sawon?deptno="+deptno )
+        // fetch( "/admin/read_dept_sawon?deptno="+deptno )
         // .then( res => res.json() )
         // .then( data => {
 
@@ -154,7 +154,7 @@
         const deptno = document.getElementById('modalDeptNo').value;
         const sabun = document.getElementById('selectSabun').value;
         
-        fetch('/admin_reposition_leader', {
+        fetch('/admin/reposition_leader', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -6,7 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id = "sawonList"
             resultType="sawon">
-        select * from sawon
+        select * from sawon where sastatus = '재직'
     </select>
 
     <!-- 사번으로 사원정보 조회 -->
@@ -25,7 +25,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!-- 사원 추가 -->
     <insert id="sawonInsert" parameterType="sawon">
-        insert into sawon values(
+        insert into sawon(sabun, saname, deptno, pwd, sapay, sajob, sahire, saemail, satel, saaddr, sazipcode)
+        values(
             #{sabun},
             #{saname},
             #{deptno},
@@ -65,7 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!-- 전체 사원 수 조회 -->
     <select id="sawonCnt"
             resultType="int">
-        select count(sabun)cnt from sawon
+        select count(sabun)cnt from sawon where sastatus = '재직'
     </select>
 
     <!-- 최근 충원 부서 조회 -->
@@ -98,6 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM sawon s
         JOIN dept d
             ON s.deptno = d.deptno
+        WHERE s.sastatus = '재직'
         ORDER BY d.deptno, s.saname
 
     </select>
@@ -163,7 +165,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="getDeptSawonList"
             parameterType="int"
             resultType="sawon">
-        select sabun, saname from sawon where deptno = #{deptno}
+        select sabun, saname from sawon where deptno = #{deptno} and sastatus = '재직'
     </select>
 
 </mapper>
