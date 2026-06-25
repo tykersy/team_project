@@ -114,9 +114,11 @@
 
                             <div class="kpi-card">
                                 <p>승인 대기</p>
-                                <h3>${approval}</h3>
+                                <a href="/mypage?tab=leave" style="text-decoration: none; color: inherit; display: block;">
+                                    <h3>${approval}</h3>
+                                </a>
                             </div>
-
+                            
                             <div class="kpi-card">
                                 <p>부서별 휴가 현황</p>
                                 <div class="kpi-list-content">

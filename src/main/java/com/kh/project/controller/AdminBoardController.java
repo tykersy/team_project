@@ -60,18 +60,16 @@ public class AdminBoardController {
     @GetMapping("/write") 
     public String writeForm(Model model) { 
         Integer sabun = (Integer) session.getAttribute("user");
-        
         // 1. 로그인 체크
         if (sabun == null) return "redirect:/login";
-
         // 2. 사원 정보 조회 (JOIN을 통해 dname 포함)
         SawonVO member = userDAO.selectUser(sabun);
-        
         // 3. 권한 체크: 사번 1(사장) 또는 직급이 '팀장'인 경우만 접근 허용
+
         boolean isAuthorized = false;
         if(sabun == 1 || "팀장".equals(member.getSajob())){
             isAuthorized = true;
-        };
+        }
         
         if (!isAuthorized) {
             return "redirect:/admin/board/list"; 
@@ -83,15 +81,15 @@ public class AdminBoardController {
     
     @PostMapping("/write") 
     public String writePro(BoardVO board) { 
-    // 세션에서 사번을 가져와서 board 객체에 강제로 설정
-    Integer sabun = (Integer) session.getAttribute("user");
-    board.setSabun(sabun);
-    
-    // 파일이 null인 경우 빈 문자열로 초기화 (에러 방지)
-    if (board.getFile() == null) board.setFile("");
-    
-    boardDAO.insertBoard(board); 
-    return "redirect:/admin/board/list"; 
+        // 세션에서 사번을 가져와서 board 객체에 강제로 설정
+        Integer sabun = (Integer) session.getAttribute("user");
+        board.setSabun(sabun);
+        
+        // 파일이 null인 경우 빈 문자열로 초기화 (에러 방지)
+        if (board.getFile() == null) board.setFile("");
+        
+        boardDAO.insertBoard(board); 
+        return "redirect:/admin/board/list"; 
     }
 
     @GetMapping("/detail") 
@@ -103,17 +101,23 @@ public class AdminBoardController {
     
     @GetMapping("/update") 
     public String updateForm(@RequestParam("idx") int idx, Model model) { 
-
-        // 권한 체크: 로그인 여부 확인
-    Integer userObj = (Integer)session.getAttribute("user");
-    if (userObj == null) {
-        return("/login");
-    }
-    if((int)userObj <= 2000){
+        // 1. 세션에서 현재 로그인한 사번 가져오기
+        Integer userObj = (Integer) session.getAttribute("user");
         
-        return"/dashboard/main";
-    }
+        // 2. 로그인 여부 확인
+        if (userObj == null) {
+            return "redirect:/login";
+        }
+        
+        // 3. 권한 체크: 사번 1번 OR 2000번대(2000~2999)만 접근 허용
+        boolean isAdmin = (userObj == 1) || (userObj >= 2000 && userObj < 3000);
+        
+        if (!isAdmin) {
+            // 권한이 없으면 대시보드로 이동
+            return "redirect:/dashboard/main"; 
+        }
 
+        // 4. 정상 권한일 경우 수정 폼 보여주기
         model.addAttribute("board", boardDAO.getBoard(idx)); 
         return "admin_board/admin_update"; 
     }
