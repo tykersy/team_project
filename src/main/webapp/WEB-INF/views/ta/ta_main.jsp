@@ -263,6 +263,7 @@
                 
                 for (let i = 0; i < firstDay; i++) {
                     row.appendChild(makeEmptyCell());
+                }
                     
                     while (day <= lastDate) {
                         if (row.children.length === 7) {
@@ -343,7 +344,7 @@
                     table.appendChild(tbody);
                     container.appendChild(table);
                 }
-            }
+            
                 
             function makeEmptyCell() {
                 const td = document.createElement('td');
