@@ -58,7 +58,7 @@ public class SawonController {
     private final JobPositionDAO jobDao;
 
     //전체 사원 목록
-    @GetMapping("/sawon_list.do")
+    @GetMapping("/admin/sawon_list")
     public String sawonList( Model model ) {
         
         List<SawonVO> list = sawonDao.sawonList();
@@ -68,7 +68,7 @@ public class SawonController {
 
 
     //사원 추가 폼
-    @GetMapping("/sawonAdd")
+    @GetMapping("/admin/sawon_add")
     public String sawonAddForm(Model model){
         
         //부서 번호조회를 위해 부서 전체
@@ -79,7 +79,7 @@ public class SawonController {
     }
 
     //사원 추가
-    @PostMapping("/sawonAdd")
+    @PostMapping("/admin/sawon_add")
     @ResponseBody
     public Map<String, Integer> sawonAdd(SawonVO vo){
 
@@ -132,7 +132,7 @@ public class SawonController {
     
     
     //사원별 정보 열람 페이지
-    @GetMapping("/sawon_view.do")
+    @GetMapping("/admin/sawon_view")
     public String sawonLeave( Model model , int sabun ){
 
         SleaveVO vo = sleaveDao.sawonLeave(sabun);
@@ -143,7 +143,7 @@ public class SawonController {
     }
 
     //사원 삭제
-    @GetMapping("/admin_sawon_delete")
+    @GetMapping("/admin/sawon_delete")
     @ResponseBody
     public Map<String, Integer> sawonDelete( int sabun ){
 
@@ -155,7 +155,7 @@ public class SawonController {
         return map;
     }
 
-    @GetMapping("/admin_sawon_modify")
+    @GetMapping("/admin/sawon_modify")
     public String sawonModify( Model model , int sabun){
 
         //수정할 사원 정보 불러오기 (사원 상세보기를 위한 sawonView함수 재활용)
@@ -179,7 +179,7 @@ public class SawonController {
     }
 
     //변경할 비밀번호와 현재 비밀번호의 중복 여부 체크
-    @PostMapping("/admin_check_pwd")
+    @PostMapping("/admin/check_pwd")
     @ResponseBody
     public Map<String, String> checkPwd(SawonVO vo, String new_pwd, String ori_pwd ) {
         
@@ -200,7 +200,7 @@ public class SawonController {
     }
     
     //관리자용 사원 정보 변경
-    @PostMapping("/admin_sawon_modify")
+    @PostMapping("/admin/sawon_modify")
     @ResponseBody
     public Map<String, Integer> modifySawonInfo( SawonVO vo, String new_pwd ){
 
@@ -218,7 +218,7 @@ public class SawonController {
     }
 
     //관리자 - 사원 리스트 pdf파일 다운로드 (무료 오픈소스 라이브러리 사용)
-    @GetMapping("/sawon_download_pdf")
+    @GetMapping("/admin/sawon_download_pdf")
     public void download_sawonPdf( HttpServletResponse response ) throws IOException{
 
         // 1. 응답 헤더 설정 (PDF 파일 다운로드 형식 지정)

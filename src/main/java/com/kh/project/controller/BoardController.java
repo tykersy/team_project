@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import com.kh.project.common.GroqService;
 import com.kh.project.dao.BoardDAO;
 import com.kh.project.vo.BoardVO;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/board")
@@ -23,6 +25,9 @@ public class BoardController {
 
     private final BoardDAO boardDAO;
     private final GroqService groqService;
+
+    @Autowired
+    HttpSession session;
 
     public BoardController(BoardDAO boardDAO, GroqService groqService) {
         this.boardDAO = boardDAO;
@@ -35,6 +40,10 @@ public class BoardController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(required = false) String keyword,
             Model model) {
+
+        if(session.getAttribute("user") == null){
+            return "redirect:/login";
+        }
 
         final int limit = 10;
         int offset = (page - 1) * limit;
@@ -114,21 +123,32 @@ public class BoardController {
             break;
 
             case "translate":
+            
+                String language = params.get("language");
 
-            String language = params.get("language");
+                if (language == null || language.isBlank()) {
+                    language = "영어";
+                }
 
-            if (language == null || language.isBlank()) {
-                language = "영어";
-            }
+                // 중국어 간체자 치환 로직
+                if ("Chinese".equals(language)) {
+                    language = "중국어 간체자(Simplified Chinese)";
+                }
 
-            prompt = """
-                    아래 게시글을 자연스러운 %s로 번역해줘.
-                    원래 의미는 유지하고 현지인이 읽기 자연스럽게 번역해줘.
+                prompt = """
+                        아래 내용을 %s로 자연스럽게 번역해줘.
+                        
+                        [지시 사항]
+                        1. 원문 전체의 내용(인사말, 본문, 끝인사, 서명 등)을 빠짐없이 번역할 것.
+                        2. 어떠한 경우에도 번역 결과물 외의 부연 설명(인사말 제외 안내, Note 등)은 절대 출력하지 말 것.
+                        3. 원문의 레이아웃, 문단 구분, 리스트 형식을 그대로 보존하여 읽기 편하게 구성할 것.
+                        4. 비즈니스 이메일의 격식과 매너를 갖춘 정중한 어조로 번역할 것.
+                        5. 중국어의 경우, 반드시 표준 중국어 간체자(Simplified Chinese)를 사용할 것.
 
-                    %s
-                    """.formatted(language, content);
-
-            break;
+                        [번역할 내용]
+                        %s
+                        """.formatted(language, content);
+                break;
 
             default:
                 response.put("result", "잘못된 요청입니다.");

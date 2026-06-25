@@ -156,6 +156,7 @@
         } )
 
 
+
     }
 
     function closeRoleModal() {
@@ -166,11 +167,13 @@
         const deptno = document.getElementById('modalDeptNo').value;
         const sabun = document.getElementById('selectSabun').value;
 
+
         let formData = new FormData();
         formData.set("deptno", deptno)
         formData.set("sabun", sabun);
 
         fetch('/admin_reposition_leader', {
+
             method: 'POST',
             body: formData
         })

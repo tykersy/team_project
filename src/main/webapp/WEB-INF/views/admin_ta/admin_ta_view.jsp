@@ -23,7 +23,7 @@
                 </div>
                 
                 <div class="ta-control-bar">
-                    <form action="/admin_main.do/today_ta/view" method="get" class="search-form">
+                    <form action="/admin/today_ta/view" method="get" class="search-form">
                         <input type="hidden" name="sabun" value="${param.sabun}">
                         <label for="search_ym">조회 년월:</label>
                         <input type="month" id="search_ym" name="ym" value="${ym}">
@@ -33,7 +33,7 @@
                     <!-- 근태가 아직 마감되지 않은 사원만 수정버튼 보여주기 -->
                     <c:if test="${approved == 'show'}">
                         <button type="button" class="btn-ta-modify" 
-                                onclick="location.href='/admin_ta_modify_form?sabun=${sawon.sabun}&ym=${ym}'">
+                                onclick="location.href='/admin/ta_modify_form?sabun=${sawon.sabun}&ym=${ym}'">
                             근태 정보 수정하기
                         </button>
                     </c:if>

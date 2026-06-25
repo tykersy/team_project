@@ -6,13 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.support.HttpRequestHandlerServlet;
 
 import com.kh.project.dao.DeptDAO;
 import com.kh.project.dao.SalaryDAO;
@@ -26,12 +25,12 @@ import com.kh.project.vo.SawonVO;
 import com.kh.project.vo.SleaveLogVO;
 import com.kh.project.vo.TAVO;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/admin")
 public class AdminController {
 
     private final TADAO tadao;
@@ -44,30 +43,43 @@ public class AdminController {
     //관리자 로그인 확인용 session
     @Autowired
     private HttpSession session;
-    
 
-    @GetMapping("/admin_main.do")
+    @GetMapping("/main")
     public String toMain(Model model) {
 
-        //관리자로 로그인되어 있지 않다면 로그인 창으로 돌아가기
-        if( session.getAttribute("user") == null || !session.getAttribute("user").equals(1) ){
-            return "redirect:/login";
-        }
 
+
+        //오늘 근태현황
         Map<String, Integer> todayTa = tadao.totalAllTa();
+        //부서별 연차 소진율
+        List<Map<String, Object>> deptAnnualUseAvg = tadao.selectDeptAnnualUseAvg();
+        //오늘 출근율
+        Double todayCommuteAvg = tadao.selectTodayCommuteAvg();
+        //이번달 퇴사자
+        int monthLeaveSawon = tadao.selectMonthLeaveSawon( LocalDate.now() );
+        //이번달 입사자
+        int monthJoinedSawon = tadao.selectMonthJoinedSawon( LocalDate.now() );
+        //미승인 휴가/연차
+        int countPendingLeaves = sleavedao.countPendingLeaves();
+        //미승인 급여정산
+        int countLedgers = salarydao.getCountLedgers(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM")));
+
         model.addAttribute("todayTa", todayTa);
+        model.addAttribute("deptAnnualUseAvg", deptAnnualUseAvg);
+        model.addAttribute("todayCommuteAvg", todayCommuteAvg);
+        model.addAttribute("monthLeaveSawon", monthLeaveSawon);
+        model.addAttribute("monthJoinedSawon", monthJoinedSawon);
+        model.addAttribute("countPendingLeaves", countPendingLeaves);
+        model.addAttribute("countLedgers", countLedgers);
         
         return "/admin_main/main";
     }
 
     //일일 근태 현황 페이지
-    @GetMapping("/admin_main.do/today_ta")
+    @GetMapping("/today_ta")
     public String todayTA(Model model){ //Integer를 사용 하면 null 체크 가능
 
-        //관리자로 로그인되어 있지 않다면 로그인 창으로 돌아가기
-        if( session.getAttribute("user") == null || !session.getAttribute("user").equals(1) ){
-            return "redirect:/login";
-        }
+
 
         List<DeptVO> deptList = deptdao.selectAll(); 
         
@@ -77,20 +89,17 @@ public class AdminController {
     }
 
     //부서별 근태 현황 페이지
-    @GetMapping("/admin_main.do/today_ta/data")
+    @GetMapping("/today_ta/data")
     @ResponseBody
     public List<Map<String, Object>> loadTA(Integer deptno){
         return tadao.selectDeptTA(deptno);
     }
 
     //사원 근태 현황
-    @GetMapping("/admin_main.do/today_ta/view")
+    @GetMapping("/today_ta/view")
     public String sawonTaView(Model model, int sabun, String ym){
 
-        //관리자로 로그인되어 있지 않다면 로그인 창으로 돌아가기
-        if( session.getAttribute("user") == null || !session.getAttribute("user").equals(1) ){
-            return "redirect:/login";
-        }
+
 
         Map<String, Object> info = new HashMap<>();
         int year;
@@ -141,7 +150,7 @@ public class AdminController {
         return "admin_ta/admin_ta_view";
     }
 
-    @GetMapping("/admin_system_role")
+    @GetMapping("/system_role")
     public String adminSystemControlForRole( Model model ){
 
         //각팀별 팀장 조회
@@ -153,7 +162,7 @@ public class AdminController {
         return "admin_system/admin_role";
     }
 
-    @PostMapping("/admin_reposition_leader")
+    @PostMapping("/reposition_leader")
     @ResponseBody
     public Map<String, Integer> changeLeader( int deptno, String sabun ){
         
@@ -182,7 +191,7 @@ public class AdminController {
     }
 
     //부서별 사원 목록 가져오기
-    @GetMapping("/admin_read_dept_sawon")
+    @GetMapping("/read_dept_sawon")
     @ResponseBody
     public Map<String, Object> getDeptSawonList(int deptno){
 

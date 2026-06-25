@@ -33,10 +33,6 @@ public class CalendarController {
     @GetMapping("/calendar_calendarmain")
     public String calendarMain(Integer year, Integer month, Model model){
 
-        if(session.getAttribute("user") == null){
-            return "redirect:/login";
-        }
-
         int sabun = (int)session.getAttribute("user");
     
         LocalDate today = LocalDate.now();

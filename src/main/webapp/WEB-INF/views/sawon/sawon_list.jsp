@@ -6,7 +6,7 @@
 
     <head>
         <link rel="stylesheet" href="/css/admin/sawon_list.css"/>
-        <link rel="stylesheet" href="css/admin/sidebar.css" />
+        <link rel="stylesheet" href="/css/admin/sidebar.css" />
 
         <script>
             //사원 퇴사 처리
@@ -18,13 +18,13 @@
                 }
 
                 //단순 사원 삭제는 getMapping
-                fetch( "/admin_sawon_delete?sabun="+sabun )
+                fetch( "/admin/sawon_delete?sabun="+sabun )
                 .then( res => res.json() )
                 .then( data => {
 
                     if( data.result == 1 ){
                         alert( "정상적으로 삭제되었습니다" )
-                        location.href="/sawon_list.do"
+                        location.href="/admin/sawon_list"
                         return;
                     }
 
@@ -44,9 +44,9 @@
 
             <div class="btn-group">
                 <input type="button" value="PDF다운로드"
-                    onclick="location.href='/sawon_download_pdf'"/>
+                    onclick="location.href='/admin/sawon_download_pdf'"/>
                 <input type="button" value="+사원 추가하기"
-                    onclick="location.href='sawonAdd'"/>
+                    onclick="location.href='/admin/sawon_add'"/>
             </div>
 
             <table border="1">
@@ -67,7 +67,7 @@
                             <td>${vo.sabun}</td>
                             <td>
                                 <c:if test="${ vo.sabun ne '1' }">
-                                    <a href="/sawon_view.do?sabun=${vo.sabun}">${vo.saname}</a>
+                                    <a href="/admin/sawon_view?sabun=${vo.sabun}">${vo.saname}</a>
                                 </c:if>
                                 <c:if test="${ vo.sabun eq '1'}">
                                     <span class="admin-text">${vo.saname}</span>
@@ -78,7 +78,7 @@
                             <td>${vo.sahire}</td>
                             <td>
                                 <input type="button" value="수정" 
-                                    onclick="location.href='/admin_sawon_modify?sabun=${vo.sabun}'"/>
+                                    onclick="location.href='/admin/sawon_modify?sabun=${vo.sabun}'"/>
                                 <input type="button" value="퇴사" 
                                     onclick="del('${vo.sabun}', '${vo.saname}')"/>
                             </td>

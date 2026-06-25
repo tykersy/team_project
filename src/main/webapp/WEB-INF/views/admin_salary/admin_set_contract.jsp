@@ -124,7 +124,7 @@
             // URLSearchParams를 이용해 폼 데이터를 Query String 형태로 변환 (컨트롤러 커맨드 객체 매핑용)
             const params = new URLSearchParams(formData);
 
-            fetch('/admin_register_contract', {
+            fetch('/admin/register_contract', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
