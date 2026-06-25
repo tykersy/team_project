@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import com.kh.project.vo.DeptVO;
 import com.kh.project.vo.OrgChartVO;
 import com.kh.project.vo.SawonVO;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -26,6 +28,9 @@ public class DeptController {
     private final DeptDAO deptdao;
     //사원DAO
     private final SawonDAO sawonDao;
+
+    @Autowired
+    HttpSession session;
     
     // 조직도 화면을 보여주는 컨트롤러 메서드
     @GetMapping("/org_chart")
@@ -46,7 +51,7 @@ public class DeptController {
     }
 
     //관리자-부서 관리 페이지 
-    @GetMapping("/admin_deptlist")
+    @GetMapping("/admin/deptlist")
     public String adminDeptMain(Model model){
 
         //전체 부서 리스트 조회
@@ -69,7 +74,7 @@ public class DeptController {
     }
 
     //관리자-부서정보 수정
-    @PostMapping("/admin_update_dept")
+    @PostMapping("/admin/update_dept")
     @ResponseBody
     public Map<String, Object> updDept(DeptVO vo, String ori_deptno){
 
@@ -86,7 +91,7 @@ public class DeptController {
     }
 
     //관리자-부서 번호, 부서이름 중복체크
-    @GetMapping("/admin_add_dept")
+    @GetMapping("/admin/add_dept")
     @ResponseBody
     public Map<String, Object> check(DeptVO vo){
 
@@ -106,7 +111,7 @@ public class DeptController {
     }
 
     //관리자- 부서 등록
-    @PostMapping("/admin_add_dept")
+    @PostMapping("/admin/add_dept")
     @ResponseBody
     public Map<String, Object> insertDept( DeptVO vo ){
 
@@ -120,7 +125,7 @@ public class DeptController {
     }
 
     //부서 삭제
-    @GetMapping("/admin_delete_dept")
+    @GetMapping("/admin/delete_dept")
     @ResponseBody
     public Map<String, Integer> deleteDept( String dname ){
 
@@ -136,6 +141,11 @@ public class DeptController {
     //조직도
     @GetMapping("dept_chart.do")
     public String showChart(Model model){
+
+        if(session.getAttribute("user") == null){
+            return "redirect:/login";
+        }
+
         List<OrgChartVO> chartList = deptdao.chartList();
 
         model.addAttribute("chartList", chartList);

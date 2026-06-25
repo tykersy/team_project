@@ -168,7 +168,7 @@
         // 비동기로 월급 정산 처리 하는 핵심 함수
         function sendSalarySettlement(ids) {
             // 백엔드 구현에 맞추어 ajax / fetch 구현 진행
-            fetch( "/admin_salary_complete", {
+            fetch( "/admin/salary_complete", {
                 method:"POST",
                 headers: {
                     "Content-Type": "application/json" // 🌟 이 헤더 설정이 반드시 필요합니다!

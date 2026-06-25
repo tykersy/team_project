@@ -31,7 +31,7 @@
                 let ym = document.getElementById('target_ym').value;
                 if(!confirm(`\${name} 사원의 \${ym} 근태를 마감하시겠습니까?\n마감 후 급여 정산이 가능합니다.`)) return;
 
-                fetch("/admin_taclose", {
+                fetch("/admin/taclose", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                         // 맨 앞의 슬래시(/)를 제거하여 현재 페이지 위치 기준(상대경로)으로 호출을 일치 시킴
@@ -50,7 +50,7 @@
                 let ym = document.getElementById('target_ym').value;
                 if(!confirm(`\${ym} 전체 사원의 근태를 일괄 마감하시겠습니까?\n이미 마감된 사원은 제외됩니다.`)) return;
 
-                fetch("/admin_ta_close_all", {
+                fetch("/admin/ta_close_all", {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: `ym=\${ym}`
@@ -76,7 +76,7 @@
                     return;
                 }
 
-                location.href="/admin_main.do/today_ta/view?sabun="+sabun;
+                location.href="/admin/today_ta/view?sabun="+sabun;
 
             }
         </script>
@@ -91,7 +91,7 @@
                 </div>
 
                 <div class="filter-container">
-                    <form action="/admin_TA_confirm_main?ym="+(this.form.ym.value) method="get" class="month-picker">
+                    <form action="/admin/ta_confirm?ym="+(this.form.ym.value) method="get" class="month-picker">
                         <label for="target_ym" style="font-weight: bold; color: #444;">정산 대상 년월:</label>
                         <input type="month" id="target_ym" name="ym" value="${selectedYm}">
                         <button type="submit" class="btn-search">조회</button>

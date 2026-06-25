@@ -1,5 +1,6 @@
 package com.kh.project.dao;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -43,5 +44,17 @@ public interface TADAO {
 
     //해당 사원의 근태기록 수정
     boolean updateTaReport(TAVO ta);
+
+    //관리자 메인페이지 부서별 연차 소진율
+    List<Map<String, Object>> selectDeptAnnualUseAvg();
+
+    //관리자 메인페이지 출근율
+    Double selectTodayCommuteAvg();
+
+    //관리자 메인페이지 퇴사자
+    int selectMonthLeaveSawon(LocalDate date);
+
+    //관리자 메인페이지 입사자 조회
+    int selectMonthJoinedSawon(LocalDate date);
 
 } 

@@ -6,31 +6,31 @@
 
     <nav class="sidebar-menu">
         <div class="menu-group">
-            <a href="/admin_main.do" class="sidebar-item active">HOME</a>
+            <a href="/admin/main" class="sidebar-item active">HOME</a>
         </div>
 
         <div class="menu-group dropdown">
             <div class="sidebar-item">인사/조직 관리</div>
             <ul class="submenu">
-                <li><a href="/sawon_list.do">사원 정보 관리</a></li>
-                <li><a href="/admin_deptlist">부서 관리</a></li>
-                <li><a href="/admin_job_position">직급 관리</a></li>
+                <li><a href="/admin/sawon_list">사원 정보 관리</a></li>
+                <li><a href="/admin/deptlist">부서 관리</a></li>
+                <li><a href="/admin/job_position">직급 관리</a></li>
             </ul>
         </div>
 
         <div class="menu-group dropdown">
             <div class="sidebar-item">근태/휴가 관리</div>
             <ul class="submenu">
-                <li><a href="/admin_main.do/today_ta">근태 현황</a></li>
-                <li><a href="/admin_leave">휴가/연차 관리</a></li>
-                <li><a href="/admin_calendar">캘린더</a></li>
+                <li><a href="/admin/today_ta">근태 현황</a></li>
+                <li><a href="/admin/leave">휴가/연차 관리</a></li>
+                <li><a href="/admin/calendar">캘린더</a></li>
             </ul>
         </div>
 
         <div class="menu-group dropdown">
             <div class="sidebar-item">전자 계약 관리</div>
             <ul class="submenu">
-                <li><a href="/admin_set_contract">전자 근로 계약 생성</a></li>
+                <li><a href="/admin/set_contract">전자 근로 계약 생성</a></li>
                 <li><a href="">전자 계약 리스트</a></li>
             </ul>
         </div>
@@ -38,8 +38,8 @@
         <div class="menu-group dropdown">
             <div class="sidebar-item">급여/정산 관리</div>
             <ul class="submenu">
-                <li><a href="/admin_TA_confirm_main">근태 마감</a></li>
-                <li><a href="/admin_salary_confirm">급여 정산</a></li>
+                <li><a href="/admin/ta_confirm">근태 마감</a></li>
+                <li><a href="/admin/salary_confirm">급여 정산</a></li>
             </ul>
         </div>
 
@@ -47,7 +47,7 @@
             <a href="/admin/board/list" class="sidebar-item">공지사항</a>
         </div>
         <div class="menu-group">
-            <a href="admin_system_role" class="sidebar-item">시스템 관리</a>
+            <a href="/admin/system_role" class="sidebar-item">시스템 관리</a>
         </div>
     </nav>
 

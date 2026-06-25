@@ -98,13 +98,6 @@ public class UserController {
     //마이페이지
     @GetMapping("/mypage")
     public String mypage(Model model) throws Exception{
-        
-        //로그인되지 않거나 세션이 만료된 회원이 마이페이지 접근시 로그인 창으로 이동
-        if(session.getAttribute("user") == null){
-            return "redirect:/login";
-        }
-
-        System.out.println("11111111");
 
         //세션에 저장된 사번으로 유저 정보 조회
         int sabun = (int) session.getAttribute("user");
@@ -148,13 +141,6 @@ public class UserController {
     @ResponseBody
     public Map<String, String> changePw(String newPw){
         Map<String,String> map = new HashMap<>();
-        String result = "notLogin";
-
-        //로그인되지 않거나 세션이 만료된 회원이 마이페이지 접근시 로그인 창으로 이동
-        if(session.getAttribute("user") == null){
-            map.put("result", result);
-            return map;
-        }
 
         //세션에 저장된 사번으로 유저 정보 조회
         int sabun = (int) session.getAttribute("user");
@@ -169,12 +155,10 @@ public class UserController {
         int resultInt = userDao.changePW(vo);
 
         if(resultInt == 0){ //비밀번호 변경 실패
-            result = "failure";
+            map.put("result", "failure");
         }else{ // 비밀번호 변경 성공
-            result = "success";
+            map.put("result", "success");
         }
-
-        map.put("result", result);
 
         return map;
 
@@ -196,13 +180,6 @@ public class UserController {
     @ResponseBody
     public Map<String, String> userLeaveApply(SleaveLogVO logVo){
         Map<String, String> map = new HashMap<>();
-        String resultStr = "login";
-
-        //로그인되지 않거나 세션이 만료된 회원이 마이페이지 접근시 로그인 창으로 이동
-        if(session.getAttribute("user") == null){
-            map.put("result", resultStr);
-            return map;
-        }
 
         //세션에 저장된 사번불러오기
         int sabun = (int) session.getAttribute("user");

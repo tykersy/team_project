@@ -38,7 +38,7 @@
                 
                 // 안전하게 전송하기 위해 POST 방식 비동기 통신 이용
                 // URL과 파라미터명은 작성하시는 Controller 규격에 맞게 수정하세요.
-                fetch("/admin_leave_reject?log_id="+log_id+"&reject_reason="+encodeURIComponent(reason))
+                fetch("/admin/leave_reject?log_id="+log_id+"&reject_reason="+encodeURIComponent(reason))
                 .then( data => data.json() )
                 .then(res => {
                     if(res.result == 1) {
@@ -64,7 +64,7 @@
                     return;
                 }
 
-                fetch( "/admin_leave_search_history?search_name="+search_name )
+                fetch( "/admin/leave_search_history?search_name="+search_name )
                 .then( res => res.json() )
                 .then( data => {
 
@@ -158,7 +158,7 @@
                                     <td>${pend.reason}</td>
                                     <td>
                                         <button class="btn-approve" 
-                                            onclick="location.href='/admin_leave_approval?log_id=${pend.log_id}'">승인</button>
+                                            onclick="location.href='/admin/leave_approval?log_id=${pend.log_id}'">승인</button>
                                         <button class="btn-reject" onclick="openRejectModal('${pend.log_id}')">반려</button>
                                     </td>
                                 </tr>

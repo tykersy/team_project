@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import com.kh.project.common.GroqService;
 import com.kh.project.dao.BoardDAO;
 import com.kh.project.vo.BoardVO;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/board")
@@ -23,6 +25,9 @@ public class BoardController {
 
     private final BoardDAO boardDAO;
     private final GroqService groqService;
+
+    @Autowired
+    HttpSession session;
 
     public BoardController(BoardDAO boardDAO, GroqService groqService) {
         this.boardDAO = boardDAO;
@@ -35,6 +40,10 @@ public class BoardController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(required = false) String keyword,
             Model model) {
+
+        if(session.getAttribute("user") == null){
+            return "redirect:/login";
+        }
 
         final int limit = 10;
         int offset = (page - 1) * limit;

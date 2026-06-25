@@ -24,7 +24,7 @@
         
         <div class="admin-section">
             <c:if test="${user eq 1}">
-                <a href="/admin_main.do" class="admin-btn">⚙️관리자</a>
+                <a href="/admin/main" class="admin-btn">⚙️관리자</a>
             </c:if>
         </div>
     </aside>

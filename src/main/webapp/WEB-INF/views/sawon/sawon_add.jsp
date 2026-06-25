@@ -62,12 +62,12 @@
 
                 let formData = new FormData(f);
 
-                fetch("/sawonAdd", { method:"post" , body : formData})
+                fetch("/admin/sawon_add", { method:"post" , body : formData})
                     .then(res => res.json())
                     .then(data => {
                         if(data.result == 1){
                             alert("등록이 완료되었습니다.");
-                            location.href = "/sawon_list.do";
+                            location.href = "/admin/sawon_list";
                         }else{
                             alert("등록이 실패했습니다.");
                             return;

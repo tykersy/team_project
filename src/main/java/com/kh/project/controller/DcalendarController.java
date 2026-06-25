@@ -23,7 +23,7 @@ public class DcalendarController {
     private final DcalendarDAO dcalendarDao;
     private final DeptDAO deptDao;
 
-    @GetMapping("/admin_calendar")
+    @GetMapping("/admin/calendar")
     public String calendarMain(Model model) {
 
         List<DeptVO> dept_list = deptDao.selectAll();
@@ -32,7 +32,7 @@ public class DcalendarController {
         return "/admin_calendar/schedule_list";
     }
 
-    @GetMapping("/schedule_deptSchedule.do")
+    @GetMapping("/admin/schedule_dept")
     @ResponseBody
     public Map<String, Object> deptSchedule(int deptno) {
         
@@ -46,7 +46,7 @@ public class DcalendarController {
     }
 
     // 모든 부서 스케쥴 조회
-    @GetMapping("/schedule_all.do")
+    @GetMapping("/admin/schedule_all")
     @ResponseBody
     public Map<String, Object> allSchedule() {
 
@@ -59,7 +59,7 @@ public class DcalendarController {
     }
 
     // 부서명 검색
-    @GetMapping("/schedule_search.do")
+    @GetMapping("/admin/schedule_search")
     @ResponseBody
     public Map<String, List<DeptVO>> searchDept(String search_name) {
 
@@ -73,7 +73,7 @@ public class DcalendarController {
     }
 
     // 일정 상세보기 팝업창
-    @GetMapping("/schedule_view.do")
+    @GetMapping("/admin/schedule_view")
     public String toDetailView(int deptno, String date, Model model) {
 
         List<ScheduleDTO> list;

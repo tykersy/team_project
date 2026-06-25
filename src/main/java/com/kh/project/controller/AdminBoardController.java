@@ -57,11 +57,13 @@ public class AdminBoardController {
         return "admin_board/admin_list"; 
     }
 
-    @GetMapping("/write") 
-    public String writeForm(Model model) { 
+    @GetMapping("/write")
+    public String writeForm(Model model) {
         Integer sabun = (Integer) session.getAttribute("user");
+
         // 1. 로그인 체크
         if (sabun == null) return "redirect:/login";
+
         // 2. 사원 정보 조회 (JOIN을 통해 dname 포함)
         SawonVO member = userDAO.selectUser(sabun);
         // 3. 권한 체크: 사번 1(사장) 또는 직급이 '팀장'인 경우만 접근 허용
@@ -101,9 +103,10 @@ public class AdminBoardController {
     
     @GetMapping("/update") 
     public String updateForm(@RequestParam("idx") int idx, Model model) { 
+
         // 1. 세션에서 현재 로그인한 사번 가져오기
         Integer userObj = (Integer) session.getAttribute("user");
-        
+      
         // 2. 로그인 여부 확인
         if (userObj == null) {
             return "redirect:/login";

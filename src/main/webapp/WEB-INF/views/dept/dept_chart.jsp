@@ -5,9 +5,92 @@
             <html>
 
             <head>
-                 <link rel="stylesheet" href="/css/dashboard.css"> 
+                <link rel="stylesheet" href="/css/dashboard.css">
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
-                <link rel="stylesheet" href="/css/org_chart/dept_chart.css"> 
+                <link rel="stylesheet" href="/css/org_chart/dept_chart.css">
+
+                <script>
+                    function openOrgProfile(name, job, dept, email, tel) {
+                        document.getElementById("orgProfileInitial").innerText = name.substring(0, 1);
+                        document.getElementById("orgProfileName").innerText = name;
+                        document.getElementById("orgProfileJob").innerText = job;
+                        document.getElementById("orgProfileDept").innerText = dept;
+                        document.getElementById("orgProfileEmail").innerText = email;
+                        document.getElementById("orgProfileTel").innerText = tel;
+
+                        document.getElementById("orgProfileModal").classList.add("open");
+                    }
+
+                    function closeOrgProfile() {
+                        document.getElementById("orgProfileModal").classList.remove("open");
+                    }
+
+                    function searchOrgChart() {
+
+                        const keyword = document.getElementById("orgSearch")
+                            .value
+                            .trim() 
+                            .toLowerCase(); 
+
+                        document.querySelectorAll(".dept-box, .member-card")
+                            .forEach(el => el.classList.remove("focused"));
+
+                        if (keyword === "") return;
+
+                        let firstTarget = null;
+
+                        document.querySelectorAll(".dept-box").forEach(dept => {
+
+                            const deptText = dept.dataset.search.toLowerCase();
+
+                            if (deptText.includes(keyword)) {
+
+                                dept.classList.add("focused");
+
+                                if (firstTarget == null) {
+                                    firstTarget = dept;
+                                }
+
+                            } else {
+
+                                dept.querySelectorAll(".member-card").forEach(member => {
+
+                                    const memberText = member.dataset.search.toLowerCase();
+
+                                    if (memberText.includes(keyword)) {
+
+                                        member.classList.add("focused");
+
+                                        if (firstTarget == null) {
+                                            firstTarget = member;
+                                        }
+
+                                    }
+
+                                });
+
+                            }
+
+                        });
+
+                        if (firstTarget != null) {
+
+                            firstTarget.scrollIntoView({
+                                behavior: "smooth",
+                                block: "center"
+                            });
+
+                            setTimeout(() => {
+                                document.querySelectorAll(".dept-box, .member-card")
+                                    .forEach(el => el.classList.remove("focused"));
+                            }, 2000);
+
+                        }
+
+                    }
+                    
+                </script>
+
             </head>
 
             <body>
@@ -24,13 +107,22 @@
                                     <p>우리 회사의 조직과 구성원을 한눈에 확인하세요.</p>
                                 </div>
 
-                                <input type="text" class="org-search" placeholder="이름, 직책, 부서 검색">
+                                <div class="org-search-box">
+                                    <input type="text" id="orgSearch" class="org-search" placeholder="이름, 직책, 부서 검색">
+                                    <button type="button" class="org-search-btn" onclick="searchOrgChart()">🔍</button>
+                                </div>
                             </div>
 
                             <div class="ceo-wrap">
                                 <c:forEach var="chart" items="${chartList}">
                                     <c:if test="${chart.sabun == 1}">
-                                        <div class="ceo-card">
+                                        <div class="ceo-card" onclick="openOrgProfile(
+                                                                '${chart.saname}',
+                                                                '${chart.sajob}',
+                                                                '${chart.dname}',
+                                                                '${chart.saemail}',
+                                                                '${chart.satel}'
+                                                            )">
                                             <div class="ceo-circle">
                                                 ${fn:substring(chart.saname,0,1)}
                                             </div>
@@ -53,7 +145,7 @@
 
                                     <c:if test="${dept.deptno != prevDeptno}">
 
-                                        <div class="dept-box">
+                                        <div class="dept-box" data-search="${dept.dname} ${dept.dtel}">
 
                                             <div class="dept-head">
                                                 <h3>${dept.dname}</h3>
@@ -64,7 +156,15 @@
 
                                                 <c:forEach var="emp" items="${chartList}">
                                                     <c:if test="${emp.deptno == dept.deptno && emp.sabun != 1}">
-                                                        <div class="member-card">
+                                                        <div class="member-card"
+                                                            data-search="${emp.saname} ${emp.sajob} ${emp.dname} ${emp.saemail} ${emp.satel}"
+                                                            onclick="openOrgProfile(
+                                                                '${emp.saname}',
+                                                                '${emp.sajob}',
+                                                                '${emp.dname}',
+                                                                '${emp.saemail}',
+                                                                '${emp.satel}'
+                                                            )">
                                                             <div class="member-circle">
                                                                 ${fn:substring(emp.saname,0,1)}
                                                             </div>
@@ -89,8 +189,34 @@
                             </div>
 
                         </div>
+                        <div id="orgProfileModal" class="org-profile-modal">
+                            <div class="org-profile-card">
+                                <button type="button" class="org-profile-close" onclick="closeOrgProfile()">×</button>
+
+                                <div class="org-profile-circle" id="orgProfileInitial"></div>
+
+                                <h2 id="orgProfileName"></h2>
+                                <p id="orgProfileJob"></p>
+
+                                <div class="org-profile-info">
+                                    <div>🏢 <span id="orgProfileDept"></span></div>
+                                    <div>📧 <span id="orgProfileEmail"></span></div>
+                                    <div>📞 <span id="orgProfileTel"></span></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <script>
+                    document.getElementById("orgSearch").addEventListener("keydown", function(e) {
+
+                        if (e.key === "Enter") {
+                            searchOrgChart();
+                        }
+
+                    });
+                </script>
 
             </body>
 
