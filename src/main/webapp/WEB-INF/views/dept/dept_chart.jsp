@@ -171,7 +171,26 @@
 
                                                             <div class="member-info">
                                                                 <strong>${emp.saname}</strong>
-                                                                <span>${emp.sajob}</span>
+                                                                <!-- <span class="job-text">${emp.sajob}</span> -->
+                                                                 <span class="job-text">
+                                                                    <c:choose>
+                                                                        <%-- 직급이 '팀장'이라면 아무것도 표시하지 않음 --%>
+                                                                        <c:when test="${emp.sajob == '팀장'}">
+                                                                            &nbsp;
+                                                                        </c:when>
+                                                                        <%-- 그 외의 직급은 정상 표시 --%>
+                                                                        <c:otherwise>
+                                                                            ${emp.sajob}
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </span>
+
+                                                                <span class="status-badge 
+                                                                    ${emp.status == '휴가중' ? 'vacation' : 
+                                                                    emp.status == '퇴근' ? 'off-work' : 
+                                                                    emp.status == '근무중' ? 'working' : 'before-work'}">
+                                                                    ${emp.status}
+                                                                </span>
                                                             </div>
                                                         </div>
                                                     </c:if>

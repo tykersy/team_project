@@ -22,5 +22,7 @@ public class OrgChartVO {
 
     private String saemail;
     private String satel;
+
+    private String status;
     
 }

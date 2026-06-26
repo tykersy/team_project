@@ -63,6 +63,13 @@ public class DashboardController {
         List<Map<String, Object>> deptVacationList = sleaveDao.getDeptVacationList(todayStr);
         model.addAttribute("deptVacationList", deptVacationList);
 
+        // 로그인 한 사람 승인 대기건만 조회
+        if(sabun != null) {
+            model.addAttribute("approval", sleaveDao.countMyPendingLeaves(sabun));
+        } else {
+            model.addAttribute("approval", 0);
+        }
+
         return "dashboard/main";
     }
 }

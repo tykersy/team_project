@@ -105,19 +105,45 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from dept where dname = #{dname}
     </delete>
 
-    <select id="chartList"
-            resultType="orgchart">
-        select d.deptno,
-                d.dname,
-                d.dtel,
-                s.sabun,
-                s.saname,
-                s.sajob,
-                s.saemail,
-                s.satel
-        FROM dept d
-        LEFT JOIN sawon s ON d.deptno = s.deptno AND s.sastatus = '재직'
-        ORDER BY d.deptno, s.sabun
+    <!-- 조직도 상태표시 포함 -->
+   <select id="chartList" resultType="orgchart">
+    SELECT 
+        d.deptno, d.dname, d.dtel,
+        s.sabun, s.saname, s.sajob, s.saemail, s.satel,
+        CASE 
+            WHEN l.log_id IS NOT NULL THEN '휴가중'
+            <!-- 퇴근 시간이 찍혀있다면 '퇴근' -->
+            WHEN ta.checkout IS NOT NULL THEN '퇴근'
+            <!-- 출근 시간만 있다면 '근무중' -->
+            WHEN ta.checkin IS NOT NULL THEN '근무중'
+            <!-- 위 조건에 모두 해당 안 되면 '출근전' -->
+            ELSE '출근전'
+        END AS status
+    FROM dept d
+    LEFT JOIN sawon s ON d.deptno = s.deptno AND s.sastatus = '재직'
+    
+    <!-- 오늘 날짜 휴가 기록 확인 -->
+    LEFT JOIN sleave_log l ON s.sabun = l.sabun 
+                           AND l.use_date = CURDATE() 
+                           AND l.approve = 1
+                           
+    <!-- 오늘 날짜 근태 기록 확인 (TA 테이블의 day 기준) -->
+    LEFT JOIN TA ta ON s.sabun = ta.sabun 
+                     AND DATE(ta.day) = CURDATE() 
+                     
+    ORDER BY d.deptno ASC, 
+             <!-- 1. 팀장류(LIKE)를 최상단(0)으로 배치 -->
+             (CASE WHEN s.sajob LIKE '%팀장%' THEN 0 
+             <!-- 2. 나머지 직급 우선순위 할당 -->
+                   WHEN s.sajob = '부장' THEN 1
+                   WHEN s.sajob = '차장' THEN 2
+                   WHEN s.sajob = '과장' THEN 3
+                   WHEN s.sajob = '대리' THEN 4
+                   WHEN s.sajob = '주임' THEN 5
+                   WHEN s.sajob = '사원' THEN 6
+                   ELSE 7 END) ASC, 
+            <!-- 같은 직급 내에서는 사번 순 -->
+             s.sabun ASC 
     </select>
 
 </mapper>

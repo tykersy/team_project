@@ -25,6 +25,9 @@ public interface SleaveDAO {
     // [추가] 오늘 날짜 기준으로 휴가 중인 사원 목록 조회
     List<Map<String, Object>> getDeptVacationList(String today);
 
+    // [추가] 로그인한 사원의 승인 대기 건수만 조회
+    int countMyPendingLeaves(int sabun);
+
     //[추가] 승인 대기건
     int countPendingLeaves();
 
