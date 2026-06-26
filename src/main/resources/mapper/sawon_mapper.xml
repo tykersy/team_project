@@ -95,10 +95,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             s.sabun,
             s.saname,
             s.deptno,
-            d.dname
+            d.dname,
+            CASE
+                WHEN t.checkin IS NOT NULL
+                AND t.checkout IS NULL
+                THEN 'ONLINE'
+                ELSE 'OFFLINE'
+            END AS onlineStatus
         FROM sawon s
         JOIN dept d
             ON s.deptno = d.deptno
+        LEFT JOIN ta t
+            ON s.sabun = t.sabun
+            AND DATE(t.day) = CURDATE()
         WHERE s.sastatus = '재직'
         ORDER BY d.deptno, s.saname
 

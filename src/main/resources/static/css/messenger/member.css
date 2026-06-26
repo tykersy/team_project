@@ -48,9 +48,32 @@
 }
 
 .member-name{
+    display:flex;
+    align-items:center;
+    gap:6px;
+
     font-size:15px;
     font-weight:600;
     color:#111;
+}
+
+.online-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#22c55e;
+    box-shadow:0 0 8px rgba(34,197,94,.8);
+    flex-shrink:0;
+    margin-left: 10px;
+}
+
+.offline-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#9ca3af;
+    flex-shrink:0;
+    margin-left: 10px;
 }
 
 .member-dept{

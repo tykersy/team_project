@@ -20,4 +20,6 @@ public class SawonVO {
 
     private String dname; // join용 
 
+    private String onlineStatus; // 온라인 상태 확인
+
 }

@@ -40,7 +40,17 @@
                             <div class="profile-circle">${fn:substring(vo.saname,0,1)}</div>
 
                             <div class="member-info">
-                                <div class="member-name">${vo.saname}</div>
+                                <div class="member-name">
+                                    ${vo.saname}
+                                    <c:choose>
+                                        <c:when test="${vo.onlineStatus == 'ONLINE'}">
+                                            <span class="online-dot"></span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="offline-dot"></span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
                                 <div class="member-dept">${vo.dname}</div>
                             </div>
                             </div>
