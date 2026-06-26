@@ -111,5 +111,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ORDER BY l.created_at ASC
     </select>
 
+    <!-- 본인 승인대기 건수만 조회 -->
+    <select id="countMyPendingLeaves" parameterType="int" resultType="int">
+    SELECT COUNT(*) 
+    FROM sleave_log 
+    WHERE sabun = #{sabun} 
+    AND approve = 0
+    </select>
+
     
 </mapper>

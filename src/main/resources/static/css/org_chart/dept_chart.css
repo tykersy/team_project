@@ -252,6 +252,10 @@
     color: #64748b;
     font-size: 14px;
     font-weight: 600;
+    /* 직급 정렬을 위해 추가하는 속성들 */
+    display: inline-block; 
+    width: 45px;           
+    text-align: center;
 }
 
 @media (max-width: 900px) {
@@ -392,4 +396,42 @@ html, body {
 
 .main-content::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
+}
+
+/* 상태 뱃지 스타일 */
+.status-badge {
+    display: inline-block;
+    font-size: 11px; 
+    padding: 3px 6px; 
+    min-width: 54px; 
+    
+    /* 정렬 설정 */
+    text-align: center;
+    border-radius: 12px;
+    font-weight: bold;
+    margin-left: auto;
+}
+
+.vacation { 
+    background-color: #dae9ff;
+    color: #2693dc;         
+    border: 1px solid #cadffe;
+}
+.off-work { 
+    background-color: #cccccc; 
+    color: #6d28d9; 
+    border: 1px 
+    solid #ddd6fe; 
+} 
+
+.working { 
+    background-color: #d2f8a7; 
+    color: #16a34a;         
+    border: 1px solid #bbf7d0;
+}
+
+.before-work { 
+    background-color: #fee2e2; 
+    color: #dc2626; 
+    border: 1px solid #fecaca; 
 }
