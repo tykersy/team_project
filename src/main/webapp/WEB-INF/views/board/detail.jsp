@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -37,7 +38,7 @@
                 <div class="post-info" style="display: flex; justify-content: flex-end; gap: 10px; color: #666; margin-bottom: 15px; align-items: center;">
                     <span>작성 부서: ${board.dept}</span>
                     <span>|</span>
-                    <span>작성일: ${board.created}</span>
+                    <span>작성일: ${fn:substring(board.created, 0, 10)}</span>
                 </div>
                 
                 <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e5e7eb;">
