@@ -65,6 +65,8 @@ public class AdminController {
         int countPendingLeaves = sleavedao.countPendingLeaves();
         //미승인 급여정산
         int countLedgers = salarydao.getCountLedgers(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM")));
+        //전자계약 현황
+        Map<String,Object> countsContract = salarydao.getCountsContract();
 
         model.addAttribute("todayTa", todayTa);
         model.addAttribute("deptAnnualUseAvg", deptAnnualUseAvg);
@@ -73,6 +75,7 @@ public class AdminController {
         model.addAttribute("monthJoinedSawon", monthJoinedSawon);
         model.addAttribute("countPendingLeaves", countPendingLeaves);
         model.addAttribute("countLedgers", countLedgers);
+        model.addAttribute("countsContract", countsContract);
         
         return "/admin_main/main";
     }
