@@ -43,8 +43,8 @@
         <div class="menu-group dropdown">
             <div class="sidebar-item">급여/정산 관리</div>
             <ul class="submenu">
-                <li><a href="/admin/admin/ta_confirm">근태 마감</a></li>
-                <li><a href="/admin/admin/salary_confirm">급여 정산</a></li>
+                <li><a href="/admin/ta_confirm">근태 마감</a></li>
+                <li><a href="/admin/salary_confirm">급여 정산</a></li>
             </ul>
         </div>
 
