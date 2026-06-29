@@ -8,7 +8,7 @@
     <aside class="sidebar">
         
         <div class="logo" onclick="location.href='/dashboard'">
-            🔗Linked
+            🔗 Linked
         </div>
 
         <nav class="sidebar-menu">
