@@ -7,183 +7,8 @@
     <head>
         <link rel="stylesheet" href="/css/admin/sidebar.css">
         <link rel="stylesheet" href="/css/admin/modal.css"/>
-
-    <style>
-        /* 기본 초기화 및 폰트 설정 */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-            background-color: #f3f4f6;
-            color: #1f2937;
-        }
-
-        /* ─── 레이아웃 구조 ─── */
-        .manager-container {
-            display: flex;       
-            min-height: 100vh;
-            width: 100%;
-        }
-
-        .main-content {
-            flex: 1;             
-            padding: 40px 45px;  /* 여백 적정 수준으로 조정 */
-            box-sizing: border-box;
-            max-width: 1400px;   /* [조정] 과하지 않게 딱 좋은 대시보드 표준 너비 */
-            margin: 0;           
-        }
-
-        /* ─── 페이지 헤더 ─── */
-        .page-header {
-            display: flex;
-            justify-content: space-between; /* 타이틀은 왼쪽, 버튼은 오른쪽 끝 */
-            align-items: center;            /* 세로 중앙 정렬 */
-            margin-bottom: 32px; 
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 16px;
-        }
-
-        /* ─── 상단 추가 버튼 스타일 ─── */
-        .page-header .btn-group input[type="button"] {
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            
-            /* 테마 포인트 컬러 적용 (#111827) */
-            background-color: #111827; 
-            color: #ffffff;
-            border: 1px solid #111827;
-        }
-
-        .page-header .btn-group input[type="button"]:hover {
-            background-color: #1f2937;
-            border-color: #1f2937;
-        }
-
-        .page-title {
-            font-size: 28px;    /* [조정] 너무 크지 않게 조절 (32px -> 28px) */
-            font-weight: 700;
-            color: #111827; 
-            margin: 0;
-        }
-
-        /* ─── 대시보드 그리드 (테이블 배치) ─── */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 2.2fr 1fr; 
-            gap: 24px;          /* 간격 최적화 */
-            margin-bottom: 24px;
-        }
-
-        /* ─── 카드 공통 스타일 ─── */
-        .table-card, .summary-card {
-            background: #ffffff; 
-            border-radius: 14px; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            padding: 28px;       /* [조정] 박스 볼륨감 적정화 (36px -> 28px) */
-            box-sizing: border-box;
-            border: 1px solid #e5e7eb;
-        }
-
-        /* ─── 테이블(Table) 디자인 ─── */
-        table {
-            width: 100%;
-            border-collapse: collapse; 
-            text-align: left;
-        }
-
-        caption {
-            font-size: 20px;    /* [조정] (22px -> 20px) */
-            font-weight: 600;
-            color: #111827; 
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        th, td {
-            padding: 16px 20px; /* [조정] 위아래 줄간격을 딱 보기 좋은 황금비율로 조정 */
-            font-size: 15px;    /* [조정] 본문 글씨 크기 최적화 (16px -> 15px) */
-        }
-
-        th {
-            background-color: #f9fafb; 
-            color: #4b5563;
-            font-weight: 600;
-        }
-
-        tr:hover {
-            background-color: #f9fafb; 
-        }
-
-        /* ─── 테이블 내 버튼(수정/삭제) 스타일 ─── */
-        input[type="button"] {
-            padding: 7px 14px;  
-            border-radius: 7px;
-            font-size: 13px;    
-            font-weight: 500;
-            cursor: pointer;
-            border: 1px solid transparent;
-            transition: all 0.2s;
-            margin-right: 4px;
-        }
-
-        /* 수정 버튼 */
-        input[type="button"][value="수정"] {
-            background-color: #f3f4f6;
-            color: #111827; 
-            border: 1px solid #e5e7eb;
-        }
-        input[type="button"][value="수정"]:hover {
-            background-color: #111827; 
-            color: #ffffff;
-            border-color: #111827;
-        }
-
-        /* 삭제 버튼 */
-        input[type="button"][value="삭제"] {
-            background-color: #fef2f2;
-            color: #ef4444;
-        }
-        input[type="button"][value="삭제"]:hover {
-            background-color: #ef4444;
-            color: #ffffff;
-        }
-
-        /* ─── 부서별 인원수 배지 ─── */
-        .count-badge {
-            background-color: #111827; 
-            color: #ffffff;
-            padding: 5px 12px;  
-            border-radius: 20px;
-            font-size: 13px;    
-            font-weight: 500;
-            display: inline-block;
-        }
-
-        /* ─── 하단 요약 카드 (Summary Card) ─── */
-        .summary-card {
-            display: inline-block;
-            min-width: 240px;   /* [조정] 하단 카드 크기 최적화 */
-            margin-right: 20px;
-            vertical-align: top;
-        }
-
-        .summary-title {
-            font-size: 15px;    
-            color: #6b7280;
-            font-weight: 500;
-            margin-bottom: 10px;
-        }
-
-        .summary-value {
-            font-size: 32px;    /* [조정] 대형 숫자 크기 최적화 (36px -> 32px) */
-            font-weight: 700;
-            color: #111827; 
-        }
-    </style>
+        <link rel="stylesheet" href="/css/admin/main.css"/>
+        <link rel="stylesheet" href="/css/admin/dept.css"/>
 
         <script>
             // 부서 추가 모달 열기
@@ -339,10 +164,10 @@
 
                 <div class="page-header">
                     <h2 class="page-title">부서 관리</h2>
-                    <div class="btn-group">
-                        <input type="button" value="+ 부서 추가하기" onclick="openModal()"/> </div>
                 </div>
-
+                <div class="btn-group">
+                    <input type="button" value="+ 부서 추가하기" onclick="openModal()"/> 
+                </div>
                 <div class="dashboard-grid">
 
                     <div class="table-card">
