@@ -131,15 +131,21 @@ public class SawonController {
     }
     
     
-    //사원별 정보 열람 페이지
+    //사원별 정보 모달로 전달
     @GetMapping("/admin/sawon_view")
-    public String sawonLeave( Model model , int sabun ){
+    @ResponseBody
+    public Map<String, Object> sawonLeave( Model model , int sabun ){
 
         SleaveVO vo = sleaveDao.sawonLeave(sabun);
         SawonVO sawon = sawonDao.sawonView(sabun);
-        model.addAttribute("vo", vo);
-        model.addAttribute("sawon", sawon);
-        return "/sawon/sawon_view";
+        
+        //map에 담아서 전달
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("vo", vo);
+        map.put("sawon", sawon);
+
+        return map;
     }
 
     //사원 삭제
@@ -233,7 +239,7 @@ public class SawonController {
         // 3. PDF 문서 객체 생성 (A4 용지, 여백 설정)
         Document document = new Document(PageSize.A4, 36, 36, 36, 36);
         PdfWriter.getInstance(document, response.getOutputStream());
-
+ 
         document.open();
 
         // PDF 한글 깨짐 방지 폰트 설정

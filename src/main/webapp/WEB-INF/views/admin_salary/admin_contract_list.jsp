@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="filter-control-bar">
-                    <form action="/admin_contract_status" method="get" id="searchForm">
+                    <form action="/admin/admin_contract_status" method="get" id="searchForm">
                         <div class="filter-group">
                             <select id="sortType" name="sortType" class="erp-select" onchange="handleSortChange(this.value)">
                                 <option value="SABUN_ASC" ${filter.sortType eq 'SABUN_ASC' ? 'selected' : ''}>사번 순 보기</option>
@@ -144,7 +144,7 @@
         </div>
 
         <script>
-        // 부서 선택 조건 선탹 (부서 별 선택일 때만 2차 select 박스 보여주기)
+        // 부서 선택 조건 선택 (부서 별 선택일 때만 2차 select 박스 보여주기)
         function handleSortChange(value) {
             const deptSelect = document.getElementById('deptSelect');
             if (value === 'DEPT') {
@@ -165,7 +165,7 @@
 
         // 상단 대시보드 요약카드 클릭 시 필터링 처리 가이드 함수
         function filterBySummary(type) {
-            location.href = "/admin_contract_status?filterType=" + type;
+            location.href = "/admin/admin_contract_status?filterType=" + type;
         }
 
         // 사원명 검색 버튼 클릭 시
@@ -176,13 +176,13 @@
             // hidden 인풋에 동기화 후 서브밋 (수정예정)
             document.getElementById('hiddenSaname').value = name;
             
-            location.href = "/admin_contract_status?sortType=" + sortType + "&deptno=" + deptno + "&saname=" + encodeURIComponent(name);
+            location.href = "/admin/admin_contract_status?sortType=" + sortType + "&deptno=" + deptno + "&saname=" + encodeURIComponent(name);
         }
 
         /* 🌟 비동기 데이터 뷰 바인딩 및 상세 모달 오픈 */
         function openContractDetail(sabun) {
             // 백엔드 CRUD 컨트롤러가 완성되면 fetch로 데이터 받아서 바인딩 예정****
-            fetch('/admin_contract_detail?sabun=' + sabun)
+            fetch('/admin/admin_contract_detail?sabun=' + sabun)
             .then(res => res.json())
             .then(data => {
                 document.getElementById('mdSabun').innerText = data.contract.sabun;

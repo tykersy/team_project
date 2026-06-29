@@ -251,6 +251,10 @@ public class AdminController {
         filter.put("sortType", sortType);
         filter.put("saname", saname);
 
+        //부서리스트 조회 및 바인딩
+        List<DeptVO> deptList = deptdao.selectAll();
+        model.addAttribute("deptList", deptList);
+
         //조건으로 조회하기+ 결과 바인딩하기
         List<SalaryContractVO> contractList = salarydao.getfilteredList(filter);
         model.addAttribute("contractList", contractList);

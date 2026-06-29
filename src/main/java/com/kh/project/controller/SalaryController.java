@@ -298,7 +298,7 @@ public class SalaryController {
         int countLedgers = salaryDao.getCountLedgers(ym);
         //해당 년월의 정산 완료 명세서 수
         int countConfirmedLedgers = salaryDao.getCountConfirmedLedgers(ym);
-
+ 
         //포워딩
         model.addAttribute("ledgerList", ledgerList);
         model.addAttribute("ym", ym);

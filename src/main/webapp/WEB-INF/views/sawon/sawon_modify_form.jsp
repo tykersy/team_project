@@ -141,7 +141,7 @@
 
                     if( data.result == 1 ){
                         alert(saname+"사원의 정보가 성공적으로 변경 되었습니다")
-                        location.href="/admin/sawon_view?sabun="+sabun;
+                        location.href="/admin/sawon_list";
                     }else{
                         alert(saname+"사원 정보 수정에 실패했습니다. 다시 시도해주세요")
                     }
