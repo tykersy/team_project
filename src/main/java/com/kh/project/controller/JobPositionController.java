@@ -74,17 +74,29 @@ public class JobPositionController {
         model.addAttribute("positionCnt", positionCnt);
         model.addAttribute("jobCnt", jobCnt);
         model.addAttribute("jobList", jobList);
-        model.addAttribute("cur_job", cur_job);
+        model.addAttribute("cur_job", cur_job); 
 
         return "admin_hr/admin_manage_job_position";
 
     }
 
-    //직급 추가 전 id,직급명 중복 체크
+    //직급 추가 전 직급명 중복 체크
     @GetMapping("/admin/add_job_position")
     @ResponseBody
-    public Map<String, Object> add_idCheck( JobPositionVO vo ){
+    public Map<String, Object> add_idCheck( String job_id, String sajob ){
 
+        JobPositionVO vo = new JobPositionVO();
+
+        //방어코드
+        if( job_id != null && !job_id.equals("") ) {
+            int num_jobid = Integer.parseInt(job_id);
+            vo.setJob_id(num_jobid);
+        }else{
+            vo.setJob_id(0);
+        }
+        vo.setSajob(sajob);
+        
+        
         JobPositionVO res = jobPositionDao.chId(vo);
 
         Map<String, Object> map = new HashMap<>();

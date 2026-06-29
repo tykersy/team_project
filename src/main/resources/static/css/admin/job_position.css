@@ -1,0 +1,155 @@
+        .page-header {
+            display: flex;
+            justify-content: space-between; /* 타이틀은 왼쪽, 버튼은 오른쪽 끝 */
+            align-items: center;            /* 세로 중앙 정렬 */
+            margin-bottom: 32px; 
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 16px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b; /* 깊이감 있는 다크 슬레이트 톤 */
+            margin: 0;
+        }
+
+        /* ─── 상단 추가 버튼 스타일 ─── */
+        .btn-group {
+            display: flex;
+            justify-content: flex-end;    /* 내부 버튼을 우측 끝으로 밀착 */
+            margin-bottom: 20px;          /* 대시보드 그리드와의 간격 확보 */
+            width: 100%;                  /* 전체 가로폭 활용 */
+        }
+
+        /* 버튼 자체 스타일 (필요시 패딩이나 여백 미세 조정) */
+        .btn-group input[type="button"] {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: #111827; 
+            color: #ffffff;
+            border: 1px solid #111827;
+        }
+
+        .btn-group input[type="button"]:hover {
+            background-color: #1f2937;
+            border-color: #1f2937;
+        }
+
+        /* ─── 대시보드 그리드 (테이블 배치) ─── */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2.2fr 1fr; 
+            gap: 24px;          /* 간격 최적화 */
+            margin-bottom: 24px;
+        }
+
+        /* ─── 카드 공통 스타일 ─── */
+        .table-card, .summary-card {
+            background: #ffffff; 
+            border-radius: 14px; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            padding: 28px;       /* [조정] 박스 볼륨감 적정화 (36px -> 28px) */
+            box-sizing: border-box;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* ─── 테이블(Table) 디자인 ─── */
+        table {
+            width: 100%;
+            border-collapse: collapse; 
+            text-align: left;
+        }
+
+        caption {
+            font-size: 20px;    /* [조정] (22px -> 20px) */
+            font-weight: 600;
+            color: #111827; 
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 16px 20px; /* [조정] 위아래 줄간격을 딱 보기 좋은 황금비율로 조정 */
+            font-size: 15px;    /* [조정] 본문 글씨 크기 최적화 (16px -> 15px) */
+        }
+
+        th {
+            background-color: #f9fafb; 
+            color: #4b5563;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f9fafb; 
+        }
+
+        /* ─── 테이블 내 버튼(수정/삭제) 스타일 ─── */
+        input[type="button"] {
+            padding: 7px 14px;  
+            border-radius: 7px;
+            font-size: 13px;    
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+            margin-right: 4px;
+        }
+
+        /* 수정 버튼 */
+        input[type="button"][value="수정"] {
+            background-color: #f3f4f6;
+            color: #111827; 
+            border: 1px solid #e5e7eb;
+        }
+        input[type="button"][value="수정"]:hover {
+            background-color: #111827; 
+            color: #ffffff;
+            border-color: #111827;
+        }
+
+        /* 삭제 버튼 */
+        input[type="button"][value="삭제"] {
+            background-color: #fef2f2;
+            color: #ef4444;
+        }
+        input[type="button"][value="삭제"]:hover {
+            background-color: #ef4444;
+            color: #ffffff;
+        }
+
+        /* ─── 부서별 인원수 배지 ─── */
+        .count-badge {
+            background-color: #111827; 
+            color: #ffffff;
+            padding: 5px 12px;  
+            border-radius: 20px;
+            font-size: 13px;    
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        /* ─── 하단 요약 카드 (Summary Card) ─── */
+        .summary-card {
+            display: inline-block;
+            min-width: 240px;   /* [조정] 하단 카드 크기 최적화 */
+            margin-right: 20px;
+            vertical-align: top;
+        }
+
+        .summary-title {
+            font-size: 15px;    
+            color: #6b7280;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .summary-value {
+            font-size: 32px;    /* [조정] 대형 숫자 크기 최적화 (36px -> 32px) */
+            font-weight: 700;
+            color: #111827; 
+        }
