@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
         <!DOCTYPE html>
         <html lang="ko">
@@ -150,7 +151,7 @@
                                                 <span class="notice-title" style="font-weight: bold;">${b.title}</span>
                                             </a>
                                             <span class="notice-date"
-                                                style="float: right; color: #888;">${b.created}</span>
+                                                style="float: right; color: #888;">${fn:substring(b.created, 0, 10)}</span>
                                         </div>
                                     </c:forEach>
                                     <c:if test="${empty boardList}">
@@ -169,7 +170,7 @@
                                             <span class="schedule-title"
                                                 style="font-weight: bold; color: #333;">${s.title}</span>
                                             <span class="schedule-time"
-                                                style="float: right; color: #2563eb; font-size: 0.9rem;">${s.start_date}</span>
+                                                style="float: right; color: #2563eb; font-size: 0.9rem;">${fn:substring(s.start_date, 0, 10)}</span>
                                         </div>
                                     </c:forEach>
                                     <c:if test="${empty scheduleList}">
