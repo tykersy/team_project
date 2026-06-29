@@ -80,7 +80,7 @@
     line-height: 1.6;
 }
 
-/* 💡 버튼 통일 공통 클래스 (Flexbox를 이용한 완벽한 크기/정렬 통일) */
+/* 버튼 통일 공통 클래스 (Flexbox를 이용한 완벽한 크기/정렬 통일) */
 .btn-custom {
     display: inline-flex;
     align-items: center;
@@ -131,4 +131,12 @@ button.btn-custom {
 }
 .btn-secondary:hover { 
     background-color: #475569; 
+}
+
+@media (max-width: 600px) {
+    .btn-custom {
+        min-width: 80px; /* 작은 화면에서는 최소 너비를 줄임 */
+        padding: 0 10px;
+        font-size: 13px;
+    }
 }

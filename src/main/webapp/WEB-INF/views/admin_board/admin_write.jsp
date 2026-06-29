@@ -18,6 +18,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+
+    <style>
+    /* 글쓰기 title 스타일적용 */
+    .board-table th {
+        background-color: #F8FAFC !important;
+        color: #475569 !important;    
+        text-align: center !important;
+        font-weight: bold !important;
+    }
+    </style>
+    
 </head>
 
 <body>
@@ -54,7 +65,7 @@
                         </tbody>
                     </table>
 
-                    <div class="btn-container">
+                    <div class="btn-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 30px;">
                         <button type="button" onclick="submitForm()" class="btn-custom btn-primary" style="cursor:pointer;">등록</button>
                         <a href="/admin/board/list" class="btn-custom btn-secondary" style="text-decoration:none;">취소</a>
                     </div>
