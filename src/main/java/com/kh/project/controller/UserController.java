@@ -121,8 +121,13 @@ public class UserController {
         SalaryLedgerVO userSalary = salaryDao.getLedgerinfo(monthlyTAMap); //사원 이번달 월급 정보 조회
         SalaryContractVO userContract = salaryDao.getContractBySabun(sabun); // 사원 근로 계약서 정보 조회 
         
-        if(userContract.getEnd_date() == null || userContract.getEnd_date().isEmpty()){ //사원이 정규직인지 반별
-            userContract.setStart_date("정규직");
+        if(userContract != null){
+            if(userContract.getEnd_date() == null || userContract.getEnd_date().isEmpty()){ //사원이 정규직인지 반별
+                userContract.setStart_date("정규직");
+            }
+        }else{
+            userContract = new SalaryContractVO();
+            userContract.setStart_date("근로계약서 작성필요");
         }
 
         System.out.println("년월" + ym);
