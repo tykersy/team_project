@@ -114,6 +114,9 @@
                     const localDate = new Date(eventData.start.getTime() - offset);
                     const clickedDate = localDate.toISOString().split('T')[0];
 
+                    //모달 날짜추가
+                    document.getElementById("modalTargetDate").innerText = clickedDate;
+
                     // 모달을 위한 비동기fetch호출
                     fetch( "/admin/schedule_view?deptno="+cur_deptno+"&date="+clickedDate)
                     .then(res => res.json())
@@ -137,7 +140,8 @@
                             listContainer.innerHTML = `
                                 <div class="sch-no-data">
                                     <p>등록된 부서 일정이 없습니다.</p>
-                                </div>
+                                    </div>
+                                    <input type="button" value="일정 추가" onclick="/" />
                             `;
                         } else {
                             let html = '<ul class="sch-list-group">';
@@ -154,7 +158,9 @@
                                             \${deptBadge}
                                         </div>
                                         \${contentText}
-                                    </li>
+                                        </li>
+                                        <input type="button" value="일정 수정" onclick="/" />
+                                        <input type="button" value="일정 삭제" onclick="/" />
                                 `;
                             });
                             html += '</ul>';
@@ -178,6 +184,9 @@
             //모달 닫기
             function closeScheduleModal(){
                 document.getElementById("scheduleDetailModal").style.display = "none";
+
+                //캘린더 하이라이트 제거
+                calendar.clearGridSelections();
             }
 
             //부서 버튼을 클릭하면 실행되는 함수
@@ -204,12 +213,13 @@
                     const events = data.list.map( item => {
 
                         return {
-                            id : item.id,
+                            id : item.dcal_idx,
                             calendarId : item.deptno,
                             title : item.title,
                             start : item.start_date,
                             end : item.end_date,
-                            category : 'time'
+                            category : 'allday',
+                            isAllday : true
                         };
 
                     } );
@@ -248,12 +258,13 @@
                     const events = data.list.map( item => {
 
                         return {
-                            id : item.id,
+                            id : item.dcal_idx,
                             calendarId : item.deptno,
                             title : item.title,
                             start : item.start_date,
                             end : item.end_date,
-                            category : 'time'
+                            category : 'allday',
+                            isAllday : true
                         };
 
                     } );
@@ -318,6 +329,15 @@
                 } )
 
             }
+            //버튼 색 변경
+            function selectDeptButton(btn) {
+
+                document.querySelectorAll(".dept-filters input")
+                    .forEach(item => item.classList.remove("active"));
+
+                btn.classList.add("active");
+            }
+
         </script>
     </head>
 
@@ -330,10 +350,10 @@
 
             <div class="controls">
             <div class="dept-filters">
-                <input type="button" value="전체부서" style="background-color: #57606f;" 
-                        onclick="allSchedule()"/>
+                <input type="button" value="전체부서" class="active"  
+                        onclick="selectDeptButton(this); allSchedule()"/>
                 <c:forEach var="dept" items="${dept_list}">
-                    <input type="button" value="${dept.dname}" onclick="dept_sawon('${dept.deptno}')"/>
+                    <input type="button" value="${dept.dname}" onclick="selectDeptButton(this); dept_sawon('${dept.deptno}')"/>
                 </c:forEach>
             </div>
 
@@ -361,7 +381,7 @@
         <div id="scheduleDetailModal" class="schedule-modal-overlay" onclick="if(event.target == this) closeScheduleModal();">
             <div class="schedule-modal-content">
                 <div class="sch-modal-header">
-                    <h3>📅 일정 목록 (<span id="modalTargetDate">2026-00-00</span>)</h3>
+                    <h3>📅 일정 목록 (<span id="modalTargetDate"></span>)</h3>
                     <button type="button" class="sch-close-btn" onclick="closeScheduleModal()">&times;</button>
                 </div>
                 

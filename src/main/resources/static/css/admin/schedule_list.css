@@ -202,3 +202,9 @@
         font-size: 15px;
         font-weight: 500;
     }
+
+    .dept-filters input.active {
+        background: #475569 !important;
+        color: white;
+        box-shadow: 0 0 12px rgba(37, 99, 235, 0.35);
+    }

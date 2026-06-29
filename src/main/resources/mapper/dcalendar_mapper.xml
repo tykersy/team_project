@@ -48,7 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select c.dcal_idx, d.dname, d.deptno, c.title, c.start_date, c.end_date
         from dcalendar c
         join dept d on c.deptno = d.deptno
-        where c.deptno = #{deptno} and c.start_date like CONCAT('%', #{date}, '%')
+        where c.deptno = #{deptno} and DATE(c.start_date) &lt;= #{date} and DATE(c.end_date) &gt;= #{date}
         order by c.start_date
     </select>
 
@@ -59,7 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select c.dcal_idx, d.dname, d.deptno, c.title, c.start_date, c.end_date
         from dcalendar c
         join dept d on c.deptno = d.deptno
-        where c.start_date like CONCAT('%', #{date}, '%')
+        where DATE(c.start_date) &lt;= #{date} and DATE(c.end_date) &gt;= #{date}
         order by c.start_date
     </select>
 
