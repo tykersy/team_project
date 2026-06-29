@@ -107,6 +107,12 @@ a.sidebar-item {
     transition: max-height 0.3s ease-in-out, opacity 0.2s ease-in-out;
 }
 
+/* 페이지 로드 시 애니메이션 비활성화 */
+.no-transition .submenu,
+.no-transition .sidebar-item {
+    transition: none !important;
+}
+
 /* 서브메뉴 내부의 링크 스타일 */
 .submenu li a {
     display: block;
@@ -125,11 +131,26 @@ a.sidebar-item {
 }
 
 /* ⭐ 마우스 올렸을 때 서브메뉴 열림 처리 */
-.dropdown:hover .submenu {
-    max-height: 300px; /* 서브메뉴가 다 열릴 수 있는 충분한 높이 지정 */
+.dropdown:hover .submenu,
+.dropdown.active .submenu {
+    max-height: 300px;
     opacity: 1;
     margin-top: 4px;
     margin-bottom: 8px;
+}
+
+/* 활성화된 서브메뉴 항목 */
+.submenu li a.active {
+    background: #DBEAFE;
+    color: #1D4ED8;
+    font-weight: 600;
+}
+
+/* 활성화된 드롭다운 그룹의 대메뉴 */
+.dropdown.active > .sidebar-item {
+    background: rgba(219, 234, 254, 0.15);
+    color: #60A5FA;
+    font-weight: 600;
 }
 
 /* 하단 관리자/로그아웃 섹션 고정 */

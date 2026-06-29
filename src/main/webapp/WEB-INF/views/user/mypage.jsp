@@ -42,7 +42,14 @@
                     <div class="info-item"><label>소속 부서</label><div class="val">${info.dname}</div></div>
                     <div class="info-item"><label>직위</label><div class="val">${info.sajob}</div></div>
                     <div class="info-item"><label>입사일</label><div class="val mono">${info.sahire}</div></div>
-                    <div class="info-item"><label>계약 기간</label><div class="val mono">수정필요함</div></div>
+                    <div class="info-item"><label>계약 기간</label>
+                        <div class="val mono">
+                            ${userContract.start_date}
+                            <c:if test="${not empty userContract.end_date}">
+                             ~ ${userContract.end_date}
+                            </c:if>
+                        </div>
+                    </div>
                 </div>
             </div>
         
@@ -51,8 +58,8 @@
             <div class="info-grid">
                 <div class="info-item"><label>소정 근로시간</label><div class="val">주 40시간</div></div>
                 <div class="info-item"><label>근무 요일</label><div class="val">월 ~ 금</div></div>
-                <div class="info-item"><label>출근 시간</label><div class="val mono">09:00 ( 수정필요함 )</div></div>
-                <div class="info-item"><label>퇴근 시간</label><div class="val mono">18:00 ( 수정필요함 )</div></div>
+                <div class="info-item"><label>출근 시간</label><div class="val mono">09:00</div></div>
+                <div class="info-item"><label>퇴근 시간</label><div class="val mono">18:00</div></div>
                 <div class="info-item"><label>기본급</label><div class="val mono"><fmt:formatNumber value="${info.sapay}" pattern="#,###" /> 원</div></div>
                 <div class="info-item"><label>연봉</label><div class="val mono"><fmt:formatNumber value="${info.sapay*12}" pattern="#,###" /> 원</div></div>
             </div>

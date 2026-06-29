@@ -154,7 +154,7 @@
                             <a href="/admin/set_contract" class="approval-item">
                                 <span class="approval-icon contract"></span>
                                 <span class="approval-label">근로계약</span>
-                                <span class="approval-count contract-count">0 건</span>
+                                <span class="approval-count contract-count">${countsContract.pendingCount + countsContract.countsContract} 건</span>
                             </a>
                         </div>
                     </div>

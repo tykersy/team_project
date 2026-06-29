@@ -63,7 +63,7 @@ public class SawonController {
         
         List<SawonVO> list = sawonDao.sawonList();
         model.addAttribute("list", list);
-        return "/sawon/sawon_list";
+        return "sawon/sawon_list";
     }
 
 
