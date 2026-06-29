@@ -23,7 +23,6 @@ import com.kh.project.dao.UserDAO;
 import com.kh.project.vo.DeptVO;
 import com.kh.project.vo.SalaryContractVO;
 import com.kh.project.vo.SawonVO;
-import com.kh.project.vo.SleaveLogVO;
 import com.kh.project.vo.TAVO;
 
 import jakarta.servlet.http.HttpSession;
