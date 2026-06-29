@@ -72,19 +72,20 @@ public class DcalendarController {
         return map; 
     }
 
-    // 일정 상세보기 팝업창
+    // 일정 상세보기 모달창
     @GetMapping("/admin/schedule_view")
-    public String toDetailView(int deptno, String date, Model model) {
+    @ResponseBody
+    public Map<String, Object> toDetailView(int deptno, String date, Model model) {
 
         List<ScheduleDTO> list;
+        Map<String, Object> map = new HashMap<>();
 
         // 부서번호가 1일 때 ( 전체 부서 스케쥴 상세보기 )
         if (deptno == 1) {
             list = dcalendarDao.detailViewAll(date);
         } else {
-            // 선택된 부서가 1개인 경우
+            // 선택된 부서가 1인 경우 (전체 부서 일정 조회)
             // 파라미터로 받은 부서번호, 해당날짜 map에 담아서 파라미터로 보내기
-            Map<String, Object> map = new HashMap<>();
             map.put("deptno", deptno);
             map.put("date", date);
 
@@ -92,14 +93,12 @@ public class DcalendarController {
 
             // jsp에서 부서명을 사용하기 위해 부서 번호로 부서정보 가져오기
             DeptVO dept = deptDao.selectOne(deptno);
-            model.addAttribute("dept", dept);
+            map.put("dept", dept);
         }
 
-        // 파라미터로 받은 부서정보와 날짜를 바인딩
-        model.addAttribute("deptno", deptno);
-        model.addAttribute("date", date);
-        model.addAttribute("list", list);
+        // map에 list담기
+        map.put("list", list);
 
-        return "/admin_calendar/schedule_detail_view";
+        return map;
     }
 }

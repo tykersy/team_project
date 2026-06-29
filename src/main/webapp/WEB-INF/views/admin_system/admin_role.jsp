@@ -137,7 +137,7 @@
         let optionStr = `<option value="">-- 관리자 미지정(권한 회수) --</option>`;
 
         //선택된 부서 사원 목록 가져오기
-        fetch( "/admin_read_dept_sawon?deptno="+deptno )
+        fetch( "/admin/read_dept_sawon?deptno="+deptno )
         .then( res => res.json() )
         .then( data => {
             console.log("받아온 데이터 확인:", data)
@@ -172,15 +172,18 @@
         formData.set("deptno", deptno)
         formData.set("sabun", sabun);
 
-        fetch('/admin_reposition_leader', {
+        fetch('/admin/reposition_leader', {
 
             method: 'POST',
             body: formData
         })
         .then(res => res.json())
         .then(data => {
-            if(data.result == 2) {
-                alert("관리자 권한 변경이 완료되었습니다.");
+            if(data.result == 1) {
+                alert("관리자 권한 초기화가 완료되었습니다.");
+                location.reload();
+            }else if( data.result == 2 ){
+                alert("관리자 권한 변경이 완료되었습니다.")
                 location.reload();
             } else {
                 alert("실패: 변경 중 오류가 발생했습니다");

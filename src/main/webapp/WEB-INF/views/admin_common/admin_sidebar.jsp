@@ -31,8 +31,8 @@
             <div class="sidebar-item">전자 계약 관리</div>
             <ul class="submenu">
 
-                <li><a href="/admin_set_contract">전자 근로 계약 생성</a></li>
-                <li><a href="/admin_contract_list">전자 계약 현황</a></li>
+                <li><a href="/admin/set_contract">전자 근로 계약 생성</a></li>
+                <li><a href="/admin/admin_contract_list">전자 계약 현황</a></li>
 
             </ul>
         </div>
@@ -40,8 +40,8 @@
         <div class="menu-group dropdown">
             <div class="sidebar-item">급여/정산 관리</div>
             <ul class="submenu">
-                <li><a href="/admin/ta_confirm">근태 마감</a></li>
-                <li><a href="/admin/salary_confirm">급여 정산</a></li>
+                <li><a href="/admin/admin/ta_confirm">근태 마감</a></li>
+                <li><a href="/admin/admin/salary_confirm">급여 정산</a></li>
             </ul>
         </div>
 
@@ -50,7 +50,7 @@
         </div>
         <div class="menu-group">
 
-            <a href="${pageContext.request.contextPath}/admin_system_role" class="sidebar-item">시스템 관리</a>
+            <a href="${pageContext.request.contextPath}/admin/system_role" class="sidebar-item">시스템 관리</a>
 
         </div>
     </nav>

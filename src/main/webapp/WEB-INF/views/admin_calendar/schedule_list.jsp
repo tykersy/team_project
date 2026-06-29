@@ -9,13 +9,8 @@
         <!-- sidebar css -->
         <link rel="stylesheet" href="/css/admin/sidebar.css">
         <link rel="stylesheet" href="/css/admin/main.css">
-        <style>
-            /* 캘린더 출력할 div의 사이즈 조정 */
-            #calendarbox {
-                height:700px;
-                width:90%
-            }
-        </style>
+        <link rel="stylesheet" href="/css/admin/dcal.css">
+        
         <!-- toast ui 라이브러리 참조 & css참조 -->
         <meta charset="UTF-8">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/toastui-calendar.min.css" />
@@ -119,20 +114,70 @@
                     const localDate = new Date(eventData.start.getTime() - offset);
                     const clickedDate = localDate.toISOString().split('T')[0];
 
-                    // Controller로 보낼 URL 생성 (파라미터 포함)
-                    
-                    const url = "/admin/schedule_view?deptno="+cur_deptno
-                                +"&date="+clickedDate;
-                    
-                    //미니 팝업 띄우기
-                    window.open(url, 'scheduleDetailPopup', 
-                                    'width=600, height=700, scrollbars=yes, resizable=no');
+                    // 모달을 위한 비동기fetch호출
+                    fetch( "/admin/schedule_view?deptno="+cur_deptno+"&date="+clickedDate)
+                    .then(res => res.json())
+                    .then(data =>{
+                        console.log("서버 응답 데이터:", data)
+
+                        //리스트 출력할 컨테이너 가져오기
+                        const listContainer = document.getElementById("scheduleListContainer");
+
+                        if (!listContainer) {
+                            console.error("scheduleListContainer 엘리먼트를 찾을 수 없습니다.");
+                            return;
+                        }
+                        listContainer.innerHTML = ""; // 기존 목록 초기화
+
+                        //scheudleList에 읽어온 정보 입력
+                        const scheduleList = data.list || data;
+
+                        //데이터 유무에 따라서 동적으로 값 넣기
+                        if (!scheduleList || scheduleList.length === 0) {
+                            listContainer.innerHTML = `
+                                <div class="sch-no-data">
+                                    <p>등록된 부서 일정이 없습니다.</p>
+                                </div>
+                            `;
+                        } else {
+                            let html = '<ul class="sch-list-group">';
+                            scheduleList.forEach(item => {
+                                // 백엔드 ScheduleDTO 필드명(title, content, dname 등)에 맞게 매핑
+                                // 전체 부서 조회 시(deptno==1) 각 일정의 부서명을 뱃지로 달아주면 좋습니다.
+                                const deptBadge = `<span class="sch-dept-badge">\${item.dname}</span>`;
+                                const contentText = item.start_date && item.end_date ? `<p class="sch-item-content">\${item.start_date} ~ \${item.end_date}</p>` : '';
+
+                                html += `
+                                    <li class="sch-list-item">
+                                        <div class="sch-item-header">
+                                            <span class="sch-item-title">📌 \${item.title}</span>
+                                            \${deptBadge}
+                                        </div>
+                                        \${contentText}
+                                    </li>
+                                `;
+                            });
+                            html += '</ul>';
+
+                            //html문장 주입
+                            listContainer.innerHTML = html;
+                        }
+
+                        //모달 열기
+                        document.getElementById("scheduleDetailModal").style.display = "inline";
+
+                    })
                 } )
             
             }
 
             allSchedule();
 
+            }
+
+            //모달 닫기
+            function closeScheduleModal(){
+                document.getElementById("scheduleDetailModal").style.display = "none";
             }
 
             //부서 버튼을 클릭하면 실행되는 함수
@@ -310,6 +355,22 @@
             </div>
             <div id="calendarbox"></div>
             <div id="searchbox"></div>
+            </div>
+        </div>
+
+        <div id="scheduleDetailModal" class="schedule-modal-overlay" onclick="if(event.target == this) closeScheduleModal();">
+            <div class="schedule-modal-content">
+                <div class="sch-modal-header">
+                    <h3>📅 일정 목록 (<span id="modalTargetDate">2026-00-00</span>)</h3>
+                    <button type="button" class="sch-close-btn" onclick="closeScheduleModal()">&times;</button>
+                </div>
+                
+                <div class="sch-modal-body" id="scheduleListContainer">
+                    </div>
+                
+                <div class="sch-modal-footer">
+                    <button type="button" class="btn-sch-close" onclick="closeScheduleModal()">확인</button>
+                </div>
             </div>
         </div>
     </body>
