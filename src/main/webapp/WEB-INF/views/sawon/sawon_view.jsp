@@ -14,7 +14,7 @@
         <div class="manager-container">
             <jsp:include page="/WEB-INF/views/admin_common/admin_sidebar.jsp"/>
             <div class="sawon_container">
-            <h2>사원별 관리 페이지</h2>
+            <h2>사원 정보 상세보기</h2>
 
             <table>
                 <tr>
@@ -47,7 +47,8 @@
                     </tr>
                 <tr>
                     <td colspan="2" align="center">
-                        <input type="button" value=""/>
+                        <input type="button" value="뒤로가기"
+                            onclick="history.back()"/>
                     </td>
                 </tr>
             </table>
