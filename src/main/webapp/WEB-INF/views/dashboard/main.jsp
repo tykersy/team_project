@@ -170,7 +170,8 @@
                                             <span class="schedule-title"
                                                 style="font-weight: bold; color: #333;">${s.title}</span>
                                             <span class="schedule-time"
-                                                style="float: right; color: #2563eb; font-size: 0.9rem;">${fn:substring(s.start_date, 0, 10)}</span>
+                                                style="float: right; color: #2563eb; font-size: 0.9rem;">
+                                                ${fn:substring(s.start_date, 0, 10)} &nbsp; ~ &nbsp;  ${fn:substring(s.end_date, 0, 10)} </span>
                                         </div>
                                     </c:forEach>
                                     <c:if test="${empty scheduleList}">

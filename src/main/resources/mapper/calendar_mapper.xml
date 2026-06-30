@@ -103,11 +103,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
         </update>
 
-        <select id="selectDeptToday" parameterType="int" resultType="com.kh.project.vo.DcalendarVO">
-            SELECT dcal_idx, deptno, sabun, DATE_FORMAT(start_date, '%Y-%m-%d') AS start_date, end_date, title, content
+        <select id="selectDeptToday" parameterType="int" resultType="dcal">
+            SELECT dcal_idx, deptno, sabun, DATE_FORMAT(start_date, '%Y-%m-%d') AS start_date, 
+            DATE_FORMAT(end_date, '%Y-%m-%d') AS end_date, title, content
             FROM dcalendar 
             WHERE deptno = #{deptno} 
-            AND DATE(start_date) = CURDATE()
+            AND CURDATE() BETWEEN DATE(start_date) AND DATE(end_date)
         </select>
 
 </mapper>
