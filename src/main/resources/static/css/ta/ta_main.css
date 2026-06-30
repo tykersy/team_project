@@ -183,6 +183,7 @@
 
    .ta-card_btn:hover{
     background-color: #2f57d6;
+    cursor: pointer;
    }
 
    .card-content p{

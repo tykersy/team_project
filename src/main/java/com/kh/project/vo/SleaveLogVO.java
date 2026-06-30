@@ -18,7 +18,7 @@ public class SleaveLogVO {
     private int sabun; 
     private String leave_type, reason;
     private double use_days; // 연차 사용 개수
-    private boolean approve; // 연차 승인 여부 
+    private int approve; // 연차 승인 여부 
     private Date created_at;
     private LocalDate use_date;
 

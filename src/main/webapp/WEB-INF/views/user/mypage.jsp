@@ -251,11 +251,14 @@
                                             <td>${log.use_days} 일</td>
                                             <td>${log.reason}</td>
                                             <td>
-                                                <c:if test="${log.approve}" >
+                                                <c:if test="${log.approve eq 1}" >
                                                     <span class="tag normal">승인완료</span>
                                                 </c:if>
-                                                <c:if test="${not log.approve}" >
-                                                    <span class="tag absent">승인중</span>
+                                                <c:if test="${log.approve eq 2}">
+                                                    <span class="tag absent">반려</span>
+                                                </c:if>
+                                                <c:if test="${log.approve eq 0}" >
+                                                    <span class="tag early">승인중</span>
                                                 </c:if>
                                             </td>
                                         </tr>

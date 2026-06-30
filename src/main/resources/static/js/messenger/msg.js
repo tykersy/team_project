@@ -45,7 +45,7 @@
             
             function loadLikedChatRoomList(){
                 currentRoomId = null;
-                fetch("msg_LikedChatRoomList")
+                fetch("/msg_LikedChatRoomList")
                     .then(res => res.text())
                     .then(html => {
                         document.getElementById("msg_like").innerHTML = html;
@@ -98,7 +98,7 @@
                 loadingMore = false;
                 noMoreLogs = false;
 
-                fetch("msg_chatRoom/" + roomId + "?room_type=" + room_type)
+                fetch("/msg_chatRoom/" + roomId + "?room_type=" + room_type)
                     .then(res => res.text())
                     .then(html => {
                         document.getElementById(roomListType).innerHTML = html;
@@ -121,7 +121,7 @@
                 let lastLogId = firstMsg.getAttribute('data-msg-id');
                 loadingMore = true;
 
-                fetch("msg_chatRoom/" + currentRoomId + "/more?lastLogId=" + lastLogId)
+                fetch("/msg_chatRoom/" + currentRoomId + "/more?lastLogId=" + lastLogId)
                     .then(res => res.json())
                     .then(logs => {
                         if (logs.length === 0) {
@@ -300,7 +300,7 @@
             async function chat_like(event,roomId,index){
                 event.stopPropagation();
 
-                await fetch("msg_chatRoomList/liked?roomId="+roomId+"&sabun="+MY_SABUN)
+                await fetch("/msg_chatRoomList/liked?roomId="+roomId+"&sabun="+MY_SABUN)
                     .then(res => res.text())
                     .then(html => {
                         document.querySelectorAll('.chat-liked-'+index).forEach((b, i) => {
@@ -318,7 +318,7 @@
                 document.getElementById('memberSelectSearch').value = '';
                 document.getElementById('memberSelectModal').classList.add('open');
 
-                fetch("msg_member.do")
+                fetch("/msg_member.do")
                     .then(res => res.text())
                     .then(html => {
                         let parser = new DOMParser();
