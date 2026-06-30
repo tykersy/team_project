@@ -14,12 +14,15 @@ body {
 }
 
 .sidebar {
-    width: 260px;
+    /* width: 260px; */
+    flex: 0 0 260px; /* 고정 크기를 260px로 하되, 억지로 늘어나지 않게 설정 */
     height: 100vh;
     background: #111827;
     border-right: 1px solid #E2E8F0;
     padding: 24px;
-
+    overflow-y: auto;  /* 이 속성이 있어야 사이드바가 길 때 스크롤바가 생깁니다 */
+    
+    flex-shrink: 0;    /* 레이아웃 찌그러짐 방지 */
     display: flex;
     flex-direction: column;
     position: sticky;
@@ -171,4 +174,3 @@ a.sidebar-item {
     font-weight: 600;
     transition: 0.2s;
 }
-

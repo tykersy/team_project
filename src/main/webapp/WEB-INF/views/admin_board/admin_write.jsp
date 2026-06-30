@@ -41,7 +41,7 @@
 
         <div class="dashboard-container">
             <div class="panel" style="width: 100%;">
-                <h2 style="margin-bottom: 20px;">공지사항 작성</h2>
+                <h2 style="margin-bottom: 25px;">공지사항 작성</h2>
                 
                 <form action="/admin/board/write" method="post" id="writeForm">
                     <input type="hidden" name="content" id="content">
