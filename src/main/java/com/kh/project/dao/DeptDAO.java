@@ -34,7 +34,7 @@ public interface DeptDAO {
     List<Map<String, Object>> deptCntList();
 
     //부서 정보 수정
-    int update(Map<String, Object> map);
+    int update(DeptVO vo);
 
     //부서번호, 부서명 중복체크
     DeptVO selectCheck (DeptVO vo);
@@ -46,4 +46,7 @@ public interface DeptDAO {
     int deleteDept(String dname);
 
     List<OrgChartVO> chartList();
+
+    //현재 DB중 가장 큰 부서번호 조회
+    int getBiggestDeptno();
 }

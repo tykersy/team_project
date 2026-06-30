@@ -21,8 +21,17 @@
                 
                 form.dataset.mode = "insert"; 
 
-                // 입력창 상태 초기화 (배경색 흰색)
-                document.getElementById("deptno").style.backgroundColor = "#ffffff";
+                // 입력창 세팅 (부서번호는 회색배경/입력or변경불가능)
+                document.getElementById("deptno").style.backgroundColor = "#E9ECEF";
+                document.getElementById("deptno").readOnly = true;
+                
+                //10단위로 부서번호 자동 지정
+                fetch("/admin/getDeptno")
+                .then(res=>res.json())
+                .then(data=>{
+                    //가져온 지정된 부서번호를 deptno의 value로 주입
+                    document.getElementById("deptno").value = data.result;
+                })
 
                 modal.style.display = "flex";
             }
@@ -35,7 +44,8 @@
                 // 모달 닫힐 때 폼 입력값 및 배경색 원상복구
                 const form = document.getElementById("modalForm");
                 form.reset(); 
-                document.getElementById("deptno").style.backgroundColor = "#ffffff";
+                document.getElementById("deptno").style.backgroundColor = "#E9ECEF";
+                document.getElementById("deptno").value = "";
             }
 
             //부서 정보 수정 모달 열기
@@ -54,17 +64,16 @@
                 document.getElementById("dname").value = dname;
                 document.getElementById("dtel").value = dtel;
 
-                // ++.기존 부서번호를 form태그 안에 넣기
-                form.ori_deptno.value = deptno;
+                // 부서번호 input타입을 readonly로 바꾸기
+                document.getElementById("deptno").readOnly = true;
                 
-                document.getElementById("deptno").style.backgroundColor = "#ffffff";
+                document.getElementById("deptno").style.backgroundColor = "#E9ECEF";
                 
                 modal.style.display = "flex";
             } 
 
             function send(f){
                 let deptno = f.deptno.value.trim();
-                let ori_deptno = f.ori_deptno.value.trim();
                 let dname = f.dname.value.trim();
                 let dtel = f.dtel.value.trim();
                 let mode = f.dataset.mode; //등록인지 수정인지 구별
@@ -88,8 +97,7 @@
                 //button모드가 수정(update)일 때는 중복체크를 건너뜀
                 if(mode === "update") {
                     let formData = new FormData(f);
-                    formData.set("ori_deptno", ori_deptno); //기존 부서번호를 forData에 담기
-                    formData.set("deptno", deptno); // 사용자가 새로 바꾼 부서번호 있다면 담아서 전송
+                    formData.set("deptno", deptno); 
                     formData.set("dtel", dtel);
 
                     fetch("/admin/update_dept", { method: "POST", body: formData })
@@ -184,10 +192,12 @@
                                     <td>${dept.dname}</td>
                                     <td>${dept.dtel}</td>
                                     <td>
-                                        <input type="button" value="수정"
-                                            onclick="openUpdModal('${dept.deptno}','${dept.dname}', '${dept.dtel}')"/>
-                                        <input type="button" value="삭제"
-                                            onclick="del('${dept.dname}')"/>
+                                        <c:if test="${dept.deptno ne 1}">
+                                            <input type="button" value="수정"
+                                                onclick="openUpdModal('${dept.deptno}','${dept.dname}', '${dept.dtel}')"/>
+                                            <input type="button" value="삭제"
+                                                onclick="del('${dept.dname}')"/>
+                                        </c:if>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -232,16 +242,15 @@
         <div id="jobModal" class="modal-overlay">
             <div class="modal-content-box">
                 <div class="modal-header">
-                    <h3 id="modalTitle">새 직급 등록</h3>
+                    <h3 id="modalTitle">새 부서 등록</h3>
                     <span class="close-btn" onclick="closeModal()">&times;</span>
                 </div>
                 
                 <form id="modalForm" method="post">
-                    <input name="ori_deptno" type="hidden"/>
                     <div class="modal-body">
                         <div class="input-group">
                             <label for="deptno">부서번호</label>
-                            <input type="text" id="deptno" name="deptno" placeholder="예: 60" required>
+                            <input type="text" id="deptno" name="deptno"  required>
                         </div>
                         <div class="input-group">
                             <label for="dname">부서명</label>

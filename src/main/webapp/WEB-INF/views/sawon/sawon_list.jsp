@@ -114,8 +114,10 @@
                             <td>${vo.sajob}</td>
                             <td>${vo.sahire}</td>
                             <td>
-                                <input type="button" value="수정" onclick="location.href='/admin/sawon_modify?sabun=${vo.sabun}'"/>
-                                <input type="button" value="퇴사" onclick="del('${vo.sabun}', '${vo.saname}')"/>
+                                <c:if test="${vo.sabun ne 1}">
+                                    <input type="button" value="수정" onclick="location.href='/admin/sawon_modify?sabun=${vo.sabun}'"/>
+                                    <input type="button" value="퇴사" onclick="del('${vo.sabun}', '${vo.saname}')"/>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>
