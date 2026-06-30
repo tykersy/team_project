@@ -76,14 +76,11 @@ public class DeptController {
     //관리자-부서정보 수정
     @PostMapping("/admin/update_dept")
     @ResponseBody
-    public Map<String, Object> updDept(DeptVO vo, String ori_deptno){
+    public Map<String, Object> updDept(DeptVO vo){
+
+        int res = deptdao.update(vo);
 
         Map<String, Object> map = new HashMap<>();
-        map.put("ori_deptno", ori_deptno);
-        map.put("vo", vo);
-
-        int res = deptdao.update(map);
-
         map.put("result", res);
 
         return map;
@@ -151,6 +148,21 @@ public class DeptController {
         model.addAttribute("chartList", chartList);
 
         return"dept/dept_chart";
+    }
+
+    //부서 추가시 부서번호 자동 배정을 위한 로직
+    @GetMapping("/admin/getDeptno")
+    @ResponseBody
+    public Map<String, Integer> getNewDeptno(){
+
+        //제일 큰 수를 가진 deptno가져와 10을 추가
+        int biggestDeptno = deptdao.getBiggestDeptno() + 10;
+
+        Map<String, Integer> map = new HashMap<>();
+        map.put("result", biggestDeptno);
+
+        return map;
+
     }
 
 }

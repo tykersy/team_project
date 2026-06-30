@@ -81,16 +81,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!-- 부서 정보 수정 -->
     <update id="update"
-            parameterType="java.util.Map">
-        update dept set deptno = #{vo.deptno}, dname = #{vo.dname}, dtel = #{vo.dtel}
-        WHERE deptno = #{ori_deptno}
+            parameterType="dept">
+        update dept set dname = #{dname}, dtel = #{dtel}
+        WHERE deptno = #{deptno}
     </update>
 
     <!-- 부서명, 부서번호 중복체크 -->
     <select id="selectCheck"
             parameterType="dept"
             resultType="dept">
-        select * from dept where deptno = #{deptno} and dname = #{dname}
+        select * from dept 
+        where deptno = #{deptno}
+        or dname = #{dname}
     </select>
 
     <!-- 부서등록 -->
@@ -144,6 +146,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                    ELSE 7 END) ASC, 
             <!-- 같은 직급 내에서는 사번 순 -->
              s.sabun ASC 
+    </select>
+
+    <!-- 현재 DB중 가장 큰 부서번호 조회 -->
+    <select id="getBiggestDeptno"
+            resultType="int">
+        select max(deptno) from dept
     </select>
 
 </mapper>
