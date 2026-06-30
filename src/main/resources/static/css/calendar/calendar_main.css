@@ -313,6 +313,10 @@
     font-size: 11px;
 }
 
+.dcal-item:hover{
+    cursor: pointer;
+}
+
 .scal-item {
 
     margin-top: 2px;
@@ -324,6 +328,10 @@
     border-radius: 4px;
 
     font-size: 11px;
+}
+
+.scal-item:hover{
+    cursor: pointer;
 }
 
 .detail-modal {

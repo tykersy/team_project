@@ -151,7 +151,7 @@
                                 <span class="approval-label">급여 정산</span>
                                 <span class="approval-count salary-count">${countLedgers} 건</span>
                             </a>
-                            <a href="/admin/set_contract" class="approval-item">
+                            <a href="/admin/admin_contract_list" class="approval-item">
                                 <span class="approval-icon contract"></span>
                                 <span class="approval-label">근로계약</span>
                                 <span class="approval-count contract-count">${countsContract.pendingCount + countsContract.countsContract} 건</span>
