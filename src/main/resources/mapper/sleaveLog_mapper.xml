@@ -49,5 +49,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         WHERE log_id = #{log_id}
     </update>
 
+    <!-- 사원의 해당 년월의 연차 사용 일수 -->
+    <select id="getCountPendingTa"
+            parameterType="java.util.Map"
+            resultType="int">
+        SELECT COALESCE(SUM(use_days), 0)
+        FROM sleave_log
+        WHERE sabun = #{sabun}
+        AND DATE_FORMAT(use_date, '%Y-%m') = #{ym}
+    </select>
     
 </mapper>

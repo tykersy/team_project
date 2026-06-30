@@ -56,4 +56,7 @@ public interface SawonDAO {
     //부서별 사원 목록
     List<SawonVO> getDeptSawonList(int deptno);
 
+    //사번으로 관리자 권한 확인
+    SawonVO checkLeader(int sabun);
+
 } 

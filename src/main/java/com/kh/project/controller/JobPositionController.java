@@ -109,7 +109,10 @@ public class JobPositionController {
     //직급 추가
     @PostMapping("/admin/add_job_position")
     @ResponseBody
-    public Map<String, Integer> add_job_position( JobPositionVO vo ){
+    public Map<String, Integer> add_job_position( String sajob ){
+
+        JobPositionVO vo = new JobPositionVO();
+        vo.setSajob(sajob);
 
         int res = jobPositionDao.insert(vo);
 

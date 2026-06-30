@@ -43,4 +43,7 @@ public interface SalaryDAO {
 
     //필터링 된 계약서 리스트 조회
     List<SalaryContractVO> getfilteredList(Map<String, Object> filter);
+
+    //해당 월에 근태 마감된 인원
+    int getCntClosed(String ym);
 }

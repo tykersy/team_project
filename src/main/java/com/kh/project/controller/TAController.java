@@ -2,7 +2,9 @@ package com.kh.project.controller;
 
 
 import java.text.DateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -20,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.project.common.Calendar;
+import com.kh.project.dao.SalaryDAO;
 import com.kh.project.dao.SawonDAO;
+import com.kh.project.dao.SleaveDAO;
 import com.kh.project.dao.TADAO;
 
 import com.kh.project.vo.SalaryClosedVO;
@@ -47,6 +51,10 @@ public class TAController {
     private final UserDAO userDao;
     
     private final SawonDAO sawonDao;
+
+    private final SleaveDAO sleavedao;
+
+    private final SalaryDAO salarydao;
 
     @Autowired
     HttpSession session;
@@ -163,14 +171,24 @@ public class TAController {
         //전체 사원별 해당 년월 TA리스트 불러오기
         List<SalaryClosedVO> attendanceList = tadao.getAllMonthlyTA(ym);
 
-        // 2. 이번 달(예: 6월)의 총 평일 수 설정 (보통 주말 제외 21일 ~ 22일)
-        int standardDays = 22;
+        // 2. 이번 달(ym기준)의 총 평일 수 설정 (보통 주말 제외 21일 ~ 22일)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM"); //데이트 타입으로 파싱
+        YearMonth yearMonth = YearMonth.parse(ym, formatter); //yearmonth객체로 파싱
+
+        LocalDate startOfMonth = yearMonth.atDay(1); //해당 월의 시작일 반환
+        LocalDate endOfNextMonth = yearMonth.atEndOfMonth().plusDays(1); //해당 월의 마지막 날짜+1
+
+        //월~금요일 카운트
+        int standardDays = (int)startOfMonth.datesUntil(endOfNextMonth)
+                        .map(LocalDate::getDayOfWeek)
+                        .filter(day -> day != DayOfWeek.SATURDAY && day != DayOfWeek.SUNDAY)
+                        .count();
 
         for(SalaryClosedVO emp : attendanceList ) {
             // DB에서 세어온 실제 출근일수 꺼내기
             int workedDays = Integer.parseInt(String.valueOf(emp.getWorked_days()));
             
-            // [결근일수 계산] = 기준일수(22일) - 실제출근일수
+            // [결근일수 계산] = 기준일수 - 실제출근일수
             int absenceDays = standardDays - workedDays;
             if(absenceDays < 0) absenceDays = 0; // 혹시 주말 출근 등으로 출근일이 더 많으면 0일 처리
             
@@ -178,16 +196,24 @@ public class TAController {
             emp.setStandard_days(standardDays);
             emp.setAbsence_days(absenceDays);
             
-            // 연차 테이블(sleave_log) 연동 전이므로 임시로 leave_days도 0으로 입력해두기
-            emp.setLeave_days(0); 
+            //sleave_log에서 해당 사원의 이번달 연차 사용 일수 조회
+            Map<String, Object> map = new HashMap<>();
+            map.put("ym", ym);
+            map.put("sabun", emp.getSabun());
+
+            int leaveCnt = sleavedao.getCountPendingTa(map);
+
+            emp.setLeave_days(leaveCnt); 
             emp.setStatus("대기");
         }
+        //마감 완료 인원 조회
+        int completeCnt = salarydao.getCntClosed(ym);
 
         // 3. 바인딩 및 포워딩
         // model.addAttribute("attendanceList", dummyList); //정산 대상자 목록
         model.addAttribute("selectedYm", ym); //선택 년월
-        model.addAttribute("waitCnt", 1); //마감 대기자 수
-        model.addAttribute("completeCnt", 1); //마감 완료자 수
+        model.addAttribute("waitCnt", attendanceList.size()); //마감 대기자 수
+        model.addAttribute("completeCnt", completeCnt); //마감 완료자 수
 
         model.addAttribute("attendanceList", attendanceList);
 

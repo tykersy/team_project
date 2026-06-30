@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.project.dao.SalaryDAO;
+import com.kh.project.dao.SawonDAO;
 import com.kh.project.dao.SleaveDAO;
 import com.kh.project.dao.UserDAO;
 import com.kh.project.vo.CalendarDayVO;
@@ -49,6 +50,8 @@ public class UserController {
     private final Calendar calendar;
     //계약서
     private final SalaryDAO salaryDao;
+    //부서 관리자
+    private final SawonDAO sawonDao;
 
     //세션으로 로그인 유무 확인 
     @Autowired
@@ -76,6 +79,13 @@ public class UserController {
             if( pwdSecurity.pwdDecoding(pwd, sawonInfo.getPwd()) ){
                 //사번 , 비밀번호 모두 일치시 succeed
                 result = "succeed";
+                
+                //관리자 접근 권한을 위해 sawonleader조회
+                SawonVO leader = sawonDao.checkLeader(sawonInfo.getSabun());
+                if( leader != null ){
+                    //관리자 권한을 가지고 있는 사원일 경우 값 (1) 넣기
+                    session.setAttribute("manager", 1);
+                }
                 
                 //로그인 유무를 확인 하기 위한 세션 세팅
                 session.setAttribute("user", sawonInfo.getSabun());
