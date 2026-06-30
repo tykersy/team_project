@@ -63,6 +63,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by c.start_date
     </select>
 
+    <select id="selectOneSchedule"
+            parameterType="int"
+            resultType="dcal">
+
+        SELECT * FROM dcalendar
+        WHERE dcal_idx = #{dcal_idx}
+
+    </select>
+
     <insert id = "insertSchedule"
             parameterType="dcal">
         INSERT INTO dcalendar
@@ -78,6 +87,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{content}
         )
     </insert>
+
+    <update id="updateSchedule"
+            parameterType="dcal">
+
+        UPDATE dcalendar
+        SET
+            deptno = #{deptno},
+            start_date = #{start_date},
+            end_date = #{end_date},
+            title = #{title},
+            content = #{content}
+        WHERE dcal_idx = #{dcal_idx}
+
+    </update>
 
     <delete id="deleteSchedule" parameterType="int">
         delete From dcalendar

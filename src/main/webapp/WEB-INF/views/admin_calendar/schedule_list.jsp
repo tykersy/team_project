@@ -141,7 +141,9 @@
                                 <div class="sch-no-data">
                                     <p>등록된 부서 일정이 없습니다.</p>
                                     </div>
-                                    <input type="button" value="일정 추가" onclick="openScheduleInsert()" />
+                                    <div class="schedule-btn-area">
+                                    <input type="button" class="schedule_insert_btn" value="일정 추가" onclick="openScheduleInsert()" />
+                                    </div>
                             `;
                         } else {
                             let html = '<ul class="sch-list-group">';
@@ -164,14 +166,15 @@
                                         
                                 `;
                             });
-                            html += '<input type="button" value="일정 추가" onclick="openScheduleInsert()" /></ul>';
+                            html += 
+                            '<div class="schedule-btn-area"><input type="button" class="schedule_insert_btn" value="일정 추가" onclick="openScheduleInsert()" /></div></ul>';
 
                             //html문장 주입
                             listContainer.innerHTML = html;
                         }
 
                         //모달 열기
-                        document.getElementById("scheduleDetailModal").style.display = "inline";
+                        document.getElementById("scheduleDetailModal").style.display = "flex";
 
                     })
                 } )
@@ -341,8 +344,10 @@
 
             //일정 추가
             function openScheduleInsert(){
+
                 document.getElementById("scheduleDetailModal").style.display = "none";
                 document.getElementById("scheduleForm").reset();
+                document.getElementById("dcal_idx").value = "";
 
                 const date = document.getElementById("modalTargetDate").innerText;
 
@@ -356,7 +361,7 @@
             function closeScheduleFormModal(){
                 document.getElementById("scheduleFormModal").style.display = "none";
 
-                document.getElementById("scheduleDetailModal").style.display = "block";
+                document.getElementById("scheduleDetailModal").style.display = "flex";
             }
 
             //일정 저장
@@ -364,6 +369,7 @@
                 const form = document.getElementById("scheduleForm");
                 const formData = new FormData(form);
 
+                const dcal_idx = document.getElementById("dcal_idx").value;
                 const title = document.getElementById("title").value.trim();
                 const startDate = document.getElementById("start_date").value;
                 const endDate = document.getElementById("end_date").value;
@@ -383,7 +389,23 @@
                     return;
                 }
 
-                fetch("/admin/schedule_insert", {
+                let url;
+                let successMsg;
+
+                if(dcal_Idx === ""){
+                    // 추가
+                    url = "/admin/schedule_insert";
+                    successMsg = "일정이 추가되었습니다.";
+
+                    // insert는 auto_increment라 dcal_idx 보내면 안 됨
+                    formData.delete("dcal_idx");
+                }else{
+                    // 수정
+                    url = "/admin/schedule_update";
+                    successMsg = "일정이 수정되었습니다.";
+                }
+
+                fetch(url, {
                     method: "POST",
                     body: formData
                 })
@@ -391,7 +413,7 @@
                 .then(data => {
 
                     if(data.result === "success"){
-                        alert("일정이 추가되었습니다.");
+                        alert(successMsg);
 
                         document.getElementById("scheduleFormModal").style.display = "none";
 
@@ -402,14 +424,32 @@
                         }
 
                     }else{
-                        alert("일정 추가 실패");
+                        alert("저장 실패");
                     }
+                });
+            }
+
+            //일정 수정
+            function openScheduleUpdate(dcal_idx){
+
+                fetch("/admin/schedule_one?dcal_idx=" + dcal_idx)
+                .then(res => res.json())
+                .then(vo => {
+                    document.getElementById("dcal_idx").value = vo.dcal_idx;
+                    document.getElementById("deptno").value = vo.deptno;
+                    document.getElementById("title").value = vo.title;
+                    document.getElementById("start_date").value = vo.start_date.substring(0, 10);
+                    document.getElementById("end_date").value = vo.end_date.substring(0, 10);
+                    document.getElementById("content").value = vo.content || "";
+
+                    document.getElementById("scheduleDetailModal").style.display = "none";
+                    document.getElementById("scheduleFormModal").style.display = "flex";
                 });
             }
 
             function deleteSchedule(dcal_idx){
                 if(!confirm("일정을 삭제하시겠습니까?")){
-                    retuen;
+                    return;
                 }
                 fetch("/admin/schedule_delete?dcal_idx="+dcal_idx, {method: "POST"})
                 .then(res=>res.json())
@@ -485,6 +525,7 @@
             style="display:none; z-index:100000;"  onclick="if(event.target==this) closeScheduleFormModal();">
             <div class="schedule-modal-content">
                 <form id="scheduleForm">
+                    <input type="hidden" name="dcal_idx" id="dcal_idx">
                     <div>
                         <label>부서</label>
                         <select name="deptno" id="deptno">
@@ -511,8 +552,10 @@
                         <label>내용</label>
                         <textarea name="content" id="content"></textarea>
                     </div>
-                    <button type="button" onclick="saveSchedule()">저장</button>
-                    <button type="button" onclick="closeScheduleFormModal()">취소</button>
+                    <div class="form-btn-area">
+                        <button type="button" onclick="saveSchedule()">저장</button>
+                        <button type="button" onclick="closeScheduleFormModal()">취소</button>
+                    </div>
                 </form>
             </div>
         </div>

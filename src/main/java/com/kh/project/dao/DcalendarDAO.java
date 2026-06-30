@@ -24,8 +24,14 @@ public interface DcalendarDAO {
     // 대시보드 오늘 일정용 메서드 추가
     List<CalendarVO> selectDeptToday(int deptno);
 
+    //idx기반 정보찾기
+    DcalendarVO selectOneSchedule(int dcal_idx);
+
     //일정 추가
     int insertSchedule(DcalendarVO vo);
+
+    //일정 수정 
+    int updateSchedule(DcalendarVO vo);
 
     //일정 삭제
     int deleteSchedule(int dcal_idx);

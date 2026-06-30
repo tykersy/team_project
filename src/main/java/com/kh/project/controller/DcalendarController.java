@@ -109,6 +109,12 @@ public class DcalendarController {
         return map;
     }
 
+    @GetMapping("/admin/schedule_one")
+    @ResponseBody
+    public DcalendarVO scheduleOne(int dcal_idx) {
+        return dcalendarDao.selectOneSchedule(dcal_idx);
+    }
+
     @PostMapping("/admin/schedule_insert")
     @ResponseBody
     public Map<String, Object> insertSchedule(DcalendarVO vo){
@@ -116,6 +122,18 @@ public class DcalendarController {
         vo.setSabun(sabun);
         
         int res = dcalendarDao.insertSchedule(vo);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("result", res>0?"success":"fail");
+
+        return map;
+    }
+    
+    @PostMapping("/admin/schedule_update")
+    @ResponseBody
+    public Map<String, Object> updateSchedule(DcalendarVO vo){
+
+        int res = dcalendarDao.updateSchedule(vo);
 
         Map<String,Object> map = new HashMap<>();
         map.put("result", res>0?"success":"fail");
