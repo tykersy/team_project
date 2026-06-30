@@ -38,7 +38,7 @@
                             <td>${board.dept}</td>
                             <td>${fn:substring(board.created, 0, 10)}</td>
                             <td>${board.views}</td>
-                            <td>
+                            <td class="btn-td-container">
                                 <a href="/admin/board/update?idx=${board.idx}" class="btn-sm btn-blue">수정</a>
                                 <a href="/admin/board/delete?idx=${board.idx}" class="btn-sm btn-red" onclick="return confirm('삭제하시겠습니까?');">삭제</a>
                             </td>
