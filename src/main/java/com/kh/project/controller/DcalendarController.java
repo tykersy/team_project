@@ -4,16 +4,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.project.dao.DcalendarDAO;
 import com.kh.project.dao.DeptDAO;
+import com.kh.project.vo.DcalendarVO;
 import com.kh.project.vo.DeptVO;
 import com.kh.project.vo.ScheduleDTO;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -22,6 +26,9 @@ public class DcalendarController {
     
     private final DcalendarDAO dcalendarDao;
     private final DeptDAO deptDao;
+
+    @Autowired
+    HttpSession session;
 
     @GetMapping("/admin/calendar")
     public String calendarMain(Model model) {
@@ -98,6 +105,31 @@ public class DcalendarController {
 
         // map에 list담기
         map.put("list", list);
+
+        return map;
+    }
+
+    @PostMapping("/admin/schedule_insert")
+    @ResponseBody
+    public Map<String, Object> insertSchedule(DcalendarVO vo){
+        int sabun = (Integer) session.getAttribute("user");
+        vo.setSabun(sabun);
+        
+        int res = dcalendarDao.insertSchedule(vo);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("result", res>0?"success":"fail");
+
+        return map;
+    }
+
+    @PostMapping("/admin/schedule_delete")
+    @ResponseBody
+    public Map<String, Object> deleteSchedule(int dcal_idx){
+        int res = dcalendarDao.deleteSchedule(dcal_idx);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("result", res>0?"success":"fail");
 
         return map;
     }

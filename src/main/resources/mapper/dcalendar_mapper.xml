@@ -63,4 +63,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by c.start_date
     </select>
 
+    <insert id = "insertSchedule"
+            parameterType="dcal">
+        INSERT INTO dcalendar
+        (deptno, sabun, start_date, end_date, title, content)
+
+        VALUES
+        (
+            #{deptno},
+            #{sabun},
+            #{start_date},
+            #{end_date},
+            #{title},
+            #{content}
+        )
+    </insert>
+
+    <delete id="deleteSchedule" parameterType="int">
+        delete From dcalendar
+        where dcal_idx=#{dcal_idx}
+    </delete>
+
 </mapper>
