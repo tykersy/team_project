@@ -177,4 +177,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select sabun, saname from sawon where deptno = #{deptno} and sastatus = '재직'
     </select>
 
+    <!-- 사번으로 관리자 권한 확인 -->
+    <select id="checkLeader"
+            parameterType="int"
+            resultType="sawon">
+        select * 
+        from sawonleader
+        where sabun = #{sabun}
+    </select>
+
 </mapper>

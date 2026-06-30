@@ -163,4 +163,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where s.sabun = #{sabun}
     </select>
     
+    <!-- 해당 연월의 근태 마감된 인원 조회 -->
+    <select id="getCntClosed"
+            parameterType="String"
+            resultType="int">
+        select count(sabun)
+        from salary_closed_attendance
+        where closed_ym = #{ym} and status = '완료'
+    </select>
 </mapper>

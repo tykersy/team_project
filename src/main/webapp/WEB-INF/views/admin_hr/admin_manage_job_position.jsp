@@ -22,7 +22,7 @@
                 form.dataset.mode = "insert"; 
 
                 // 입력창 상태 초기화 (배경색 흰색)
-                document.getElementById("job_id").style.backgroundColor = "#ffffff";
+                document.getElementById("job_id").style.backgroundColor = "#EEEEEE";
 
                 modal.style.display = "flex";
             }
@@ -35,7 +35,7 @@
                 // 모달 닫힐 때 폼 입력값 및 배경색 원상복구
                 const form = document.getElementById("modalForm");
                 form.reset(); 
-                document.getElementById("job_id").style.backgroundColor = "#ffffff";
+                document.getElementById("job_id").style.backgroundColor = "#EEEEEE";
             }
 
             //직급 정보 수정 모달 열기
@@ -56,7 +56,7 @@
                 // ++.기존 job_id를 form태그 안에 넣기
                 form.ori_job_id.value = job_id;
                 
-                document.getElementById("job_id").style.backgroundColor = "#ffffff";
+                document.getElementById("job_id").style.backgroundColor = "#EEEEEE";
                 
                 modal.style.display = "flex";
             } 
@@ -80,25 +80,35 @@
                     formData.set("job_id", job_id);
                     formData.set("sajob", sajob);
 
-                    //직급명 유효성 체크(수정중****) null이면 사용가능, null이 아니면 불가능
-
-                    //job_id 
-                    fetch("/admin/update_job_position", { method: "POST", body: formData })
+                    //직급명 유효성 체크(null이면 사용가능, null이 아니면 불가능)
+                    fetch( "/admin/update_job_position?job_id="+job_id+"&sajob="+sajob )
                     .then(res => res.json())
                     .then(data => {
-                        if(data.result.sajob != sajob) {
-                            alert("직급 정보가 수정되었습니다.");
-                            closeModal();
-                            location.href = "/admin/job_position";
-                        } else {
-                            alert("수정에 실패했습니다.");
+
+                        if( data.result != null ){
+                            alert("이미 존재하는 직급입니다.")
+                            return;
                         }
-                    })
-                    .catch(err => {
-                        console.error("수정 중 서버 에러 발생:", err);
-                        alert("서버 통신 중 오류가 발생했습니다.");
-                    });
-                    return; // 수정 로직이 끝나면 아래 등록 로직이 실행 안 되도록 반드시 차단
+
+                        //직급 정보 수정 로직
+                        fetch("/admin/update_job_position", { method: "POST", body: formData })
+                        .then(res => res.json())
+                        .then(data => {
+                            if(data.result.sajob != sajob) {
+                                alert("직급 정보가 수정되었습니다.");
+                                closeModal();
+                                location.href = "/admin/job_position";
+                            } else {
+                                alert("수정에 실패했습니다.");
+                            }
+                        })
+                        .catch(err => {
+                            console.error("수정 중 서버 에러 발생:", err);
+                            alert("서버 통신 중 오류가 발생했습니다.");
+                        });
+                        return; // 수정 로직이 끝나면 아래 등록 로직이 실행 안 되도록 반드시 차단
+
+                    })   
                 }
 
                 //버튼이 등록일 때 동일한 직급명 체크
@@ -109,7 +119,9 @@
                     .then( res => res.json() )
                     .then( data => {
                         if( data.result == null ){ 
+                            //result가 null이면 새로 추가 가능한 직급(추가 로직 실행)
                             let formData = new FormData(f);
+
                             fetch( "/admin/add_job_position", { method:"POST", body:formData } )
                             .then( res => res.json() )
                             .then( postData => {

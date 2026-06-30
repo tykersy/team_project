@@ -55,5 +55,7 @@ public interface SleaveDAO {
     //연차 사용 신청 반려
     int reject(Map<String, Object> map);
 
+    //해당 사원의 해당 달 사용 연차 갯수
+    int getCountPendingTa( Map<String, Object> map );
     
 }
