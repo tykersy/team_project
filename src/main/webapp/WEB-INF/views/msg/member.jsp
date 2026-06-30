@@ -98,7 +98,7 @@
                     menu.classList.toggle("open");
                 }
                 function viewProfile(sabun) {
-                    fetch("msg_profile.do?sabun=" + sabun)
+                    fetch("/msg_profile.do?sabun=" + sabun)
                         .then(res => res.json())
                         .then(data => {
                             document.getElementById("profileInitial").innerText = data.saname.substring(0, 1);
