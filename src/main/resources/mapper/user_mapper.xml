@@ -13,10 +13,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!-- 마이페이지 조회 -->
     <select id="userMyPage" parameterType="int" resultType="user">
-        select * from
+        select s.sabun, s.deptno ,s.saname, s.sajob , s.saemail ,s.satel , s.sahire , s.saaddr, s.sastatus, s.sazipcode,
+	           d.dname , sl.base_pay
+        from
             sawon as s join dept as d
             on s.deptno = d.deptno
-        where sabun=#{sabun}
+            join salary_ledger sl
+            on sl.sabun = s.sabun
+        where s.sabun=#{sabun}
     </select>
 
     <!-- 마이페이지 월 총근무시간 & 근무일 조회 -->

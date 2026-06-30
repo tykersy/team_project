@@ -130,6 +130,7 @@ public class UserController {
         List<SleaveLogVO> userSleaveLog = sleaveDAO.sleaveLogSelect(sabun); //사원 연차 사용 조회
         SalaryLedgerVO userSalary = salaryDao.getLedgerinfo(monthlyTAMap); //사원 이번달 월급 정보 조회
         SalaryContractVO userContract = salaryDao.getContractBySabun(sabun); // 사원 근로 계약서 정보 조회 
+        List<SalaryLedgerVO> userSalaryList = salaryDao.getLedgerbySabun(sabun);
         
         if(userContract != null){
             if(userContract.getEnd_date() == null || userContract.getEnd_date().isEmpty()){ //사원이 정규직인지 반별
@@ -153,6 +154,7 @@ public class UserController {
         model.addAttribute("leaveLogList", userSleaveLog);
         model.addAttribute("userSalary", userSalary);
         model.addAttribute("userContract", userContract);
+        model.addAttribute("userSalaryList", userSalaryList);
         
 
         return "user/mypage";

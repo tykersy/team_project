@@ -133,6 +133,7 @@ public class SalaryController {
         vo.setSabun(Integer.parseInt(sabun));
         //모든 값들은 소수점2자리까지만 사용하도록 값 수정
         vo.setBase_pay((int) baseSalary);
+        vo.setFinalBasePay((int) finalBasePay);
         vo.setOvertime_pay(((int) overtimePay));
         vo.setMeal_pay((int) mealAllowance);
         vo.setNational_pension((int) nationalPension);

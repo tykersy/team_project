@@ -18,7 +18,7 @@ public interface SalaryDAO {
     int updateSignature(SalaryContractVO contract);
 
     //사원의 월급명세서 정보 조회
-    SalaryLedgerVO getLedgerbySabun(int sabun);
+    List<SalaryLedgerVO> getLedgerbySabun(int sabun);
 
     //사원의 정산 완료된 월급명세서 정보 조회
     SalaryLedgerVO getLedgerinfo(Map<String, Object> map);
