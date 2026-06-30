@@ -1,142 +1,120 @@
-/* 공지사항 테이블 */
-.board-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+/* 1. 전체 레이아웃: 사이드바와 메인을 수평으로 나열 */
+.layout { 
+    display: flex; 
+    width: 100%; 
+    height: 100vh; 
+    overflow: hidden; /* 레이아웃 자체의 스크롤을 막아 화면 깨짐 방지 */
+}
+
+/* 2. 메인 콘텐츠: 사이드바 너비만큼을 제외한 나머지 공간 활용 */
+.main-content {
+    flex: 1; 
+    flex: 1;
+    min-width: 800px;
+    height: 100vh; 
+    overflow-y: auto; /* 세로 스크롤 */
+    overflow-x: auto; /* 창이 좁아지면 가로 스크롤바 생성 */
+    padding: 20px;
+    background-color: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 콘텐츠를 항상 중앙으로 */
+    box-sizing: border-box;
+}
+
+/* 3. 카드 박스 */
+.content-card {
     background: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 1200px; /* 큰 화면에서는 너무 커지지 않게 */
+    min-width: 800px;  /* 작은 화면에서도 테이블 찌그러짐 방지 */
+    margin: 20px 0;
+    box-sizing: border-box;
 }
 
-.board-table th, .board-table td {
-    padding: 12px 15px;
+/* 제목: 중앙 배치 */
+.content-card h1 {
     text-align: center;
-    border-bottom: 1px solid #ededed;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #1a1a2e;
 }
 
-/* 게시판 목록에서 두 번째 열(제목)만 강제 좌측 정렬 */
-.board-table td:nth-child(2) {
-    text-align: left !important;
+/* 4. 테이블 스타일: 반응형 및 잘림 방지 */
+.board-table { 
+    width: 100%; 
+    table-layout: fixed; /* 테이블 셀 너비를 강제로 고정 */
+    border-collapse: collapse; 
+    margin-bottom: 40px; 
+}
+.board-table th { background-color: #F8FAFC !important; color: #475569 !important; padding: 15px; text-align: center; }
+.board-table td { 
+    padding: 15px; 
+    border-bottom: 1px solid #eee; 
+    text-align: center;
+    white-space: nowrap;      /* 글자 줄바꿈 금지 */
+    overflow: hidden;         /* 넘치는 부분 숨김 */
+    text-overflow: ellipsis;  /* 넘치면 ...으로 표시 */
+}
+/* 제목 열만 예외: 좌측 정렬 및 글자 줄바꿈 허용 */
+.board-table td:nth-child(2) { 
+    text-align: left; 
+    padding-left: 20px;
+    white-space: normal; 
+    overflow: visible; 
 }
 
-.board-table th {
-    background-color: #1E3A8A !important; /* !important를 추가하여 강제우선순위 */
-    color: white !important;
-    text-align: center; 
+/* 5. 검색창 + 작성 버튼 */
+.action-row {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    position: relative; /* 버튼 배치를 위해 relative 설정 */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 0 10px;
+    min-width: 300px; /* 버튼이 숨겨지지 않게 최소 너비 확보 */
 }
 
-/* 글쓰기 버튼 */
-.write-btn {
-    float: right;
-    background-color: #1E3A8A;
+/* 검색창 박스 */
+.search-box { 
+    display: flex; 
+    align-items: center; 
+    border: 1px solid #d1d5db; 
+    padding: 0 15px; 
+    width: 300px; 
+    height: 40px; 
+    background: white; 
+    border-radius: 6px;
+}
+
+.search-box input { 
+    border: none; 
+    outline: none; 
+    width: 100%; 
+    font-size: 14px; 
+}
+
+/* 작성 버튼 */
+.btn-write {
+    position: absolute; 
+    right: 0; 
+    background: #475569;
     color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    padding: 8px 20px;
+    border-radius: 4px;
     text-decoration: none;
     font-weight: bold;
+    white-space: nowrap; /* 버튼 텍스트가 줄바꿈되지 않게 */
 }
 
-/* 글쓰기 폼 스타일 */
-.write-form-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-.write-form-table th {
-    width: 15%;
-    padding: 15px;
-    background-color: #3b5bdb; 
-    color: white;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-}
-
-.write-form-table td {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-}
-
-.write-form-table input[type="text"], 
-.write-form-table textarea {
-    width: 98%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-/* 게시글 상세 본문 영역 스타일 */
-.post-content {
-    width: 100%;
-    box-sizing: border-box;
-    min-height: 300px; 
-    padding: 20px; 
-    white-space: normal;           /* HTML 태그가 여백을 관리하도록 기본값(normal)으로 설정 */
-    word-break: keep-all;          /* 한글이 음절 단위로 쪼개지지 않고 단어 단위로 줄바꿈되도록 설정 */
-    overflow-wrap: break-word;     /* 너무 긴 단어는 줄 바꿈 처리 */
-    line-height: 1.6;
-}
-
-/* 버튼 통일 공통 클래스 (Flexbox를 이용한 완벽한 크기/정렬 통일) */
-.btn-custom {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 100px;        
-    height: 44px;            
-    padding: 0 20px;         
-    border-radius: 8px; 
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    border: none;            /* 💡 기본 테두리 제거 확실히 적용 */
-    outline: none;           /* 💡 포커스 시 생기는 외곽선 제거 */
-    transition: background-color 0.2s, color 0.2s;
-    margin-left: 8px;
-    box-sizing: border-box;  /* 💡 패딩/높이가 border 포함해서 계산되도록 설정 */
-    white-space: nowrap;      
-    vertical-align: middle;  /* 💡 수직 정렬 강제화 */
-}
-
-/* 추가: 버튼 태그 자체의 기본 브라우저 스타일 초기화 */
-button.btn-custom {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-}
-
-.btn-primary {
-    background-color: #2563EB; 
-    color: white;
-}
-.btn-primary:hover { 
-    background-color: #1D4ED8; 
-}
-
-.btn-danger {
-    background-color: #DC2626; 
-    color: white;
-}
-.btn-danger:hover { 
-    background-color: #B91C1C; 
-}
-
-.btn-secondary {
-    background-color: #64748B; 
-    color: white;
-}
-.btn-secondary:hover { 
-    background-color: #475569; 
-}
-
-@media (max-width: 600px) {
-    .btn-custom {
-        min-width: 80px; /* 작은 화면에서는 최소 너비를 줄임 */
-        padding: 0 10px;
-        font-size: 13px;
-    }
-}
+/* 버튼 및 페이징 */
+.btn-sm { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; color: white; font-weight: bold; text-decoration: none; font-size: 14px; margin: 0 2px; }
+.btn-blue { background: #3b82f6; }
+.btn-red { background: #ef4444; }
+.pagination-row { text-align: center; font-weight: bold; padding: 5px 0; margin-top: 30px; } /* 페이징 간격 추가 */
+.pagination-row a { text-decoration: none; color: #333; margin: 0 10px; }
