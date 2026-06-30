@@ -34,7 +34,7 @@
 
                     defaultView: 'month', //캘린더 방식
                     useFormPopup: false, //기본 팝업 설정 끄기
-                    useDetailPopup: true, //스케쥴 디테일을 볼 수 있는 팝업
+                    useDetailPopup: false, //스케쥴 디테일을 볼 수 있는 팝업
                     gridSelection: true,
                     isReadOnly: false,
                     calendars: [ //부서별로 색깔 다르게 표시
@@ -141,7 +141,7 @@
                                 <div class="sch-no-data">
                                     <p>등록된 부서 일정이 없습니다.</p>
                                     </div>
-                                    <input type="button" value="일정 추가" onclick="/" />
+                                    <input type="button" value="일정 추가" onclick="openScheduleInsert()" />
                             `;
                         } else {
                             let html = '<ul class="sch-list-group">';
@@ -158,12 +158,13 @@
                                             \${deptBadge}
                                         </div>
                                         \${contentText}
+                                        <input type="button" value="일정 수정" onclick="openScheduleUpdate(\${item.dcal_idx})" />
+                                        <input type="button" value="일정 삭제" onclick="deleteSchedule(\${item.dcal_idx})" />
                                         </li>
-                                        <input type="button" value="일정 수정" onclick="/" />
-                                        <input type="button" value="일정 삭제" onclick="/" />
+                                        
                                 `;
                             });
-                            html += '</ul>';
+                            html += '<input type="button" value="일정 추가" onclick="openScheduleInsert()" /></ul>';
 
                             //html문장 주입
                             listContainer.innerHTML = html;
@@ -338,6 +339,92 @@
                 btn.classList.add("active");
             }
 
+            //일정 추가
+            function openScheduleInsert(){
+                document.getElementById("scheduleDetailModal").style.display = "none";
+                document.getElementById("scheduleForm").reset();
+
+                const date = document.getElementById("modalTargetDate").innerText;
+
+                document.getElementById("start_date").value = date;
+                document.getElementById("end_date").value = date;
+
+                document.getElementById("scheduleFormModal").style.display = "flex";
+            }
+
+            //일정추가 종료
+            function closeScheduleFormModal(){
+                document.getElementById("scheduleFormModal").style.display = "none";
+
+                document.getElementById("scheduleDetailModal").style.display = "block";
+            }
+
+            //일정 저장
+            function saveSchedule(){
+                const form = document.getElementById("scheduleForm");
+                const formData = new FormData(form);
+
+                const title = document.getElementById("title").value.trim();
+                const startDate = document.getElementById("start_date").value;
+                const endDate = document.getElementById("end_date").value;
+
+                if(title === ""){
+                    alert("제목을 입력하세요.");
+                    return;
+                }
+
+                if(startDate === "" || endDate === ""){
+                    alert("시작일과 종료일을 선택하세요.");
+                    return;
+                }
+
+                if(startDate > endDate){
+                    alert("종료일은 시작일보다 빠를 수 없습니다.");
+                    return;
+                }
+
+                fetch("/admin/schedule_insert", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+
+                    if(data.result === "success"){
+                        alert("일정이 추가되었습니다.");
+
+                        document.getElementById("scheduleFormModal").style.display = "none";
+
+                        if(cur_deptno == 1){
+                            allSchedule();
+                        }else{
+                            dept_sawon(cur_deptno);
+                        }
+
+                    }else{
+                        alert("일정 추가 실패");
+                    }
+                });
+            }
+
+            function deleteSchedule(dcal_idx){
+                if(!confirm("일정을 삭제하시겠습니까?")){
+                    retuen;
+                }
+                fetch("/admin/schedule_delete?dcal_idx="+dcal_idx, {method: "POST"})
+                .then(res=>res.json())
+                .then(data=>{
+                    if(data.result === "success"){
+                        alert("삭제되었습니다.")
+                        
+                        closeScheduleModal();
+                        location.reload();
+                    }else{
+                        alert("삭제실패")
+                    }
+                });
+            }
+
         </script>
     </head>
 
@@ -393,6 +480,44 @@
                 </div>
             </div>
         </div>
+
+        <div id="scheduleFormModal" class="schedule-modal-overlay"
+            style="display:none; z-index:100000;"  onclick="if(event.target==this) closeScheduleFormModal();">
+            <div class="schedule-modal-content">
+                <form id="scheduleForm">
+                    <div>
+                        <label>부서</label>
+                        <select name="deptno" id="deptno">
+                            <c:forEach var="dept" items="${dept_list}">
+                                <option value="${dept.deptno}">
+                                    ${dept.dname}
+                                </option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div>
+                        <label>제목</label>
+                        <input type="text" name="title" id="title">
+                    </div>
+                    <div>
+                        <label>시작일</label>
+                        <input type="date" name="start_date" id="start_date">
+                    </div>
+                    <div>
+                        <label>종료일</label>
+                        <input type="date" name="end_date" id="end_date">
+                    </div>
+                    <div>
+                        <label>내용</label>
+                        <textarea name="content" id="content"></textarea>
+                    </div>
+                    <button type="button" onclick="saveSchedule()">저장</button>
+                    <button type="button" onclick="closeScheduleFormModal()">취소</button>
+                </form>
+            </div>
+        </div>
+
+        
     </body>
     
 </html>
