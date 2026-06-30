@@ -25,13 +25,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!-- 사원 추가 -->
     <insert id="sawonInsert" parameterType="sawon">
-        insert into sawon(sabun, saname, deptno, pwd, sapay, sajob, sahire, saemail, satel, saaddr, sazipcode)
+        insert into sawon(sabun, saname, deptno, pwd, sajob, sahire, saemail, satel, saaddr, sazipcode)
         values(
             #{sabun},
             #{saname},
             #{deptno},
             #{pwd},
-            #{sapay},
             #{sajob},
             #{sahire},
             #{saemail},
