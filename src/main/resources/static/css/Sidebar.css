@@ -36,6 +36,9 @@ body {
     color: #ffffff;
     margin-bottom: 40px;
 }
+.logo:hover{
+    cursor: pointer;
+}
 
 .sidebar-menu {
     display: flex;
