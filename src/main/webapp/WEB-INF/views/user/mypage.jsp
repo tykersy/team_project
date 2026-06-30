@@ -60,8 +60,8 @@
                 <div class="info-item"><label>근무 요일</label><div class="val">월 ~ 금</div></div>
                 <div class="info-item"><label>출근 시간</label><div class="val mono">09:00</div></div>
                 <div class="info-item"><label>퇴근 시간</label><div class="val mono">18:00</div></div>
-                <div class="info-item"><label>기본급</label><div class="val mono"><fmt:formatNumber value="${info.sapay}" pattern="#,###" /> 원</div></div>
-                <div class="info-item"><label>연봉</label><div class="val mono"><fmt:formatNumber value="${info.sapay*12}" pattern="#,###" /> 원</div></div>
+                <div class="info-item"><label>기본급</label><div class="val mono"><fmt:formatNumber value="${info.base_pay}" pattern="#,###" /> 원</div></div>
+                <div class="info-item"><label>연봉</label><div class="val mono"><fmt:formatNumber value="${info.base_pay*12}" pattern="#,###" /> 원</div></div>
             </div>
             </div>
         
@@ -154,6 +154,7 @@
             </div>
             <div class="salary-breakdown">
                 <div class="breakdown-row"><span class="name">기본급</span><span class="amt"><fmt:formatNumber value="${userSalary.base_pay}" pattern="#,###"/></span></div>
+                <div class="breakdown-row"><span class="name">총 지급액</span><span class="amt"><fmt:formatNumber value="${userSalary.finalBasePay}" pattern="#,###"/></span></div>
                 <div class="breakdown-row"><span class="name">초과근무수당</span><span class="amt"><fmt:formatNumber value="${userSalary.overtime_pay}" pattern="#,###"/></span></div>
                 <div class="breakdown-row deduct"><span class="name">국민연금</span><span class="amt">-<fmt:formatNumber value="${userSalary.national_pension}" pattern="#,###"/></span></div>
                 <div class="breakdown-row deduct"><span class="name">건강보험</span><span class="amt">-<fmt:formatNumber value="${userSalary.health_insurance}" pattern="#,###"/></span></div>
@@ -170,11 +171,15 @@
                 <tr><th>지급월</th><th>지급일</th><th>총 지급액</th><th>공제액</th><th>실수령액</th></tr>
                 </thead>
                 <tbody>
-                <tr><td class="label">2025. 05</td><td>05. 25</td><td>3,480,000</td><td>300,000</td><td style="color:var(--green)">3,180,000</td></tr>
-                <tr><td class="label">2025. 04</td><td>04. 25</td><td>3,200,000</td><td>300,000</td><td style="color:var(--green)">2,900,000</td></tr>
-                <tr><td class="label">2025. 03</td><td>03. 25</td><td>3,200,000</td><td>300,000</td><td style="color:var(--green)">2,900,000</td></tr>
-                <tr><td class="label">2025. 02</td><td>02. 25</td><td>3,550,000</td><td>300,000</td><td style="color:var(--green)">3,250,000</td></tr>
-                <tr><td class="label">2025. 01</td><td>01. 25</td><td>3,200,000</td><td>300,000</td><td style="color:var(--green)">2,900,000</td></tr>
+                <c:forEach var="monthSalary" items="${userSalaryList}">
+                    <tr>
+                        <td class="label">${monthSalary.pay_ym}</td>
+                        <td>05. 25</td>
+                        <td><fmt:formatNumber value="${monthSalary.finalBasePay + monthSalary.overtime_pay}" pattern="#,###"/></td>
+                        <td><fmt:formatNumber value="${monthSalary.national_pension + monthSalary.health_insurance + monthSalary.employment_insurance + monthSalary.local_income_tax + monthSalary.income_tax}" pattern="#,###"/></td>
+                        <td style="color:var(--green)"><fmt:formatNumber value="${monthSalary.net_pay}" pattern="#,###"/></td>
+                    </tr>
+                </c:forEach>
                 </tbody>
             </table>
             </div>

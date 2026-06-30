@@ -144,7 +144,7 @@
                             <a href="/admin/ta_confirm" class="approval-item">
                                 <span class="approval-icon ta"></span>
                                 <span class="approval-label">근태 마감</span>
-                                <span class="approval-count ta-count">0 건</span>
+                                <span class="approval-count ta-count">${attendance} 건</span>
                             </a>
                             <a href="/admin/salary_confirm" class="approval-item">
                                 <span class="approval-icon salary"></span>

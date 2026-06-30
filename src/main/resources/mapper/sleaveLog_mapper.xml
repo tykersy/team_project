@@ -26,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!-- 연차 승인 처리 (approve상태를 1로 변경)-->
     <update id="changeApprove"
             parameterType="int">
-        update sleave_log set approve = 1 
+        update sleave_log set approve = 1, approved_at=now()
         WHERE log_id = #{log_id}
     </update>
 

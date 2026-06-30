@@ -21,6 +21,7 @@ import com.kh.project.dao.SleaveDAO;
 import com.kh.project.dao.TADAO;
 import com.kh.project.dao.UserDAO;
 import com.kh.project.vo.DeptVO;
+import com.kh.project.vo.SalaryClosedVO;
 import com.kh.project.vo.SalaryContractVO;
 import com.kh.project.vo.SawonVO;
 import com.kh.project.vo.TAVO;
@@ -66,6 +67,9 @@ public class AdminController {
         int countLedgers = salarydao.getCountLedgers(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM")));
         //전자계약 현황
         Map<String,Object> countsContract = salarydao.getCountsContract();
+        //근태마감 현황
+        String ym = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        List<SalaryClosedVO> attendanceList = tadao.getAllMonthlyTA(ym);
 
         model.addAttribute("todayTa", todayTa);
         model.addAttribute("deptAnnualUseAvg", deptAnnualUseAvg);
@@ -75,6 +79,7 @@ public class AdminController {
         model.addAttribute("countPendingLeaves", countPendingLeaves);
         model.addAttribute("countLedgers", countLedgers);
         model.addAttribute("countsContract", countsContract);
+        model.addAttribute("attendance", attendanceList.size());
         
         return "/admin_main/main";
     }

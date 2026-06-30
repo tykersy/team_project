@@ -222,12 +222,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertSalaryLedger"
             parameterType="ledger">
         INSERT INTO salary_ledger(
-            pay_ym, sabun, base_pay, overtime_pay, meal_pay,
+            pay_ym, sabun, base_pay, finalBasePay, overtime_pay, meal_pay,
             national_pension, health_insurance, long_term_care, employment_insurance,
             income_tax, local_income_tax, net_pay, status
         )
         VALUES (
-            #{pay_ym}, #{sabun}, #{base_pay}, #{overtime_pay}, #{meal_pay},
+            #{pay_ym}, #{sabun}, #{base_pay}, #{finalBasePay}, #{overtime_pay}, #{meal_pay},
             #{national_pension}, #{health_insurance}, #{long_term_care}, #{employment_insurance},
             #{income_tax}, #{local_income_tax}, #{net_pay}, '대기'
         )
