@@ -34,7 +34,10 @@
                 <div class="section-container">
                     <div class="section-header-inline">
                         <div class="section-title">${ym} 정산 대상 사원 명단</div>
-                        <button type="button" class="btn-salary-action btn-batch" onclick="approveAllSalary()">선택 사원 일괄 정산확정</button>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <input type="month" id="salaryYm" value="${ym}" onchange="changeSalaryMonth()">
+                            <button type="button" class="btn-salary-action btn-batch" onclick="approveAllSalary()">선택 사원 일괄 정산확정</button>
+                        </div>
                     </div>
 
                     <table class="data-table">
@@ -234,6 +237,11 @@
             if (event.target == modal) {
                 modal.style.display = 'none';
             }
+        }
+
+        function changeSalaryMonth(){
+            const ym = document.getElementById("salaryYm").value;
+            location.href = "/admin/salary_confirm?ym="+ym;
         }
     </script>
 </body>
