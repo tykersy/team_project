@@ -34,6 +34,8 @@ public class CalendarController {
     public String calendarMain(Integer year, Integer month, Model model){
 
         int sabun = (int)session.getAttribute("user");
+
+        boolean isLeader = calendardao.isLeader(sabun) > 0;
     
         LocalDate today = LocalDate.now();
 
@@ -103,6 +105,8 @@ public class CalendarController {
 
         int totalCell = startBlank + lastDay;
         int endBlank = totalCell % 7 == 0 ? 0 : 7 - (totalCell % 7);
+
+        model.addAttribute("isLeader", isLeader);
 
         model.addAttribute("sajob", sajob);
         model.addAttribute("prevLastDay", prevLastDay);

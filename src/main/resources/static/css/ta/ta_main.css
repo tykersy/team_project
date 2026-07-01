@@ -211,3 +211,15 @@ html::-webkit-scrollbar-thumb:hover,
 body::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
+
+.record-filter {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+}
+
+.record-filter select {
+    padding: 8px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+}

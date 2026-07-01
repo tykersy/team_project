@@ -254,13 +254,13 @@ public class SawonController {
         document.add(title);
 
         // 5. 테이블 생성 (열 개수 지정: 사번, 이름, 부서, 직급, 입사일 등 5개 기준)
-        PdfPTable table = new PdfPTable(5);
+        PdfPTable table = new PdfPTable(6);
         table.setWidthPercentage(100); // 가로 꽉 차게
         table.setSpacingBefore(10);
-        table.setWidths(new float[] {1.5f, 2f, 2.5f, 2f, 3f}); // 컬럼 너비 비율
+        table.setWidths(new float[] {1.5f, 2f, 2.5f, 2f, 3f, 3f}); // 컬럼 너비 비율
 
         // 6. 테이블 헤더 스타일 및 데이터 정의
-        String[] headers = {"사원번호", "이름", "소속부서", "직급", "입사일"};
+        String[] headers = {"사원번호", "이름", "소속부서", "직급", "입사일", "전화번호"};
         for (String header : headers) {
             PdfPCell cell = new PdfPCell(new Phrase(header, headerFont));
             cell.setBackgroundColor(new java.awt.Color(17, 24, 39)); // 기존 테마 컬러인 다크 그레이 (#111827) 느낌 적용

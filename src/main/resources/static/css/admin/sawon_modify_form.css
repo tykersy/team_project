@@ -174,3 +174,173 @@
         transform: translateY(-1px);
         box-shadow: 0 4px 6px rgba(0,0,0,0.15);
     }
+@charset "UTF-8";
+
+/* ─── 레이아웃 구조 (사이드바 연동) ─── */
+.manager-container {
+    display: flex;   
+    min-height: 100vh;
+    width: 100%;
+    background-color: #F8FAFC; /* 사이드바와 통일된 연한 회색 배경 */
+}
+
+/* 메인 콘텐츠 영역 (규격 1400px 세팅) */
+.main-content {
+    flex: 1;            
+    padding: 40px 45px;  
+    box-sizing: border-box;
+    max-width: 1400px;   
+    margin: 0;          
+}
+
+/* ─── 상단 헤더 영역 ─── */
+.page-title-section {
+    margin-bottom: 24px;
+}
+
+.page-title-section h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0 0 6px 0;
+}
+
+.page-title-section p {
+    font-size: 14px;
+    color: #64748B;
+    margin: 0 0 20px 0;
+} 
+
+.title-divider {
+    border: 0;
+    height: 1px;
+    background-color: #E2E8F0;
+    margin: 0;
+}
+
+/* ─── 입력 폼 카드 레이아웃 (흰색 보드판 효과) ─── */
+form {
+    background: #FFFFFF; 
+    border-radius: 16px; 
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    border: 1px solid #E2E8F0;
+    padding: 36px;
+    max-width: 1000px; /* 입력 폼이 너무 퍼지지 않도록 안정적인 크기 제한 */
+}
+
+/* 폼 내부 레이아웃 구조 */
+.form-grid {
+    display: block; /* WeasyPrint 및 구형 브라우저 호환을 위해 블록화 후 여백 제어 */
+}
+
+/* 각 입력 항목 그룹 */
+.form-group {
+    margin-bottom: 24px;
+}
+
+/* 라벨 스타일 */
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+}
+
+/* 에러 메시지 텍스트 (기존 font태그 대신 스타일 처리) */
+.form-group label .error-msg {
+    font-size: 12px;
+    color: #EF4444; /* 부드러운 레드 */
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+/* ─── 입력 요소 (컨트롤러) 스타일 ─── */
+.form-control {
+    width: 100%;
+    height: 46px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #1E293B;
+    background-color: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+/* 입력 필드 포커스 및 마우스 호버 효과 */
+.form-control:hover {
+    border-color: #94A3B8;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #111827; /* 미드나잇 블랙으로 포커스 하이라이트 */
+    box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+}
+
+/* 읽기 전용(변경 불가) 필드 스타일 */
+.form-control[readonly] {
+    background-color: #F1F5F9;
+    color: #64748B;
+    border-color: #E2E8F0;
+    cursor: not-allowed;
+}
+
+/* select 요소 내부 패딩 보정 */
+select.form-control {
+    cursor: pointer;
+    appearance: none; /* 브라우저 기본 화살표 제거 후 커스텀 적용 가능 상태로 */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+/* ─── 하단 버튼 그룹 ─── */
+.form-btn-group {
+    display: flex;
+    justify-content: flex-end; /* 우측 정렬 */
+    gap: 12px;
+    margin-top: 36px;
+    border-top: 1px solid #E2E8F0;
+    padding-top: 24px;
+}
+
+.form-btn-group input[type="button"] {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+/* 수정 완료 버튼 (메인 포인트 테마) */
+.form-btn-group input[type="button"].btn-submit {
+    background-color: #111827; /* [포인트] 진한 미드나잇 블랙 */
+    color: #FFFFFF;
+    border: 1px solid #111827;
+}
+
+.form-btn-group input[type="button"].btn-submit:hover {
+    background-color: #1F2937;
+    border-color: #1F2937;
+}
+
+/* 뒤로가기 버튼 (서브 테마) */
+.form-btn-group input[type="button"].btn-back {
+    background-color: #FFFFFF;
+    color: #475569;
+    border: 1px solid #CBD5E1;
+}
+
+.form-btn-group input[type="button"].btn-back:hover {
+    background-color: #F1F5F9;
+    color: #1E293B;
+    border-color: #94A3B8;
+}

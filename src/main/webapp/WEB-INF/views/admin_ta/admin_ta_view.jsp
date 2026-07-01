@@ -5,11 +5,10 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title></title>
+        <title>${sawon.saname} 근태 현황</title>
         <link rel="stylesheet" href="/css/admin/sidebar.css">
         <link rel="stylesheet" href="/css/admin/main.css">
-        <link rel="stylesheet" href="/css/admin/today_ta.css">
-
+        <link rel="stylesheet" href="/css/admin/ta_view.css">
     </head>
     <body>
         <div class="manager-container">
@@ -30,7 +29,6 @@
                         <button type="submit" class="btn-view">조회</button>
                     </form>
 
-                    <!-- 근태가 아직 마감되지 않은 사원만 수정버튼 보여주기 -->
                     <c:if test="${approved == 'show'}">
                         <button type="button" class="btn-ta-modify" 
                                 onclick="location.href='/admin/ta_modify_form?sabun=${sawon.sabun}&ym=${ym}'">
@@ -39,20 +37,24 @@
                     </c:if>
                 </div>
 
-                <table>
+                <table class="data-table">
+                    <colgroup>
+                        <col style="width: 25%;">
+                        <col style="width: 25%;">
+                        <col style="width: 25%;">
+                        <col style="width: 25%;">
+                    </colgroup>
                     <thead>
                         <tr>
-                            <th></th>
                             <th>날짜</th>
                             <th>출근</th>
                             <th>퇴근</th>
-                            <th>비고</th>
+                            <th>비고</th> 
                         </tr>
                     </thead>
                     <tbody>
                         <c:forEach var="ta" items="${userTaList}">
                             <tr>
-                                <td></td>
                                 <td>${ta.day}</td>
                                 <td>${ta.checkin}</td>
                                 <td>${ta.checkout}</td>

@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/css/board.css">
     <style>
         .board-table th, .board-table td { text-align: center; }
+        .btn-primary:hover { background-color: #0056b3 !important; }
     </style>
 </head>
 <body>
@@ -24,6 +25,7 @@
             <div class="dashboard-container">
                 <div class="panel" style="width: 100%;">
                     <h1 style="text-align: center;">공지사항</h1>
+                    
                     <table class="board-table">
                         <thead>
                             <tr>
@@ -34,7 +36,6 @@
                                 <th width="10%">조회수</th>
                             </tr>
                         </thead>
-
                         <tbody>
                             <c:forEach var="board" items="${boardList}">
                                 <tr>
@@ -47,7 +48,6 @@
                                     <td>${board.views}</td>
                                 </tr>
                             </c:forEach>
-
                             <c:if test="${empty boardList}">
                                 <tr>
                                     <td colspan="5" style="text-align: center; padding: 20px;">등록된 공지사항이 없습니다.</td>
@@ -56,13 +56,23 @@
                         </tbody>
                     </table>
 
-                    <div style="display: flex; justify-content: center; margin: 30px 0;">
+                    <%-- 검색창과 작성 버튼을 한 줄로 배치하는 영역 --%>
+                    <div style="display: flex; justify-content: center; align-items: center; margin: 30px 0; position: relative;">
+                        
+                        <%-- 검색창 --%>
                         <form action="/board/list" method="get" style="display: flex; align-items: center; border: 1px solid #ccc; padding: 0 15px; width: 300px; height: 40px; background: white;">
                             <input type="text" name="keyword" value="${keyword}" placeholder="Search" style="border: none; outline: none; width: 100%; height: 100%; padding: 5px; font-size: 14px;">
                             <button type="submit" style="border: none; background: none; cursor: pointer; color: #888; font-size: 16px;">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </button>
                         </form>
+
+                        <%-- 작성 버튼 --%>
+                        <c:if test="${loginMember.sajob == '팀장' || loginMember.sabun == 1}">
+                            <div style="position: absolute; right: 0;">
+                                <a href="/board/write" class="btn-custom btn-primary" style="font-size: 16px; padding: 0 30px;">작성</a>
+                            </div>
+                        </c:if>
                     </div>
 
                     <div style="text-align: center; margin-bottom: 30px;">

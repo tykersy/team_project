@@ -1,332 +1,117 @@
-*, *::before, *::after {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-            }
-            
-            body {
-                font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
-                background-color: #f0f2f5;
-                color: #222831;
-                font-size: 14px;
-                line-height: 1.6;
-            }
-            
-            /* ============================
-            레이아웃
-            ============================ */
-            
-            .manager-container {
-                display: flex;
-                min-height: 100vh;
-            }
-            
-            .main-content {
-                flex: 1;
-                padding: 32px 36px;
-                overflow-x: hidden;
-                min-width: 0;
-            }
-            
-            /* ============================
-            페이지 타이틀 영역
-            ============================ */
-            
-            .page-header {
-                margin-bottom: 24px;
-            }
-            
-            .page-title {
-                font-size: 20px;
-                font-weight: 700;
-                color: #111827;
-                letter-spacing: -0.3px;
-            }
-            
-            /* ============================
-            부서 필터 버튼
-            ============================ */
-            
-            .dept-filter-wrap {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 8px;
-                margin-bottom: 20px;
-            }
-            
-            .main-content > input[type="button"] {
-                display: inline-block;
-                margin: 0 6px 8px 0;
-                padding: 7px 20px;
-                font-family: inherit;
-                font-size: 13px;
-                font-weight: 500;
-                color: #4a5568;
-                background: #ffffff;
-                border: 1px solid #dde1e9;
-                border-radius: 6px;
-                cursor: pointer;
-                transition: all 0.15s ease;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-            }
-            
-            .main-content > input[type="button"]:hover {
-                background: #1a56db;
-                color: #ffffff;
-                border-color: #1a56db;
-                box-shadow: 0 2px 6px rgba(26,86,219,0.25);
-            }
-            
-            .main-content > input[type="button"]:active {
-                background: #1346c0;
-                border-color: #1346c0;
-                transform: scale(0.98);
-            }
-            
-            /* ============================
-            카드 컨테이너
-            ============================ */
-            
-            .table-card {
-                background: #ffffff;
-                border-radius: 12px;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
-                overflow: hidden;
-                border: 1px solid #eaecf0;
-            }
-            
-            /* ============================
-            근태 테이블
-            ============================ */
-            
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 20px;
-                background: #ffffff;
-                border-radius: 12px;
-                overflow: hidden;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
-                border: 1px solid #eaecf0;
-            }
-            
-            caption {
-                caption-side: top;
-                font-size: 16px;
-                font-weight: 700;
-                color: #1a2035;
-                text-align: left;
-                padding: 0 0 14px 2px;
-                letter-spacing: -0.2px;
-            }
-            
-            thead tr {
-                background: #f8f9fb;
-                border-bottom: 1.5px solid #eaecf0;
-            }
-            
-            th {
-                padding: 13px 20px;
-                font-size: 12px;
-                font-weight: 600;
-                color: #6b7280;
-                text-align: left;
-                white-space: nowrap;
-                letter-spacing: 0.04em;
-                text-transform: uppercase;
-            }
-            
-            th:first-child {
-                padding-left: 28px;
-            }
-            
-            tbody tr {
-                border-bottom: 1px solid #f3f4f6;
-                transition: background 0.1s;
-            }
-            
-            tbody tr:last-child {
-                border-bottom: none;
-            }
-            
-            tbody tr:hover {
-                background: #f8faff;
-            }
-            
-            td {
-                padding: 14px 20px;
-                font-size: 14px;
-                color: #374151;
-                vertical-align: middle;
-            }
-            
-            td:first-child {
-                padding-left: 28px;
-                font-weight: 600;
-                color: #1a2035;
-            }
+/* ──────────────────────────────────────────────────
+   [올해 근태 현황 전용 고정 레이아웃 CSS]
+   ────────────────────────────────────────────────── */
 
-            td:first-child > a{
-                text-decoration-line:none;
-                color: #1a2035;
-            }
+/* 1. 상단 타이틀 밑줄 효과 (화면 끝까지 길게 배치) */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #E2E8F0; /* 타이틀 바로 아래 길게 그어지는 구분선 */
+    width: 100%;
+}
 
-            td:first-child > a:hover{
-                cursor: pointer;
-                color: #435287;
-            }
-            
-            /* 입사일 열 */
-            td:nth-child(2) {
-                color: #9ca3af;
-                font-size: 13px;
-            }
-            
-            /* 정상 */
-            .tag.normal {
-                font-weight: 600;
-                color: #0d9488;
-            }
-            
-            /* 지각 */
-            .tag.late {
-                font-weight: 600;
-                color: #f59e0b;
-            }
-            
-            /* 결근 */
-            .tag.absent{
-                font-weight: 600;
-                color: #ef4444;
-            }
-            
-            /* 휴가, 반차 */
-            .tag.leave,
-            .tag.half {
-                font-weight: 600;
-                color: cornflowerblue;
-            }
-            
-            /* 숫자 배지 스타일 */
-            td:nth-child(3) span,
-            td:nth-child(4) span,
-            td:nth-child(5) span {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                min-width: 28px;
-                padding: 2px 10px;
-                border-radius: 20px;
-                font-size: 12px;
-                font-weight: 600;
-            }
-            
-            /* ============================
-            빈 데이터 상태
-            ============================ */
-            
-            tbody tr.empty-row td {
-                text-align: center;
-                color: #9ca3af;
-                font-size: 14px;
-                padding: 3rem;
-            }
-            
-            /* ============================
-            반응형
-            ============================ */
-            
-            @media (max-width: 1024px) {
-                .main-content {
-                    padding: 24px 20px;
-                }
-            }
-            
-            @media (max-width: 768px) {
-                .main-content {
-                    padding: 16px 14px;
-                }
-            
-                th, td {
-                    padding: 10px 12px;
-                }
-            
-                th:first-child, td:first-child {
-                    padding-left: 16px;
-                }
-            
-                caption {
-                    font-size: 15px;
-                }
-            }
+/* 2. ★ 세로 막대 완벽 제거 및 폰트 크기/위치 동기화 */
+.title-area h2 {
+    color: #111827;
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    font-size: 24px;               /* 부서 관리 제목 크기와 고정 매칭 */
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+    padding: 0 !important;         /* 왼쪽 여백 완전 제거로 덜컹거림 해결 */
+    border-left: none !important;     /* 검은색 세로 막대 효과 삭제 */
+}
 
-            /* 🌟 상단 제목 래퍼 */
-            .page-header {
-                margin-bottom: 20px;
-                border-bottom: 2px solid #e2e8f0;
-                padding-bottom: 15px;
-            }
-            .page-header h2 {
-                margin: 0;
-                font-size: 24px;
-                color: #111827;
-            }
+/* 3. 구분선 아래 배치되는 부서 버튼 그룹 전체 래퍼 */
+.controls-wrapper {
+    width: 100%;
+    margin-bottom: 24px;
+}
 
-            /* 🌟 [새로 추가] 년월 선택 및 버튼을 양 끝으로 찢어주는 컨트롤러 바 */
-            .ta-control-bar {
-                display: flex;
-                justify-content: space-between; /* 왼쪽 요소와 오른쪽 요소를 양 끝으로 밀어냄 */
-                align-items: center;
-                background-color: #ffffff;
-                padding: 16px 24px;
-                border-radius: 8px;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-                margin-bottom: 25px;
-                box-sizing: border-box;
-                width: 100%; /* 부모 너비 꽉 채우기 */
-            }
+.dept-filters {
+    display: flex;
+    gap: 8px;
+    background: #ffffff;
+    padding: 14px 20px;
+    border-radius: 10px;
+    border: 1px solid #E2E8F0;
+}
 
-            /* 왼쪽 년월 선택기 폼 */
-            .search-form {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-            .search-form label {
-                font-size: 14px;
-                font-weight: 600;
-                color: #111827;
-            }
-            .search-form input[type="month"] {
-                padding: 8px 12px;
-                border: 1px solid #cbd5e1;
-                border-radius: 6px;
-                font-size: 14px;
-                color: #111827; /* 🌟 텍스트 입력값도 통일 */
-                outline: none;
-            }
-            .btn-view {
-                background-color: #475569;
-                color: #ffffff;
-                border: none;
-                padding: 8px 14px;
-                border-radius: 6px;
-                cursor: pointer;
-                font-size: 14px;
-            }
-            .btn-view:hover { background-color: #334155; }
+/* c:forEach로 출력되는 실제 동적 버튼들의 스타일 커스텀 */
+.dept-filters input[type="button"] {
+    background-color: #F8FAFC;
+    color: #64748B;
+    border: 1px solid #E2E8F0;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
 
-            /* 오른쪽 수정하기 버튼 */
-            .btn-ta-modify {
-                background-color: #111827;
-                color: #ffffff;
-                border: none;
-                padding: 10px 18px;
-                font-size: 14px;
-                font-weight: 600;
-                border-radius: 6px;
-                cursor: pointer;
-                box-shadow: 0 2px 4px rgba(37, 99, 235, 0.15);
-                transition: background-color 0.2s ease;
-            }
-            .btn-ta-modify:hover { background-color: #010d2e; }
+.dept-filters input[type="button"]:hover {
+    background-color: #F1F5F9;
+    color: #0F172A;
+}
+
+/* 4. 아래 테이블 카드 래퍼 스타일 */
+.content-card {
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.data-table th {
+    background-color: #F8FAFC;
+    color: #475569;
+    font-weight: 600;
+    padding: 12px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.data-table td {
+    padding: 16px;
+    font-size: 14px;
+    color: #334155;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+/* 1. 테이블 기본 칸 구조 유지 및 정렬 */
+.data-table td.tag {
+    vertical-align: middle;
+    padding: 16px 12px !important; /* 위아래 여백을 주어 행 높이를 깔끔하게 정돈 */
+    font-weight: 700;              /* 숫자가 눈에 잘 띄도록 두께감 부여 */
+    font-size: 15px;               /* 가독성을 위한 최적의 크기 */
+    background: none !important;    /* 배경색 완전 제거 (흰색 유지) */
+    border: none !important;        /* 불필요한 테두리 완전 제거 */
+}
+
+/* 2. 각 근태 상태별 숫자 글자색(Font Color)만 명확하게 타겟팅 */
+.data-table td.tag.normal {
+    color: #2E7D32 !important; /* 정상: 그린 */
+}
+
+.data-table td.tag.leave {
+    color: #1565C0 !important; /* 휴가/반차: 블루 */
+}
+
+.data-table td.tag.late {
+    color: #E65100 !important; /* 지각: 딥 오렌지 */
+}
+
+.data-table td.tag.absent {
+    color: #C62828 !important; /* 결근: 레드 */
+}

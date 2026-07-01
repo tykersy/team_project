@@ -147,8 +147,7 @@ input[name="saaddr"] {
 }
 
 /* 사번·급여 - mono 폰트 */
-input[name="sabun"],
-input[name="sapay"] {
+input[name="sabun"] {
   font-family: 'DM Mono', monospace;
 }
 
