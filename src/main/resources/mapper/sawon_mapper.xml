@@ -20,7 +20,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="sawonView"
             parameterType="int"
             resultType="sawon">
-        select * from sawon where sabun = #{sabun}
+        SELECT
+            s.sabun,
+            s.deptno,
+            s.saname,
+            s.sajob,
+            s.saemail,
+            s.satel,
+            s.sahire,
+            s.saaddr,
+            s.sastatus,
+            s.sazipcode,
+            d.dname,
+            sc.base_salary AS base_pay
+        FROM sawon s
+        JOIN dept d
+            ON s.deptno = d.deptno
+        LEFT JOIN salary_contract sc
+            ON sc.contract_id = (
+                SELECT contract_id
+                FROM salary_contract
+                WHERE sabun = s.sabun
+                ORDER BY created_at DESC
+                LIMIT 1
+            )
+        WHERE s.sabun = #{sabun};
     </select>
 
     <!-- 사원 추가 -->
@@ -49,16 +73,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!-- 사원 정보 수정 -->
     <update id="sawonUpdate"
             parameterType="sawon">
-        update sawon set saname = #{saname},
-                         deptno = #{deptno},
-                         pwd = #{pwd},
-                         sapay = #{sapay},
-                         sajob = #{sajob},
-                         sahire = #{sahire},
-                         saemail = #{saemail},
-                         satel = #{satel},
-                         saaddr = #{saaddr},
-                         sazipcode = #{sazipcode}
+        update
+            sawon
+        set 
+            saname = #{saname},
+            deptno = #{deptno},
+            pwd = #{pwd},
+            sajob = #{sajob},
+            sahire = #{sahire},
+            saemail = #{saemail},
+            satel = #{satel},
+            saaddr = #{saaddr},
+            sazipcode = #{sazipcode}
         where sabun = #{sabun}
     </update>
 

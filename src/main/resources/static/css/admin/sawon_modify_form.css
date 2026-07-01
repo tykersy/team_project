@@ -89,7 +89,7 @@
             background-color: #f3f4f6;
             color: #9ca3af;
             border-color: #e5e7eb;
-            cursor: not-allowed;
+            pointer-events: none;
         }
 
         /* 하단 버튼 영역 */

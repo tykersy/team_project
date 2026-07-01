@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Alias("sawon")
 public class SawonVO {
     
-    private int sabun, deptno, sapay;
+    private int sabun, deptno;
     private String saname, pwd, sajob, sahire, saemail, satel, saaddr;
     private String sazipcode;
     private String saretire;
@@ -21,5 +21,7 @@ public class SawonVO {
     private String dname; // join용 
 
     private String onlineStatus; // 온라인 상태 확인
+
+    private long base_pay;
 
 }
