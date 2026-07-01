@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -65,8 +66,10 @@
         <h3>서 명 란</h3>
         <canvas id="signaturePad" width="400" height="150"></canvas>
         <div class="btn-group">
-            <button type="button" class="btn btn-clear" onclick="clearCanvas()">지우기</button>
-            <button type="button" class="btn btn-submit" onclick="submitSignature('${contract.contract_id}', '${contract.sabun}')">계약서 서명제출</button>
+            <c:if test="${contract.signed_at eq null}">
+                <button type="button" class="btn btn-clear" onclick="clearCanvas()">지우기</button>
+                <button type="button" class="btn btn-submit" onclick="submitSignature('${contract.contract_id}', '${contract.sabun}')">계약서 서명제출</button>
+            </c:if>
         </div>
     </div>
 </div>

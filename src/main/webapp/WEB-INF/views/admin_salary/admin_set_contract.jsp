@@ -133,9 +133,11 @@
             })
             .then(response => response.json())
             .then(data => {
-                if(data.res > 0) {
+                if(data.res == 1) {
                     alert("계약 정보가 성공적으로 등록되었습니다.");
-                } else {
+                }else if(data.res == 2){
+                    alert("이미 존재하는 근로계약서입니다.");
+                }else {
                     alert("등록 실패. 사원번호나 기간을 확인하세요.");
                 }
             })

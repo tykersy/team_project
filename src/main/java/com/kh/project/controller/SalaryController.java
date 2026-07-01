@@ -274,12 +274,34 @@ public class SalaryController {
         System.out.println("계약 요청 사번 : " + vo.getSabun());
         System.out.println("기본급 : " + vo.getBase_salary());
 
-        int res = salaryDao.insertContract(vo);
-
         Map<String, Object> map = new HashMap<>();
-        map.put("res", res);
 
-        //성공시 1, 실패시 0반환
+        // 현재 활성 계약서 조회 (정규직: start 이후 무기한, 계약직: start~end 범위 내)
+        SalaryContractVO existContract = salaryDao.getContractBySabun(vo.getSabun());
+
+        if(existContract != null){
+            String existEndDate = existContract.getEnd_date();
+
+            if(existEndDate == null || existEndDate.isBlank()){
+                // 기존 계약이 정규직 → 무조건 차단
+                map.put("res", 2);
+                return map;
+            }
+
+            // 기존 계약이 계약직 → 새 시작일이 기존 종료일 이후여야 허용
+            LocalDate newStartDate = LocalDate.parse(vo.getStart_date());
+            LocalDate existEnd = LocalDate.parse(existEndDate);
+
+            if(!newStartDate.isAfter(existEnd)){
+                // 기간 겹침 → 차단
+                map.put("res", 2);
+                return map;
+            }
+            // newStartDate > existEnd → 기간 겹치지 않음, 등록 허용
+        }
+
+        int res = salaryDao.insertContract(vo);
+        map.put("res", res);
         return map;
 
     }

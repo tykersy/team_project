@@ -8,18 +8,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectUser" resultType="sawon">
     SELECT * FROM sawon s 
     LEFT JOIN dept d ON s.deptno = d.deptno 
-    WHERE s.sabun = #{sabun};
+    WHERE s.sabun = #{sabun} AND s.sastatus='재직';
     </select>
 
     <!-- 마이페이지 조회 -->
     <select id="userMyPage" parameterType="int" resultType="user">
         select s.sabun, s.deptno ,s.saname, s.sajob , s.saemail ,s.satel , s.sahire , s.saaddr, s.sastatus, s.sazipcode,
-	           d.dname , sl.base_pay
+	           d.dname , sc.base_salary as base_pay
         from
             sawon as s join dept as d
             on s.deptno = d.deptno
-            join salary_ledger sl
-            on sl.sabun = s.sabun
+            left join salary_contract sc
+            on sc.sabun = s.sabun
         where s.sabun=#{sabun}
     </select>
 

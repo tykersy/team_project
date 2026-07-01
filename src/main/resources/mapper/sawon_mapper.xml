@@ -65,10 +65,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <!-- 사원삭제 -->
-    <delete id="sawonDelete"
+    <update id="sawonDelete"
             parameterType="int">
-        delete from sawon where sabun = #{sabun}
-    </delete>
+        update sawon set sastatus="퇴직" where sabun = #{sabun}
+    </update>
 
     <!-- 사원 정보 수정 -->
     <update id="sawonUpdate"
