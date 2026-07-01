@@ -153,13 +153,15 @@
                 <div class="unit"> 원 (실수령액)</div>
             </div>
             <div class="salary-breakdown">
-                <div class="breakdown-row"><span class="name">기본급</span><span class="amt"><fmt:formatNumber value="${userSalary.base_pay}" pattern="#,###"/></span></div>
-                <div class="breakdown-row"><span class="name">총 지급액</span><span class="amt"><fmt:formatNumber value="${userSalary.finalBasePay}" pattern="#,###"/></span></div>
-                <div class="breakdown-row"><span class="name">초과근무수당</span><span class="amt"><fmt:formatNumber value="${userSalary.overtime_pay}" pattern="#,###"/></span></div>
-                <div class="breakdown-row deduct"><span class="name">국민연금</span><span class="amt">-<fmt:formatNumber value="${userSalary.national_pension}" pattern="#,###"/></span></div>
-                <div class="breakdown-row deduct"><span class="name">건강보험</span><span class="amt">-<fmt:formatNumber value="${userSalary.health_insurance}" pattern="#,###"/></span></div>
-                <div class="breakdown-row deduct"><span class="name">고용보험</span><span class="amt">-<fmt:formatNumber value="${userSalary.employment_insurance}" pattern="#,###"/></span></div>
-                <div class="breakdown-row deduct"><span class="name">소득세</span><span class="amt">-<fmt:formatNumber value="${userSalary.income_tax + userSalary.local_income_tax}" pattern="#,###"/></span></div>
+                <c:if test="${userSalary ne null}">
+                    <div class="breakdown-row"><span class="name">기본급</span><span class="amt"><fmt:formatNumber value="${userSalary.base_pay}" pattern="#,###"/></span></div>
+                    <div class="breakdown-row"><span class="name">총 지급액</span><span class="amt"><fmt:formatNumber value="${userSalary.finalBasePay}" pattern="#,###"/></span></div>
+                    <div class="breakdown-row"><span class="name">초과근무수당</span><span class="amt"><fmt:formatNumber value="${userSalary.overtime_pay}" pattern="#,###"/></span></div>
+                    <div class="breakdown-row deduct"><span class="name">국민연금</span><span class="amt">-<fmt:formatNumber value="${userSalary.national_pension}" pattern="#,###"/></span></div>
+                    <div class="breakdown-row deduct"><span class="name">건강보험</span><span class="amt">-<fmt:formatNumber value="${userSalary.health_insurance}" pattern="#,###"/></span></div>
+                    <div class="breakdown-row deduct"><span class="name">고용보험</span><span class="amt">-<fmt:formatNumber value="${userSalary.employment_insurance}" pattern="#,###"/></span></div>
+                    <div class="breakdown-row deduct"><span class="name">소득세</span><span class="amt">-<fmt:formatNumber value="${userSalary.income_tax + userSalary.local_income_tax}" pattern="#,###"/></span></div>
+                </c:if>
                 <div class="breakdown-row total"><span class="name">실수령액</span><span class="amt"><fmt:formatNumber value="${userSalary.net_pay}" pattern="#,###"/></span></div>
             </div>
             </div>

@@ -18,7 +18,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             c_member.joined_at,
             lm.sent_at,
             lm.content AS last_message,
-            DATE_FORMAT(lm.sent_at, '%H:%i') AS last_message_time,
+            CASE
+                WHEN DATE(lm.sent_at) = CURDATE()
+                    THEN DATE_FORMAT(lm.sent_at, '%H:%i')
+                ELSE
+                    DATE_FORMAT(lm.sent_at, '%Y-%m-%d')
+            END AS last_message_time,
             c_member.liked
         FROM chat_room c_room
 
@@ -105,7 +110,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             c_member.joined_at,
             lm.sent_at,
             lm.content AS last_message,
-            DATE_FORMAT(lm.sent_at, '%H:%i') AS last_message_time,
+            CASE
+                WHEN DATE(lm.sent_at) = CURDATE()
+                    THEN DATE_FORMAT(lm.sent_at, '%H:%i')
+                ELSE
+                    DATE_FORMAT(lm.sent_at, '%Y-%m-%d')
+            END AS last_message_time,
             c_member.liked
         FROM chat_room c_room
 

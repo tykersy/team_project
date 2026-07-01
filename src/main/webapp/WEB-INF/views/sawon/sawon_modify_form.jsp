@@ -44,10 +44,10 @@
 
                 let saname = f.saname.value;
                 let deptno = f.deptno.value;
-
                 let sabun = f.sabun.value;
                 let new_pwd = f.new_pwd.value;
                 let sajob = f.sajob.value;
+                let sapay = f.base_pay.value;
                 let sahire = f.sahire.value;
                 let saemail = f.saemail.value;
                 let satel = f.satel.value;
@@ -181,7 +181,9 @@
                         <div class="form-group">
                             <label for="deptno">부서</label>
                             <c:if test="${sawon.deptno eq 1}">
-                                <input class="form-control" placeholder="관리자" readonly="readonly"/>
+                                <select id="deptno" name="deptno" class="form-control" required readonly>
+                                    <option value="${deptList[0].deptno}">${deptList[0].dname}</option>
+                                </select>
                             </c:if>
                             <c:if test="${sawon.deptno ne 1}">
                                 <select id="deptno" name="deptno" class="form-control" required>
@@ -202,6 +204,17 @@
                         </div>
 
                         <div class="form-group">
+
+                            <label for="salary">월급 (원)
+                                <font size="1" color="red">
+                                    <span id="error_sapay"></span></font>
+                            </label>
+
+                            <input type="number" id="salary" name="base_pay" class="form-control" value="${sawon.base_pay}" readonly>
+                        </div>
+
+                        <div class="form-group">
+
                             <label for="hireDate">입사일
                                 <span id="error_sahire" class="error-msg"></span>
                             </label>

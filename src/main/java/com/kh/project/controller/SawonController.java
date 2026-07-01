@@ -172,15 +172,13 @@ public class SawonController {
         //직급 변경 선택을 위한 직급목록
         List<JobPositionVO> jobList = jobDao.allJob();
 
-        System.out.println(jobList);
-
         
         //바인딩 및 포워딩
         model.addAttribute("sawon", sawon);
         model.addAttribute("deptList", deptList);
 
         model.addAttribute("jobList", jobList);
-        return "/sawon/sawon_modify_form";
+        return "sawon/sawon_modify_form";
 
     }
 

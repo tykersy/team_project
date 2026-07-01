@@ -22,4 +22,6 @@ public class SawonVO {
 
     private String onlineStatus; // 온라인 상태 확인
 
+    private long base_pay;
+
 }
