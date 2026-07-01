@@ -223,8 +223,10 @@ public class UserController {
             );
             // 겹침 조건: 신청시작 <= 기존종료 AND 신청종료 >= 기존시작
             if (!startDate.isAfter(existEnd) && !endDate.isBefore(existStart)) {
-                map.put("result", "overlap");  // 날짜 중복
-                return map;
+                if(leavelog.getApprove() != 2){
+                    map.put("result", "overlap");  // 날짜 중복
+                    return map;
+                }
             }
         }
 

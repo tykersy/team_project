@@ -170,13 +170,12 @@
             <div class="card-title"><span class="dot"></span>급여 내역</div>
             <table>
                 <thead>
-                <tr><th>지급월</th><th>지급일</th><th>총 지급액</th><th>공제액</th><th>실수령액</th></tr>
+                <tr><th>지급월</th><th>총 지급액</th><th>공제액</th><th>실수령액</th></tr>
                 </thead>
                 <tbody>
                 <c:forEach var="monthSalary" items="${userSalaryList}">
                     <tr>
                         <td class="label">${monthSalary.pay_ym}</td>
-                        <td>05. 25</td>
                         <td><fmt:formatNumber value="${monthSalary.finalBasePay + monthSalary.overtime_pay}" pattern="#,###"/></td>
                         <td><fmt:formatNumber value="${monthSalary.national_pension + monthSalary.health_insurance + monthSalary.employment_insurance + monthSalary.local_income_tax + monthSalary.income_tax}" pattern="#,###"/></td>
                         <td style="color:var(--green)"><fmt:formatNumber value="${monthSalary.net_pay}" pattern="#,###"/></td>
@@ -254,7 +253,12 @@
                                                     <c:otherwise>기타</c:otherwise>
                                                 </c:choose>
                                             </td>
-                                            <td>${log.use_date}</td>
+                                            <td>
+                                                ${log.use_date}
+                                                <c:if test="${log.end_date ne log.use_date}">
+                                                    ~ ${log.end_date}
+                                                </c:if>
+                                            </td>
                                             <td>${log.use_days} 일</td>
                                             <td>${log.reason}</td>
                                             <td>
@@ -262,7 +266,7 @@
                                                     <span class="tag normal">승인완료</span>
                                                 </c:if>
                                                 <c:if test="${log.approve eq 2}">
-                                                    <span class="tag absent">반려</span>
+                                                    <span class="tag absent reject-tag" data-reason="${log.reject_reason}">반려</span>
                                                 </c:if>
                                                 <c:if test="${log.approve eq 0}" >
                                                     <span class="tag early">승인중</span>

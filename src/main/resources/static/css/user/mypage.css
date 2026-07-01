@@ -272,6 +272,47 @@
   .tag.late    { background: rgba(245,158,11,0.12);  color: var(--yellow); }
   .tag.absent  { background: rgba(239,68,68,0.12);   color: var(--red); }
   .tag.early   { background: rgba(37,99,235,0.10);  color: var(--accent); }
+
+  /* 반려 사유 툴팁 */
+  .reject-tag {
+    position: relative;
+    cursor: help;
+  }
+  .reject-tag::after {
+    content: attr(data-reason);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a202c;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 400;
+    white-space: nowrap;
+    padding: 5px 10px;
+    border-radius: 6px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 10;
+  }
+  .reject-tag::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 1px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #1a202c;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 10;
+  }
+  .reject-tag:hover::after,
+  .reject-tag:hover::before {
+    opacity: 1;
+  }
  
   /* ── Salary ── */
   .salary-hero {
