@@ -38,31 +38,48 @@
     <body>
         <div class="manager-container">
             <jsp:include page="/WEB-INF/views/admin_common/admin_sidebar.jsp"/>
+            
             <div class="main-content">
+                
+                <div class="page-header">
+                    <div class="title-area">
+                        <h2>올해 근태 현황</h2>
+                    </div>
+                </div>
 
-                <c:forEach var="dept" items="${deptList}">
-                    <input type="button" value="${dept.dname}"
-                        onclick="today_ta(${dept.deptno})" />
-                </c:forEach>
-                <table>
-                    <caption>
-                        이번년도 근태 현황
-                    </caption>
-                    <thead>
-                        <tr>
-                            <th>이름</th>
-                            <th>입사일</th>
-                            <th>정상</th>
-                            <th>휴가/반차</th>
-                            <th>지각</th>
-                            <th>결근</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ta-tbody">
-                            
-                    </tbody>
+                <div class="controls-wrapper">
+                    <div class="dept-filters">
+                        <c:forEach var="dept" items="${deptList}">
+                            <input type="button" value="${dept.dname}" onclick="today_ta(${dept.deptno})" />
+                        </c:forEach>
+                    </div>
+                </div>
+                
+                <div class="content-card">
+                    <table class="data-table">
+                        <colgroup>
+                            <col style="width: 16.66%;">
+                            <col style="width: 16.66%;">
+                            <col style="width: 16.66%;">
+                            <col style="width: 16.66%;">
+                            <col style="width: 16.66%;">
+                            <col style="width: 16.66%;">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>이름</th>
+                                <th>입사일</th>
+                                <th>정상</th>
+                                <th>휴가/반차</th>
+                                <th>지각</th>
+                                <th>결근</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ta-tbody">
+                            </tbody>
                     </table>
                 </div>
+
             </div>
         </div>
     </body>

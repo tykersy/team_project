@@ -176,7 +176,6 @@
                             <input type="text" id="saname" placeholder="사원명 검색...">
                             <input type="button" value="검색" 
                                 onclick="search_history()"/>
-                            <button class="btn-pdf-download">📄 PDF 내역 다운로드</button>
                         </div>
                     </div>
                     <table class="data-table">

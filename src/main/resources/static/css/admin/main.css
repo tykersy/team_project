@@ -34,7 +34,7 @@
     .main-content {
         flex: 1;             
         padding: 40px 45px;  /* 여백 적정 수준으로 조정 */
-        box-sizing: border-box;
-        max-width: 1400px;   /* [조정] 과하지 않게 딱 좋은 대시보드 표준 너비 */
-        margin: 0;           
+        /* box-sizing: border-box;
+        max-width: 1400px;   [조정] 과하지 않게 딱 좋은 대시보드 표준 너비 */
+        /* margin: 0;           
     } */

@@ -52,7 +52,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update sawon set saname = #{saname},
                          deptno = #{deptno},
                          pwd = #{pwd},
-                         sapay = #{sapay},
                          sajob = #{sajob},
                          sahire = #{sahire},
                          saemail = #{saemail},

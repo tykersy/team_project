@@ -8,7 +8,7 @@
         <title>직원 근태 기록 수정</title>
         <link rel="stylesheet" href="/css/admin/sidebar.css">
         <link rel="stylesheet" href="/css/admin/main.css">
-        <link rel="stylesheet" href="/css/admin/today_ta.css">
+        <link rel="stylesheet" href="/css/admin/ta_modify.css">
 
         <script>
             // 수정 데이터 일괄 서버 전송 함수
@@ -46,21 +46,35 @@
     <body>
         <div class="manager-container">
             <jsp:include page="/WEB-INF/views/admin_common/admin_sidebar.jsp"/>
-            <div class="main-content">
+            
+            <div class="container">
                 
-                <div class="detail-header">
-                    <h2>${sawon.saname} ${sawon.sajob} 근태 상세 및 수정 <span style="font-size: 16px; color: #64748b;">(사번: ${param.sabun} / 정산월: ${param.ym})</span></h2>
-                    <div>
-                        <button type="button" class="btn-back" onclick="history.back();">뒤로가기</button>
-                        <button type="button" class="btn-save-all" onclick="saveAllChanges()">근태 수정사항 저장</button>
+                <div class="page-header">
+                    <div class="title-area">
+                        <h2>근태 정보 수정</h2>
+                        <p class="sub-info">
+                            <strong>${sawon.saname} ${sawon.sajob}</strong> 
+                            <span>(사번: ${param.sabun} / 정산월: ${param.ym})</span>
+                        </p>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn-secondary" onclick="history.back();">뒤로가기</button>
+                        <button type="button" class="btn-primary" onclick="saveAllChanges()">근태 수정사항 저장</button>
                     </div>
                 </div>
 
-                <form id="taUpdateForm">
+                <form id="taUpdateForm" class="content-card">
                     <input type="hidden" name="sabun" value="${param.sabun}">
                     <input type="hidden" name="ym" value="${param.ym}">
                     
                     <table class="data-table">
+                        <colgroup>
+                            <col style="width: 8%;">
+                            <col style="width: 22%;">
+                            <col style="width: 25%;">
+                            <col style="width: 25%;">
+                            <col style="width: 20%;">
+                        </colgroup>
                         <thead>
                             <tr>
                                 <th>번호</th>
@@ -74,7 +88,7 @@
                             <c:choose>
                                 <c:when test="${empty userTaList}">
                                     <tr>
-                                        <td colspan="5" style="text-align: center; padding: 30px; color: #999;">
+                                        <td colspan="5" class="no-data">
                                             해당 월에 등록된 상세 근태 기록이 없습니다.
                                         </td>
                                     </tr>
@@ -93,14 +107,23 @@
                                             <td>
                                                 <input type="time" class="input-time" name="userTaList[${status.index}].checkout" value="${ta.checkout}">
                                             </td>
-                                            <td>
-                                                <select class="select-status" name="userTaList[${status.index}].status">
-                                                    <option value="normal" ${ta.status eq 'normal' ? 'selected' : ''}>정상</option>
-                                                    <option value="late" ${ta.status eq 'late' ? 'selected' : ''}>지각</option>
-                                                    <option value="absent" ${ta.status eq 'absent' ? 'selected' : ''}>결근</option>
-                                                    <option value="leave" ${ta.status eq 'leave' ? 'selected' : ''}>휴가</option>
-                                                    <option value="half" ${ta.status eq 'half' ? 'selected' : ''}>반차</option>
-                                                </select>
+                                            <td class="select-status" name="userTaList[${status.index}].status">
+                                                
+                                               <c:if test="${ta.status eq 'normal'}">
+                                                    정상
+                                                </c:if>
+                                                <c:if test="${ta.status eq 'late'}">
+                                                    지각
+                                                </c:if>
+                                                <c:if test="${ta.status eq 'absent'}">
+                                                    결근
+                                                </c:if>
+                                                <c:if test="${ta.status eq 'leave'}">
+                                                    휴가
+                                                </c:if>
+                                                <c:if test="${ta.status eq 'half'}">
+                                                    반차
+                                                </c:if>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -112,6 +135,5 @@
 
             </div>
         </div>
-        
     </body>
 </html>
