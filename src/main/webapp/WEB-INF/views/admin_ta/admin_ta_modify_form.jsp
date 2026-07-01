@@ -107,14 +107,23 @@
                                             <td>
                                                 <input type="time" class="input-time" name="userTaList[${status.index}].checkout" value="${ta.checkout}">
                                             </td>
-                                            <td>
-                                                <select class="select-status" name="userTaList[${status.index}].status">
-                                                    <option value="normal" ${ta.status eq 'normal' ? 'selected' : ''}>정상</option>
-                                                    <option value="late" ${ta.status eq 'late' ? 'selected' : ''}>지각</option>
-                                                    <option value="absent" ${ta.status eq 'absent' ? 'selected' : ''}>결근</option>
-                                                    <option value="leave" ${ta.status eq 'leave' ? 'selected' : ''}>휴가</option>
-                                                    <option value="half" ${ta.status eq 'half' ? 'selected' : ''}>반차</option>
-                                                </select>
+                                            <td class="select-status" name="userTaList[${status.index}].status">
+                                                
+                                               <c:if test="${ta.status eq 'normal'}">
+                                                    정상
+                                                </c:if>
+                                                <c:if test="${ta.status eq 'late'}">
+                                                    지각
+                                                </c:if>
+                                                <c:if test="${ta.status eq 'absent'}">
+                                                    결근
+                                                </c:if>
+                                                <c:if test="${ta.status eq 'leave'}">
+                                                    휴가
+                                                </c:if>
+                                                <c:if test="${ta.status eq 'half'}">
+                                                    반차
+                                                </c:if>
                                             </td>
                                         </tr>
                                     </c:forEach>

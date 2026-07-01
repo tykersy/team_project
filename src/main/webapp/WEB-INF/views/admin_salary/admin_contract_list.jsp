@@ -67,7 +67,7 @@
                             <tr>
                                 <th>사원번호(사번)</th>
                                 <th>사원명</th>
-                                <th>부서</th>
+                                <th>부서</th> 
                                 <th>계약 시작일</th>
                                 <th>계약 만료일</th>
                                 <th>계약 상태</th>
@@ -181,7 +181,7 @@
 
         /* 🌟 비동기 데이터 뷰 바인딩 및 상세 모달 오픈 */
         function openContractDetail(sabun) {
-            // 백엔드 CRUD 컨트롤러가 완성되면 fetch로 데이터 받아서 바인딩 예정****
+
             fetch('/admin/admin_contract_detail?sabun=' + sabun)
             .then(res => res.json())
             .then(data => {

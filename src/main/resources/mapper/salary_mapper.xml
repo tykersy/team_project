@@ -133,7 +133,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     and s.saname like concat('%', #{saname}, '%')
                 </if>
                 <if test="filterType == 'PENDING'">
-                    AND sc.signed_at IS NULL
+                    AND sc.signed_at IS NULL and sc.contract_id is not null
                 </if>
                 <if test="filterType == 'RENEWAL'">
                     AND TIMESTAMPDIFF(YEAR, sc.start_date, CURDATE()) &gt;= 1 AND sc.signed_at IS NOT NULL

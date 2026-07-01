@@ -151,8 +151,6 @@ button, input[type="button"] {
 .input-time, .select-status {
     width: 100%;
     padding: 8px 12px;
-    border: 1px solid #CBD5E1;
-    border-radius: 6px;
     font-family: inherit;
     font-size: 14px;
     color: #334155;

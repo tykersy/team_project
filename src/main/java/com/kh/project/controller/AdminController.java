@@ -242,7 +242,7 @@ public class AdminController {
 
     //전자 계약 현황 리스트 필터링
     @GetMapping("/admin_contract_status")
-    public String filertingContractList( Model model, String saname, String sortType, String deptno){
+    public String filertingContractList( Model model, String saname, String sortType, String deptno, String filterType){
 
         //대시보드 상단 카운트 박스 정보조회 및 바인딩
         Map<String, Object> counts = salarydao.getCountsContract();
@@ -254,6 +254,7 @@ public class AdminController {
         filter.put("deptno", deptno);
         filter.put("sortType", sortType);
         filter.put("saname", saname);
+        filter.put("filterType", filterType);
 
         //부서리스트 조회 및 바인딩
         List<DeptVO> deptList = deptdao.selectAll();
@@ -262,6 +263,8 @@ public class AdminController {
         //조건으로 조회하기+ 결과 바인딩하기
         List<SalaryContractVO> contractList = salarydao.getfilteredList(filter);
         model.addAttribute("contractList", contractList);
+        //필터 조건 저장
+        model.addAttribute("filter", filter);
 
         return "admin_salary/admin_contract_list";
     }
