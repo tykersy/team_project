@@ -25,7 +25,7 @@
                             <!--일정 추가-->
                             <div>
                                 <div class="bottom-menu" id="bottomMenu">
-                                    <c:if test="${deptno=='1' || sajob=='팀장'}">
+                                    <c:if test="${isLeader}">
                                         <button onclick="location.href='dcal_insert.do'">
                                             <span>부서일정 추가</span>
                                         </button>

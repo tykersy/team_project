@@ -57,4 +57,8 @@ public interface TADAO {
     //관리자 메인페이지 입사자 조회
     int selectMonthJoinedSawon(LocalDate date);
 
+    List<TAVO> selectListByMonth(Map<String, Object> map);
+
+    List<String> selectMonthList(int sabun);
+
 } 
