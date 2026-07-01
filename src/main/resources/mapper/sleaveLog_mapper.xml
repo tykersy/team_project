@@ -34,12 +34,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="search_leave_history"
             resultType="sleavelog"
             parameterType="String">
-        SELECT s.saname, d.dname, l.leave_type, l.use_date, l.use_days, l.reason, l.created_at
+        SELECT s.saname, d.dname, l.leave_type, l.use_date, l.use_days, l.reason, l.created_at, l.approve
         FROM sleave_log l
         JOIN sawon s ON l.sabun = s.sabun
         JOIN dept d ON s.deptno = d.deptno
         WHERE s.saname = #{search_name}
-        ORDER BY l.approved_at DESC
+        ORDER BY l.created_at DESC
     </select>
 
     <!-- 연차 사용 신청 반려 -->

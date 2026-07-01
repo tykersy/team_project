@@ -76,11 +76,11 @@
 
                     //검색 결과를 담는 tbody
                     let search_result = document.getElementById("search_result")
-                    search_result.style.display = 'block';
+                    search_result.style.display = 'table-row-group';
 
                     if( data.list == null || data.list == '' ){
                         //검색결과가 없을 때 보여줄 결과
-                        search_result.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px;">\${search_name}님에 대한 검색결과가 없습니다.</td></tr>`;
+                        search_result.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:20px;">\${search_name}님에 대한 검색결과가 없습니다.</td></tr>`;
                     }else{
                         //받아온 데이터 출력문 작성하기
                         let html = "";
@@ -94,8 +94,14 @@
                                           String(date.getMonth() + 1).padStart(2, '0') + '-' + 
                                           String(date.getDate()).padStart(2, '0');
                             }
+                            let approveBadge = "";
 
-                            html += `<tr style="display: table-row !important; width: 100% !important;">
+                            if(item.approve == 1){
+                                approveBadge = `<span class="status-badge approve">승인</span>`;
+                            }else if(item.approve == 2){
+                                approveBadge = `<span class="status-badge reject">반려</span>`;
+                            }
+                            html += `<tr>
                                 <td>\${dateStr}</td>
                                 <td>\${item.saname || ''}</td>
                                 <td>\${item.dname || ''}</td>
@@ -103,6 +109,7 @@
                                 <td>\${item.use_date || ''}</td>
                                 <td>\${item.use_days || 0}일</td>
                                 <td>\${item.reason || ''}</td>
+                                <td>\${approveBadge}</td>
                                 </tr>`;
                             });
 
@@ -112,6 +119,10 @@
 
                 } )
 
+            }
+
+            function reloadHistory(){
+                location.reload();
             }
         </script>
     </head>
@@ -173,6 +184,8 @@
                             <a>결재 완료 히스토리</a>
                         </div>
                         <div class="search-filter-group">
+                            <input type="button" value="↻"
+                                onclick="reloadHistory()">
                             <input type="text" id="saname" placeholder="사원명 검색...">
                             <input type="button" value="검색" 
                                 onclick="search_history()"/>
@@ -182,7 +195,7 @@
                         <thead>
                             <tr>
                                 <th>신청일</th><th>이름</th><th>부서</th>
-                                <th>휴가</th><th>사용일</th><th>일수</th><th>사유</th>
+                                <th>휴가</th><th>사용일</th><th>일수</th><th>사유</th><th>승인</th>
                             </tr>
                         </thead>
                         <tbody id="history_content">
@@ -195,6 +208,14 @@
                                     <td>${appr.use_date}</td>
                                     <td>${appr.use_days}</td>
                                     <td>${appr.reason}</td>
+                                    <td>
+                                        <c:if test="${appr.approve == 1}">
+                                            <span class="status-badge approve">승인</span>
+                                        </c:if>
+                                        <c:if test="${appr.approve == 2}">
+                                            <span class="status-badge reject">반려</span>
+                                        </c:if>
+                                    </td>
                                 </tr>
                             </c:forEach>
                             </tbody>

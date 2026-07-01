@@ -59,12 +59,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!-- 최근 승인 완료된 휴가 5건 정보 조회 -->
     <select id="selectApprovedLeaves"
             resultType="sleavelog">
-        SELECT s.saname, d.dname, l.leave_type, l.use_date, l.use_days, l.reason, l.created_at
+        SELECT s.saname, d.dname, l.leave_type, l.use_date, l.use_days, l.reason, l.created_at, l.approve
         FROM sleave_log l
         JOIN sawon s ON l.sabun = s.sabun
         JOIN dept d ON s.deptno = d.deptno
-        WHERE l.approve = 1
-        ORDER BY l.approved_at DESC
+        ORDER BY l.created_at DESC
         LIMIT 5
     </select>
     

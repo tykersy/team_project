@@ -313,3 +313,22 @@
 .btn-modal-submit:hover {
     background-color: #ff7875;
 }
+
+.status-badge{
+    display:inline-block;
+    padding:5px 12px;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:700;
+    line-height:1;
+}
+
+.status-badge.approve{
+    background:#dcfce7;
+    color:#16a34a;
+}
+
+.status-badge.reject{
+    background:#fee2e2;
+    color:#dc2626;
+}
