@@ -24,10 +24,10 @@
                     <tr>
                         <th width="8%">No</th>
                         <th width="35%">제목</th>
-                        <th width="20%">작성 부서</th>
-                        <th width="12%">작성일</th>
-                        <th width="10%">조회수</th>
-                        <th width="15%">관리</th>
+                        <th width="15%">작성 부서</th>
+                        <th width="10%">작성일</th>
+                        <th width="13%">조회수</th>
+                        <th width="19%">관리</th>
                     </tr>
                 </thead>
                 <tbody>
