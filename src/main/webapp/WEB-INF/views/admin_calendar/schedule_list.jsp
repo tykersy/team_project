@@ -392,7 +392,7 @@
                 let url;
                 let successMsg;
 
-                if(dcal_Idx === ""){
+                if(dcal_idx === ""){
                     // 추가
                     url = "/admin/schedule_insert";
                     successMsg = "일정이 추가되었습니다.";

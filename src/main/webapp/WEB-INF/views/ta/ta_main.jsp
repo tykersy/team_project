@@ -64,6 +64,11 @@
                     
                 });
             }
+
+            function changeRecordMonth() {
+                const month = document.getElementById("recordMonth").value;
+                location.href = "ta_main.do?month=" + month;
+            }
         </script>
 
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
@@ -112,6 +117,15 @@
 
                         <div class="ta-card">
                             <div class="card-title"><span class="dot"></span>근태 기록</div>
+                            <div class="record-filter">
+                                <select id="recordMonth" onchange="changeRecordMonth()">
+                                    <c:forEach var="month" items="${monthList}">
+                                        <option value="${month}" ${month == selectedMonth ? 'selected' : ''}>
+                                            ${month}
+                                        </option>
+                                    </c:forEach>
+                                </select>
+                            </div>
                             <table class="ta-table">
                                 <tr>
                                     <th>날짜</th>

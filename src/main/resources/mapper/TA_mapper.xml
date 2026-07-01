@@ -290,6 +290,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         AND DATE_FORMAT(s.sahire, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
         ORDER BY s.saretire DESC;
     </select>
+
+    <select id="selectListByMonth" parameterType="map" resultType="ta">
+        SELECT 
+            sabun,
+            DATE_FORMAT(day, '%Y-%m-%d') AS day,
+            DATE_FORMAT(checkin, '%H:%i') AS checkin,
+            DATE_FORMAT(checkout, '%H:%i') AS checkout
+        FROM ta
+        WHERE sabun = #{sabun}
+        AND DATE_FORMAT(day, '%Y-%m') = #{month}
+        ORDER BY day DESC
+    </select>
+    <select id="selectMonthList" parameterType="int" resultType="string">
+        SELECT DISTINCT DATE_FORMAT(day, '%Y-%m')
+        FROM ta
+        WHERE sabun = #{sabun}
+        ORDER BY DATE_FORMAT(day, '%Y-%m') DESC
+    </select>
     
     
 </mapper>

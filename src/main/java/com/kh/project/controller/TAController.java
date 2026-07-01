@@ -60,19 +60,28 @@ public class TAController {
     HttpSession session;
 
     @GetMapping("/ta_main.do")
-    public String taMain(Model model) {
+    public String taMain(@RequestParam(required = false) String month, Model model) {
 
         int sabun = (Integer)session.getAttribute("user");
 
         //오늘 년/월을 구하여 포멧을 지정
         LocalDate now = LocalDate.now();
 
+        if(month == null || month.equals("")){
+            month = now.format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        }
+
         Map<String, Object> monthlyTAMap = new HashMap<>();
         monthlyTAMap.put("sabun", sabun);
         monthlyTAMap.put("year", now.getYear());
 
+        Map<String, Object> taMap = new HashMap<>();
+        taMap.put("sabun", sabun);
+        taMap.put("month", month);
+
         TAVO today = tadao.selectToday(sabun);
-        List<TAVO> list = tadao.selectList(sabun);
+        List<TAVO> list = tadao.selectListByMonth(taMap);
+        List<String> monthList = tadao.selectMonthList(sabun);
         List<Map<String,Object>> yearlyTa = userDao.getYearlyTa(monthlyTAMap);
 
         // ── taJson 변환 (핵심 추가 부분) ──
@@ -95,6 +104,8 @@ public class TAController {
 
         model.addAttribute("today", today);
         model.addAttribute("list", list);
+        model.addAttribute("monthList", monthList);
+        model.addAttribute("selectedMonth", month);
         model.addAttribute("yearlyTA", yearlyTa);
         model.addAttribute("taJson", mapper.writeValueAsString(taJson));
 
