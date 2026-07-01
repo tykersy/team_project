@@ -33,7 +33,6 @@
                 let sabun = f.sabun.value; //사번
                 let saname= f.saname.value; //이름
                 let pwd = f.pwd.value; //비밀번호
-                let sapay = f.sapay.value; //급여
                 let sahire = f.sahire.value; //입사일
                 let saemail = f.saemail.value; //이메일
                 let satel = f.satel.value; //전화번호
@@ -44,7 +43,6 @@
                 if(sabun == ''){alert("사번을 입력해 주세요."); return;}
                 if(saname == ''){alert("이름을 입력해 주세요."); return;}
                 if(pwd == ''){alert("비밀번호를 입력해 주세요."); return;}
-                if(sapay == ''){alert("급여를 입력해 주세요."); return;}
                 if(sahire == ''){alert("입사일을 입력해 주세요."); return;}
                 if(saemail == ''){alert("이메일을 입력해 주세요."); return;}
 
@@ -108,12 +106,6 @@
                     <td>
                         <input name="pwd" type="password"/>
                     <td>
-                </tr>
-                <tr>
-                    <th>급여</th>
-                    <td>
-                        <input name="sapay" type="number" />
-                    </td>
                 </tr>
                 <tr>
                     <th>직급</th>
