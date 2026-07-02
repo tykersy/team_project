@@ -66,7 +66,7 @@
 
 
             <meta charset="UTF-8">
-            <title>Dashboard</title>
+            <title>[Linked]</title>
 
             <link rel="stylesheet" href="/css/sidebar.css">
             <link rel="stylesheet" href="/css/dashboard.css">
@@ -114,7 +114,7 @@
                             </div>
 
                             <div class="kpi-card">
-                                <p>승인 대기</p>
+                                <p>휴가 승인 대기</p>
                                 <a href="/mypage?tab=leave" style="text-decoration: none; color: inherit; display: block;">
                                     <h3>${approval}</h3>
                                 </a>

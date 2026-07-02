@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/css/admin/main.css">
     <link rel="stylesheet" href="/css/admin/admin_role.css">
 
-    <title>권한 관리</title>
+    <title>[Linked : 권한 관리]</title>
     <style>
         /* 모달 스타일 기본 배치 */
         .role-modal {

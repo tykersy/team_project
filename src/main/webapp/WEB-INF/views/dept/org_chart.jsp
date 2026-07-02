@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>조직도</title>
+    <title>[Linked : 조직도]</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/Sidebar.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/user/org_chart.css">

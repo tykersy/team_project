@@ -32,6 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ) AS sc
             on sc.sabun = s.sabun
         where s.sabun=#{sabun}
+
     </select>
 
     <!-- 마이페이지 월 총근무시간 & 근무일 조회 -->

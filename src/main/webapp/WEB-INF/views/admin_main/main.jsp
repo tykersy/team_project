@@ -7,7 +7,7 @@
 
     <head>
         <meta charset="UTF-8">
-        <title>관리자 대시보드</title>
+        <title>[Linked : 관리자]</title>
 
         <!-- Chart.js 라이브러리 -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

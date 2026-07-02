@@ -13,7 +13,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>공지사항 상세</title>
+    <title>[Linked : 공지사항]</title>
     <link rel="stylesheet" href="/css/admin/sidebar.css">
     <link rel="stylesheet" href="/css/admin/main.css">
     <link rel="stylesheet" href="/css/board.css">
@@ -37,8 +37,8 @@
                 </div>
                 
                 <div style="margin-top: 20px; text-align: center;">
-                    <a href="/admin/board/list" class="btn-custom btn-secondary" style="text-decoration:none;">취소</a>
                     <button type="button" class="btn-custom btn-primary" onclick="location.href='/admin/board/update?idx=${board.idx}'">수정</button>
+                    <a href="/admin/board/list" class="btn-custom btn-secondary" style="text-decoration:none;">취소</a>
                 </div>
             </div>
         </div>
