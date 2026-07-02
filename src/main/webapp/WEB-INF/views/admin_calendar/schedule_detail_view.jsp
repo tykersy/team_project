@@ -6,7 +6,6 @@
 <html>
 
     <head>
-        <title>${date}</title>
         <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
         .popup-header { border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }

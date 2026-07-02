@@ -6,6 +6,7 @@
 <html>
 
     <head>
+        <title>[Linked : 근무일정]</title>
         <!-- sidebar css -->
         <link rel="stylesheet" href="/css/admin/sidebar.css">
         <link rel="stylesheet" href="/css/admin/main.css">

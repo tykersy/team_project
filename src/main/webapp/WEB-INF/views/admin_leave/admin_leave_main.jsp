@@ -6,6 +6,7 @@
 <html>
 
     <head>
+        <title>[Linked : 휴가 / 연차]</title>
         <link rel="stylesheet" href="/css/admin/sidebar.css">
         <link rel="stylesheet" href="/css/admin/main.css">
         <link rel="stylesheet" href="/css/admin/leave_main.css">

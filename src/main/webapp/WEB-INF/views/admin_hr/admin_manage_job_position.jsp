@@ -5,6 +5,7 @@
 <html>
 
     <head>
+        <title>[Linked : 직급 관리]</title>
         <link rel="stylesheet" href="/css/admin/sidebar.css">
         <link rel="stylesheet" href="/css/admin/main.css">
         <link rel="stylesheet" href="/css/admin/modal.css"/>

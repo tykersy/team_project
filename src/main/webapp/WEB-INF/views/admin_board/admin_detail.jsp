@@ -13,7 +13,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>공지사항 상세</title>
+    <title>[Linked : 공지사항]</title>
     <link rel="stylesheet" href="/css/admin/sidebar.css">
     <link rel="stylesheet" href="/css/admin/main.css">
     <link rel="stylesheet" href="/css/board.css">

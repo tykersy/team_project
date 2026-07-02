@@ -5,6 +5,7 @@
 <html>
 
     <head>
+        <title>[Linked : ${sawon.saname} 사원 정보 수정]</title>
         <link rel="stylesheet" href="/css/admin/sawon_modify_form.css"/>
         <link rel="stylesheet" href="/css/admin/sidebar.css" />
 

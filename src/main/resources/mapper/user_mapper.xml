@@ -15,12 +15,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="userMyPage" parameterType="int" resultType="user">
         select s.sabun, s.deptno ,s.saname, s.sajob , s.saemail ,s.satel , s.sahire , s.saaddr, s.sastatus, s.sazipcode,
 	           d.dname , sc.base_salary as base_pay
-        from
-            sawon as s join dept as d
-            on s.deptno = d.deptno
-            left join salary_contract sc
-            on sc.sabun = s.sabun
-        where s.sabun=#{sabun}
+        FROM sawon s
+        JOIN dept d
+            ON s.deptno = d.deptno
+        LEFT JOIN salary_contract sc
+            ON sc.sabun = s.sabun
+            AND CURDATE() BETWEEN sc.start_date AND sc.end_date
+        WHERE s.sabun = #{sabun};
     </select>
 
     <!-- 마이페이지 월 총근무시간 & 근무일 조회 -->

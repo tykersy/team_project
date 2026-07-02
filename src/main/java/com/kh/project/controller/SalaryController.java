@@ -325,6 +325,7 @@ public class SalaryController {
         //포워딩
         model.addAttribute("ledgerList", ledgerList);
         model.addAttribute("ym", ym);
+        model.addAttribute("now_ym", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM")));
         model.addAttribute("countLedgers", countLedgers);
         model.addAttribute("countConfirmedLedgers", countConfirmedLedgers);
 

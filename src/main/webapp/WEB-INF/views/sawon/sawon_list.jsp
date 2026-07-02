@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>직원 관리 페이지</title>
+    <title>[Linked : 직원 관리]</title>
     <link rel="stylesheet" href="/css/admin/sawon_list.css"/>
     <link rel="stylesheet" href="/css/admin/sidebar.css" />
 
