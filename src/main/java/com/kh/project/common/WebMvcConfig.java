@@ -12,6 +12,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final LoginInterceptor loginInterceptor;
     private final AdminInterceptor adminInterceptor;
+    private final PreventBackCacheInterceptor backCacheInterceptor;
+    private final AlreadyLoginInterceptor alreadyLoginInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -19,10 +21,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
             .addPathPatterns("/**")
             .excludePathPatterns(
                 "/login",
-                "/logout",
                 "/", "/home", "/dashboard",
-                "/board/**",
-                "/chat",
                 "/css/**",
                 "/js/**",
                 "/img/**",
@@ -34,5 +33,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(adminInterceptor)
             .addPathPatterns("/admin/**");
+
+        registry.addInterceptor(alreadyLoginInterceptor)
+            .addPathPatterns("/login");
+
+        registry.addInterceptor(backCacheInterceptor)
+            .addPathPatterns("/**")
+            .excludePathPatterns(
+                "/css/**",
+                "/js/**",
+                "/img/**",
+                "/images/**",
+                "/fonts/**",
+                "/favicon.ico",
+                "/error"
+            );
     }
 }

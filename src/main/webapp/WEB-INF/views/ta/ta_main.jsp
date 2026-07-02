@@ -7,7 +7,7 @@
 
     <head>
         <meta charset="UTF-8">
-        <title>근태 관리</title>
+        <title>[Linked : 근태 관리]</title>
 
         <script>
             function checkIn() {
@@ -67,7 +67,17 @@
 
             function changeRecordMonth() {
                 const month = document.getElementById("recordMonth").value;
-                location.href = "ta_main.do?month=" + month;
+
+                fetch("ta_main.do?month=" + encodeURIComponent(month))
+                .then(res => res.text())
+                .then(html => {
+                    const doc = new DOMParser().parseFromString(html, "text/html");
+                    const newBody = doc.getElementById("recordTableBody");
+
+                    if (newBody) {
+                        document.getElementById("recordTableBody").innerHTML = newBody.innerHTML;
+                    }
+                });
             }
         </script>
 
@@ -127,19 +137,22 @@
                                 </select>
                             </div>
                             <table class="ta-table">
-                                <tr>
-                                    <th>날짜</th>
-                                    <th>출근</th>
-                                    <th>퇴근</th>
-                                </tr>
-
-                                <c:forEach var="vo" items="${list}">
+                                <thead>
                                     <tr>
-                                        <td>${vo.day}</td>
-                                        <td>${vo.checkin}</td>
-                                        <td>${vo.checkout}</td>
+                                        <th>날짜</th>
+                                        <th>출근</th>
+                                        <th>퇴근</th>
                                     </tr>
-                                </c:forEach>
+                                </thead>
+                                <tbody id="recordTableBody">
+                                    <c:forEach var="vo" items="${list}">
+                                        <tr>
+                                            <td>${vo.day}</td>
+                                            <td>${vo.checkin}</td>
+                                            <td>${vo.checkout}</td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
                             </table>
                         </div>
                     </div> <!-- panel 0 -->
@@ -154,7 +167,7 @@
                             </div>
                         </div>
                         <div class="ta-card">
-                            <div class="card-title"><span class="dot"></span>연간 근태 캘린더</div>
+                            <div class="card-title"><span class="dot"></span>월간 근태 캘린더</div>
 
                             <%-- 네비게이션 --%>
                             <div class="cal-header">
@@ -178,7 +191,7 @@
                             </div>
                         </div>
                         <div class="ta-card">
-                            <div class="card-title"><span class="dot"></span>연간 근태 현황</div>
+                            <div class="card-title"><span class="dot"></span>월간 근태 현황</div>
                             <table class="ta-table">
                                 <thead>
                                     <tr>

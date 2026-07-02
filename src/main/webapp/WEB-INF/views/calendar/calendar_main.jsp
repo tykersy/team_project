@@ -4,6 +4,7 @@
         <html>
 
         <head>
+            <title>[Linked : 캘린더]</title>
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar/calendar_main.css" />
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
             <link rel="stylesheet" href="/css/dashboard.css"> 

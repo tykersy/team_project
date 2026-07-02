@@ -5,7 +5,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Linked</title>
+        <title>[Linked : 사원 추가]</title>
         <link rel="stylesheet" href="/css/user/sawon_add.css">
 
         <%-- 카카오 도로명 검색을 위한 API 호출 --%>

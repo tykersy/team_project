@@ -7,7 +7,7 @@
 
     <head>
         <meta charset="UTF-8">
-        <title>근태 정산 마감</title>
+        <title>[Linked : 근태 마감]</title>
         <link rel="stylesheet" href="/css/admin/sidebar.css">
         <link rel="stylesheet" href="/css/admin/main.css">
         <link rel="stylesheet" href="/css/admin/admin_ta.css">
@@ -22,6 +22,33 @@
                     let month = String(today.getMonth() + 1).padStart(2, '0');
                     document.getElementById('target_ym').value = today.getFullYear() + '-' + month;
                 }
+            }
+
+            // 조회 폼 제출 시 fetch로 비동기 조회 (기존 /admin/ta_confirm 매핑 재사용)
+            function handleSearchSubmit(event) {
+                event.preventDefault();
+                reloadTAConfirm();
+                return false;
+            }
+
+            function reloadTAConfirm() {
+                const ym = document.getElementById('target_ym').value;
+
+                fetch("/admin/ta_confirm?ym=" + encodeURIComponent(ym))
+                .then(res => res.text())
+                .then(html => {
+                    const doc = new DOMParser().parseFromString(html, "text/html");
+
+                    const newStatus = doc.getElementById("statusCardWrapper");
+                    const newSection = doc.getElementById("sectionContainer");
+
+                    if (newStatus) {
+                        document.getElementById("statusCardWrapper").innerHTML = newStatus.innerHTML;
+                    }
+                    if (newSection) {
+                        document.getElementById("sectionContainer").innerHTML = newSection.innerHTML;
+                    }
+                });
             }
 
             // 특정 사원 한 명만 마감 처리
@@ -91,9 +118,9 @@
                 </div>
 
                 <div class="filter-container">
-                    <form action="/admin/ta_confirm?ym="+(this.form.ym.value) method="get" class="month-picker">
+                    <form action="/admin/ta_confirm" method="get" class="month-picker" autocomplete="off" onsubmit="return handleSearchSubmit(event)">
                         <label for="target_ym" style="font-weight: bold; color: #444;">정산 대상 년월:</label>
-                        <input type="month" id="target_ym" name="ym" value="${selectedYm}">
+                        <input type="month" id="target_ym" name="ym" autocomplete="off" value="${selectedYm}" max="${selectedYm}">
                         <button type="submit" class="btn-search">조회</button>
                     </form>
                     <div>
@@ -101,7 +128,7 @@
                     </div>
                 </div>
 
-                <div class="status-card-wrapper">
+                <div class="status-card-wrapper" id="statusCardWrapper">
                     <div class="status-card pending">
                         <h3>마감 대기 대상</h3>
                         <p class="count">${waitCnt}명</p>
@@ -112,7 +139,7 @@
                     </div>
                 </div>
 
-                <div class="section-container">
+                <div class="section-container" id="sectionContainer">
                     <div class="section-title">${selectedYm} 근태 정산 대상자 목록</div>
                     <table class="data-table">
                         <thead>

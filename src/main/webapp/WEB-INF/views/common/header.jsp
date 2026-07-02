@@ -63,7 +63,7 @@
                         <span class="profile-text" style="font-size: 0.95rem; font-weight: 500; color: #1e293b;">
                             ${loginMember.saname}님
                         </span>
-                        <div class="profile-circle" style="width: 36px; height: 36px; border-radius: 50%; background-color: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 1px solid #cbd5e1;">
+                        <div class="profile-circle" style="margin: 0; width: 36px; height: 36px; border-radius: 50%; background-color: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 1px solid #cbd5e1;">
                             🧑‍💻
                         </div>
                     </a>
@@ -77,7 +77,7 @@
                         <span class="profile-text" style="font-size: 0.95rem; color: #94a3b8; font-weight: 500;">
                             로그인 필요
                         </span>
-                        <div class="profile-circle" style="width: 36px; height: 36px; border-radius: 50%; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #cbd5e1;">
+                        <div class="profile-circle" style="maigin: 0; width: 36px; height: 36px; border-radius: 50%; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #cbd5e1;">
                             👤
                         </div>
                     </a>

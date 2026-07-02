@@ -57,7 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             s.deptno,
             COUNT(CASE WHEN sl.use_date IS NULL AND t.checkin IS NOT NULL AND TIME(t.checkin) &lt;= '09:00:00' THEN 1 END) AS normalCount,
             COUNT(CASE WHEN sl.use_date IS NULL AND t.checkin IS NOT NULL AND TIME(t.checkin) &gt; '09:00:00' THEN 1 END) AS lateCount,
-            COUNT(CASE WHEN sl.use_date IS NOT NULL AND sl.approve = true THEN 1 END) AS leaveCount,
+            COUNT(CASE WHEN sl.use_date IS NOT NULL AND sl.approve = 1 THEN 1 END) AS leaveCount,
             COUNT(CASE WHEN (t.day IS NULL OR t.checkin IS NULL AND t.checkout IS NULL) AND sl.use_date IS NULL THEN 1 END) AS absentCount,
             ROUND(
                 COALESCE(
@@ -67,19 +67,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 ), 1
             ) AS totalWorkTime
         FROM calendar c
-        JOIN sawon s ON 1=1
-        LEFT JOIN ta t 
-            ON t.sabun = s.sabun 
-            AND t.day = c.day
-        LEFT JOIN sleave_log sl 
-            ON sl.sabun = s.sabun 
+        JOIN sawon s ON s.deptno = #{deptno} AND s.sastatus = '재직'
+        LEFT JOIN ta t
+            ON t.sabun = s.sabun
+            AND DATE(t.day) = c.day
+        LEFT JOIN sleave_log sl
+            ON sl.sabun = s.sabun
             AND sl.use_date = c.day
             AND sl.approve = true
-        WHERE 
+        WHERE
             DAYOFWEEK(c.day) NOT IN (1, 7)
             AND c.day &lt;= CURDATE()
-            AND s.deptno = #{deptno}
-            AND s.sastatus = '재직'
         GROUP BY s.sabun, s.saname, s.sahire, s.deptno
         ORDER BY s.deptno, s.sabun
     </select>

@@ -4,7 +4,7 @@
 <html>
 
     <head>
-
+        <title>[Linked : 부서 목록]</title>
     </head>
     <body>
         <table border="1">

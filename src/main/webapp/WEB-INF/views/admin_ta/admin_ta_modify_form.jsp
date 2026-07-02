@@ -5,7 +5,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>직원 근태 기록 수정</title>
+        <title>[Linked : 근태 기록 수정]</title>
         <link rel="stylesheet" href="/css/admin/sidebar.css">
         <link rel="stylesheet" href="/css/admin/main.css">
         <link rel="stylesheet" href="/css/admin/ta_modify.css">

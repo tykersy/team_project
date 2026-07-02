@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="/css/admin/main.css">
         <link rel="stylesheet" href="/css/admin/contract_list.css">
 
-        <title>전자 계약 현황</title>
+        <title>[Linked : 전자 계약 현황]</title>
     </head>
 
     <body>
@@ -24,7 +24,7 @@
                     <hr class="title-divider"/>
                 </div>
 
-                <div class="contract-status-wrapper">
+                <div class="contract-status-wrapper" id="contractStatusWrapper">
                     <div class="contract-card card-pending" onclick="filterBySummary('PENDING')">
                         <span class="card-label">서명 대기 중 문서</span>
                         <span class="card-value">${pending_count != null ? pending_count : 0} <span>건</span></span>
@@ -36,14 +36,14 @@
                 </div>
 
                 <div class="filter-control-bar">
-                    <form action="/admin/admin_contract_status" method="get" id="searchForm">
+                    <form action="/admin/admin_contract_status" method="get" id="searchForm" autocomplete="off">
                         <div class="filter-group">
-                            <select id="sortType" name="sortType" class="erp-select" onchange="handleSortChange(this.value)">
+                            <select id="sortType" name="sortType" class="erp-select" autocomplete="off" onchange="handleSortChange(this.value)">
                                 <option value="SABUN_ASC" ${filter.sortType eq 'SABUN_ASC' ? 'selected' : ''}>사번 순 보기</option>
                                 <option value="DEPT" ${filter.sortType eq 'DEPT' ? 'selected' : ''}>부서 별 선택</option>
                             </select>
-                            
-                            <select id="deptSelect" name="deptno" class="erp-select" style="display: ${filter.sortType eq 'DEPT' ? 'inline-block' : 'none'};"
+
+                            <select id="deptSelect" name="deptno" class="erp-select" autocomplete="off" style="display: ${filter.sortType eq 'DEPT' ? 'inline-block' : 'none'};"
                                     onchange="handleDeptChange()">
                                 <option value="">-- 부서 선택 --</option>
                                 <c:forEach var="dept" items="${deptList}">
@@ -56,12 +56,12 @@
                     </form>
 
                     <div class="search-group">
-                        <input type="text" id="searchName" name="saname" class="erp-input" placeholder="사원명 입력" value="${filter.saname}">
+                        <input type="text" id="searchName" name="saname" class="erp-input" autocomplete="off" placeholder="사원명 입력" value="${filter.saname}">
                         <button type="button" class="btn-search" onclick="submitSearch()">검색</button>
                     </div>
                 </div>
 
-                <div class="table-container">
+                <div class="table-container" id="tableContainer">
                     <table class="erp-table">
                         <thead>
                             <tr>
@@ -144,6 +144,30 @@
         </div>
 
         <script>
+        // fetch로 받아온 목록 페이지 HTML에서 요약카드/테이블 영역만 추출해 갈아끼우는 공용 함수
+        function applyContractListHtml(html, saname) {
+            const doc = new DOMParser().parseFromString(html, "text/html");
+
+            const newStatus = doc.getElementById("contractStatusWrapper");
+            const newTable = doc.getElementById("tableContainer");
+
+            if (newStatus) {
+                document.getElementById("contractStatusWrapper").innerHTML = newStatus.innerHTML;
+            }
+            if (newTable) {
+                document.getElementById("tableContainer").innerHTML = newTable.innerHTML;
+            }
+            if (saname !== undefined) {
+                document.getElementById("hiddenSaname").value = saname;
+            }
+        }
+
+        function reloadContractList(params) {
+            fetch("/admin/admin_contract_status?" + params.toString())
+            .then(res => res.text())
+            .then(html => applyContractListHtml(html, params.get("saname")));
+        }
+
         // 부서 선택 조건 선택 (부서 별 선택일 때만 2차 select 박스 보여주기)
         function handleSortChange(value) {
             const deptSelect = document.getElementById('deptSelect');
@@ -153,19 +177,24 @@
                 //선택조건이 부서별이 아닐 때
                 deptSelect.style.display = 'none';
                 deptSelect.value = ''; // 값 초기화
-                document.getElementById('hiddenSaname').value=''; //검색어 초기화
-                document.getElementById('searchForm').submit(); // 사번 순 선택 시 바로 제출
+                document.getElementById('searchName').value = ''; //검색어 초기화
+
+                reloadContractList(new URLSearchParams({ sortType: value, saname: '' })); // 사번 순 선택 시 바로 비동기 조회
             }
         }
 
-        // 2차 부서 셀렉트박스 변경 시 즉시 폼 서브밋
+        // 2차 부서 셀렉트박스 변경 시 즉시 비동기 조회
         function handleDeptChange() {
-            document.getElementById('searchForm').submit();
+            const sortType = document.getElementById('sortType').value;
+            const deptno = document.getElementById('deptSelect').value;
+            const saname = document.getElementById('searchName').value;
+
+            reloadContractList(new URLSearchParams({ sortType: sortType, deptno: deptno, saname: saname }));
         }
 
         // 상단 대시보드 요약카드 클릭 시 필터링 처리 가이드 함수
         function filterBySummary(type) {
-            location.href = "/admin/admin_contract_status?filterType=" + type;
+            reloadContractList(new URLSearchParams({ filterType: type, saname: '' }));
         }
 
         // 사원명 검색 버튼 클릭 시
@@ -173,10 +202,8 @@
             const name = document.getElementById('searchName').value;
             const sortType = document.getElementById('sortType').value;
             const deptno = document.getElementById('deptSelect').value;
-            // hidden 인풋에 동기화 후 서브밋 (수정예정)
-            document.getElementById('hiddenSaname').value = name;
-            
-            location.href = "/admin/admin_contract_status?sortType=" + sortType + "&deptno=" + deptno + "&saname=" + encodeURIComponent(name);
+
+            reloadContractList(new URLSearchParams({ sortType: sortType, deptno: deptno, saname: name }));
         }
 
         /* 🌟 비동기 데이터 뷰 바인딩 및 상세 모달 오픈 */

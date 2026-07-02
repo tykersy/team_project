@@ -6,6 +6,7 @@
 <html>
 
     <head>
+        <title>[Linked : 급여 정산 관리]</title>
         <link rel="stylesheet" href="/css/admin/sidebar.css">
         <link rel="stylesheet" href="/css/admin/main.css">
         <link rel="stylesheet" href="/css/admin/admin_salary.css">
@@ -20,7 +21,7 @@
                     <h1 class="page-title">급여 정산 관리</h1>
                 </div>
 
-                <div class="salary-status-wrapper">
+                <div class="salary-status-wrapper" id="salaryStatusWrapper">
                     <div class="status-card pending">
                         <h3>당월 정산 대기 건수</h3>
                         <div class="count">${countLedgers}건</div>
@@ -31,11 +32,11 @@
                     </div>
                 </div>
 
-                <div class="section-container">
+                <div class="section-container" id="sectionContainer">
                     <div class="section-header-inline">
                         <div class="section-title">${ym} 정산 대상 사원 명단</div>
                         <div style="display:flex; gap:10px; align-items:center;">
-                            <input type="month" id="salaryYm" value="${ym}" onchange="changeSalaryMonth()">
+                            <input type="month" autocomplete="off" id="salaryYm" value="${ym}" max="${now_ym}" onchange="changeSalaryMonth()">
                             <button type="button" class="btn-salary-action btn-batch" onclick="approveAllSalary()">선택 사원 일괄 정산확정</button>
                         </div>
                     </div>
@@ -132,16 +133,22 @@
                     <div class="receipt-row total-row"><span class="name">실수령액</span><span class="amt" id="mNetPay">0 원</span></div>
                 </div>
                 
-                <button type="button" class="btn-submit-contract" style="margin-top: 0;" onclick="closeSalaryModal()">확인</button>
+                <button type="button" class="btn-salary-secondary" style="margin-top: 0;" onclick="closeSalaryModal()">확인</button>
             </div>
         </div>
 
     <script>
-        // 체크박스 전체 선택/해제 기능
-        document.getElementById('checkAll')?.addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('input[name="salaryCheck"]');
-            checkboxes.forEach(cb => cb.checked = this.checked);
-        });
+        // 체크박스 전체 선택/해제 기능 (fetch로 테이블을 갈아끼운 뒤에도 다시 바인딩해야 하므로 함수로 분리)
+        function bindCheckAll() {
+            const checkAll = document.getElementById('checkAll');
+            if (!checkAll) return;
+
+            checkAll.addEventListener('change', function() {
+                const checkboxes = document.querySelectorAll('input[name="salaryCheck"]');
+                checkboxes.forEach(cb => cb.checked = this.checked);
+            });
+        }
+        bindCheckAll();
 
         // 개별 정산 확정 비동기 통신 처리
         function approveSalary(salaryId) {
@@ -182,7 +189,7 @@
             .then( data => {
                 if( data.result ){
                     alert(data.msg);
-                    location.reload();
+                    reloadSalaryConfirm(document.getElementById("salaryYm").value);
                 }else{
                     alert("실패 : " + data.msg);
                 }
@@ -241,7 +248,28 @@
 
         function changeSalaryMonth(){
             const ym = document.getElementById("salaryYm").value;
-            location.href = "/admin/salary_confirm?ym="+ym;
+            reloadSalaryConfirm(ym);
+        }
+
+        // 기존 /admin/salary_confirm 매핑을 재사용해 fetch로 비동기 조회
+        function reloadSalaryConfirm(ym) {
+            fetch("/admin/salary_confirm?ym=" + encodeURIComponent(ym))
+            .then(res => res.text())
+            .then(html => {
+                const doc = new DOMParser().parseFromString(html, "text/html");
+
+                const newStatus = doc.getElementById("salaryStatusWrapper");
+                const newSection = doc.getElementById("sectionContainer");
+
+                if (newStatus) {
+                    document.getElementById("salaryStatusWrapper").innerHTML = newStatus.innerHTML;
+                }
+                if (newSection) {
+                    document.getElementById("sectionContainer").innerHTML = newSection.innerHTML;
+                }
+
+                bindCheckAll();
+            });
         }
     </script>
 </body>

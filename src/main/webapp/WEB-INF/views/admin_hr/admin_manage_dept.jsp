@@ -5,6 +5,7 @@
 <html>
 
     <head>
+        <title>[Linked : 부서 관리]</title>
         <link rel="stylesheet" href="/css/admin/sidebar.css">
         <link rel="stylesheet" href="/css/admin/modal.css"/>
         <link rel="stylesheet" href="/css/admin/main.css"/>

@@ -5,6 +5,7 @@
 <html>
 
     <head>
+        <title>[Linked : 근로계약 설정]</title>
         <link rel="stylesheet" href="/css/admin/sidebar.css">
         <link rel="stylesheet" href="/css/admin/main.css">
         <link rel="stylesheet" href="/css/admin/econtract.css">
