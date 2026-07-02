@@ -78,18 +78,39 @@
                     </div>
                 </div>
             </div>
-            <!-- 서명 대기중인 근로계약건이 있을 경우에만 보여주게 설정할 예정(수정필요) -->
-            <div class="card">
-                <div class="card-title"><span class="dot"></span>서명 대기중인 근로계약건</div>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <label>계약서</label>
-                        <div class="val"> 
-                            <a href="/user_sign_contract?sabun=${info.sabun}" class="pw-edit-link">서명하기</a>
+            <!-- 서명 대기중인 근로계약건이 있을 경우에만 서명 대기 표기 -->
+            <c:if test="${not empty pendingContract}">
+                <div class="card">
+                    <div class="card-title"><span class="dot"></span>서명 대기중인 근로계약건</div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>계약서</label>
+                            <div class="val"> 
+                                <form id="myForm" action="/user_sign_contract" method="POST">
+                                    <input type="hidden" name="sabun" value="${info.sabun}"/>
+                                    <a href="javascript:document.getElementById('myForm').submit();" class="pw-edit-link">서명하기</a>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </c:if>
+            <c:if test="${empty pendingContract}">
+                <div class="card">
+                    <div class="card-title"><span class="dot"></span>나의 근로계약 정보</div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>계약서</label>
+                            <div class="val"> 
+                                <form id="myForm" action="/user_sign_contract" method="POST">
+                                    <input type="hidden" name="sabun" value="${info.sabun}"/>
+                                    <a href="javascript:document.getElementById('myForm').submit();" class="pw-edit-link">계약서 확인하기</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </c:if>
         </div>
         
         <!-- ─────────────────────────────── TAB 2: 출/퇴근 ─── -->
@@ -161,7 +182,7 @@
                     <div class="breakdown-row deduct"><span class="name">건강보험</span><span class="amt">-<fmt:formatNumber value="${userSalary.health_insurance}" pattern="#,###"/></span></div>
                     <div class="breakdown-row deduct"><span class="name">고용보험</span><span class="amt">-<fmt:formatNumber value="${userSalary.employment_insurance}" pattern="#,###"/></span></div>
                     <div class="breakdown-row deduct"><span class="name">소득세</span><span class="amt">-<fmt:formatNumber value="${userSalary.income_tax + userSalary.local_income_tax}" pattern="#,###"/></span></div>
-                </c:if>
+                </c:if> 
                 <div class="breakdown-row total"><span class="name">실수령액</span><span class="amt"><fmt:formatNumber value="${userSalary.net_pay}" pattern="#,###"/></span></div>
             </div>
             </div>

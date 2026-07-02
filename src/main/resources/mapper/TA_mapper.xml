@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="checkIn" 
             parameterType="int">
         insert into ta(sabun, day, checkin)
-        values(#{sabun}, now(), now())
+        values(#{sabun}, CURDATE(), now())
     </insert>
 
     <update id="checkOut" 
@@ -180,24 +180,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateTaReport"
             parameterType="ta">
         <foreach collection="userTaList" item="item" separator=";">
-            insert into ta (sabun, day, checkin, checkout)
-            values( #{sabun}, #{item.day}, 
-            <choose>
-                <when test="item.checkin != null and item.checkin != ''">
-                    concat(#{item.day},' ', #{item.checkin}, ':00')
-                </when>
-                <otherwise>null</otherwise>
-            </choose>,
-            <choose>
-                <when test="item.checkout != null and item.checkout != ''">    
-                    concat(#{item.day}, ' ', #{item.checkout}, ':00')
-                </when>
-                <otherwise>null</otherwise>
-            </choose>
-            )
-            on duplicate key update
-            checkin = values(checkin),
-            checkout = values(checkout)
+            <if test="(item.checkin != null and item.checkin != '')
+                    or(item.checkout != null and item.checkout != '')">
+                insert into ta (sabun, day, checkin, checkout)
+                values( #{sabun}, CAST(#{item.day} AS DATE), 
+                <choose>
+                    <when test="item.checkin != null and item.checkin != ''">
+                        concat(#{item.day},' ', #{item.checkin}, ':00')
+                    </when>
+                    <otherwise>null</otherwise>
+                </choose>,
+                <choose>
+                    <when test="item.checkout != null and item.checkout != ''">    
+                        concat(#{item.day}, ' ', #{item.checkout}, ':00')
+                    </when>
+                    <otherwise>null</otherwise>
+                </choose>
+                )
+                on duplicate key update
+                checkin = <choose>
+                            <when test="item.checkin != null and item.checkin != ''">
+                                CONCAT(#{item.day}, ' ', #{item.checkin}, ':00')
+                            </when>
+                            <otherwise>NULL</otherwise>
+                        </choose>,
+                checkout = <choose>
+                                <when test="item.checkout != null and item.checkout != ''">    
+                                    CONCAT(#{item.day}, ' ', #{item.checkout}, ':00')
+                                </when>
+                                <otherwise>NULL</otherwise>
+                            </choose>
+            </if>
         </foreach>
     </update>
 
