@@ -34,6 +34,44 @@
     .btn { padding: 10px 20px; font-size: 14px; cursor: pointer; margin: 0 5px; }
     .btn-submit { background-color: #4CAF50; color: white; border: none; }
     .btn-clear { background-color: #f44336; color: white; border: none; }
+
+    .certified-container {
+        position: relative;
+        background-color: #fcfcfc;
+        border: 1px solid #e9e9e9;
+        padding: 30px;
+        border-radius: 8px;
+        margin-top: 100px;
+        text-align: left;
+    }
+
+    /* 디지털 인증 도장 (CSS로 구현) */
+    .stamp-mark {
+        position: absolute;
+        right: 50px;       /* 오른쪽 배치 */
+        top: 50%;
+        transform: translateY(-50%) rotate(-15deg); /* 도장 찍힌 것처럼 살짝 회전 */
+        
+        border: 3px double #d32f2f; /* 도장 느낌의 이중선 테두리 */
+        color: #d32f2f;            /* 인감 도장 특유의 붉은색 */
+        font-size: 16px;
+        font-weight: bold;
+        padding: 8px 15px;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 1.4;
+        letter-spacing: 2px;
+        opacity: 0.85;             /* 약간 투명하게 해서 도장 질감 유도 */
+        user-select: none;
+    }
+    
+    .stamp-text {
+        font-size: 11px;
+        border-top: 1px solid #d32f2f;
+        margin-top: 3px;
+        padding-top: 3px;
+        letter-spacing: 0px;
+    }
 </style>
 </head>
 <body>
@@ -59,19 +97,42 @@
         <span class="contract-bold">5. 계약 임기 종료일 :</span> 
         <span>${contract.end_date != null ? contract.end_date : '기한의 정함이 없음 (정직원)'}</span>
     </div>
-    
-    <p style="margin-top:30px;">본 계약 내용을 확인하였으며, 위 조항에 동의하며 서명합니다.</p>
 
-    <div class="signature-container">
-        <h3>서 명 란</h3>
-        <canvas id="signaturePad" width="400" height="150"></canvas>
-        <div class="btn-group">
-            <c:if test="${contract.signed_at eq null}">
+    <c:if test="${contract.signed_at eq null}">
+    
+        <div class="signature-container">
+            <h3>서 명 란</h3>
+            <canvas id="signaturePad" width="400" height="150"></canvas>
+            <div class="btn-group">
                 <button type="button" class="btn btn-clear" onclick="clearCanvas()">지우기</button>
                 <button type="button" class="btn btn-submit" onclick="submitSignature('${contract.contract_id}', '${contract.sabun}')">계약서 서명제출</button>
-            </c:if>
+            </div>
         </div>
-    </div>
+    </c:if>
+    <c:if test="${contract.signed_at ne null}">
+        <div class="certified-container">
+            <!-- 왼쪽: 공식 인증 기록 텍스트 -->
+            <div class="certified-info">
+                <h4 style="color: #2b579a; margin: 0 0 10px 0; font-size: 16px;">
+                    전자문서 체결 정보
+                </h4>
+                <p style="font-size: 13px; color: #555; margin: 0 0 15px 0; line-height: 1.5;">
+                    본 근로계약서는 전자서명법에 의거하여 사원 본인의 인증 및 서명을 통해 <br>
+                    적법하게 체결 완료되었음을 시스템이 보증합니다.
+                </p>
+                <div style="font-size: 12px; color: #888; line-height: 1.6;">
+                    • <strong>서명 사원:</strong> ${info.saname} (${contract.sabun}) <br>
+                    • <strong>서명 일시:</strong> ${contract.signed_at} <br>
+                    • <strong>문서 번호:</strong> NO-${contract.contract_id}
+                </div>
+            </div>
+            <!-- 오른쪽: CSS로 만든 디지털 승인 도장 -->
+            <div class="stamp-mark">
+                서명완료
+                <div class="stamp-text">HR SYSTEM</div>
+            </div>
+        </div>
+    </c:if>   
 </div>
 
 <script>
@@ -121,7 +182,7 @@ function submitSignature(contractId, sabun) {
     if(!confirm("이 서명으로 계약을 최종 확정하시겠습니까?")) return;
 
     // 비동기 전송
-    fetch('/user_sign_contract', {
+    fetch('/user_sign_contract_fin', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -135,7 +196,7 @@ function submitSignature(contractId, sabun) {
     .then(data => {
         if(data) {
             alert("전자 계약 서명이 성공적으로 완료되었습니다!");
-            location.href="/user_sign_contract?sabun="+sabun;
+            location.href="/mypage";
         } else {
             alert("서명 처리 중 실패했습니다.");
         }

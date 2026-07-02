@@ -128,8 +128,8 @@ public class UserController {
         Map<String,String> userTotalTA = userDao.userTotalTa(sabun); // 총 근무 시간, 일
         SleaveVO userSleave = sleaveDAO.sawonLeave(sabun); // 사원 연차 조회
         List<SleaveLogVO> userSleaveLog = sleaveDAO.sleaveLogSelect(sabun); //사원 연차 사용 조회
-        SalaryLedgerVO userSalary = salaryDao.getLedgerinfo(monthlyTAMap); //사원 이번달 월급 정보 조회
-        SalaryContractVO userContract = salaryDao.getContractBySabun(sabun); // 사원 근로 계약서 정보 조회 
+        SalaryLedgerVO userSalary = salaryDao.getLedgerinfo(monthlyTAMap); //사원 이번달 월급 정보 조회(서명필요한 계약서 정보로 변경해야함!)
+        SalaryContractVO userContract = salaryDao.getPendingContract(sabun); // 서명 대기중인 근로계약서 조회 
         List<SalaryLedgerVO> userSalaryList = salaryDao.getLedgerbySabun(sabun);
         
         if(userContract != null){
@@ -264,14 +264,14 @@ public class UserController {
     }
 
     //근로&연봉 계약서 사인폼으로 이동
-    @GetMapping("/user_sign_contract")
+    @PostMapping("/user_sign_contract")
     public String SignContractForm( Model model , String sabun ){
 
         //사번이 제대로 넘어 왔다면
         if( sabun != null || !sabun.trim().equals("") ){
             
             int realSabun = Integer.parseInt(sabun);
-            SalaryContractVO contract = salaryDao.getContractBySabun(realSabun);
+            SalaryContractVO contract = salaryDao.getContractBySabun(realSabun); 
 
             model.addAttribute("contract", contract);
         }else{ //사번이 제대로 넘어오지 않았다면
@@ -282,7 +282,7 @@ public class UserController {
     }
 
     //계약서 서명
-    @PostMapping("/user_sign_contract")
+    @PostMapping("/user_sign_contract_fin")
     @ResponseBody
     public boolean signContract( SalaryContractVO contract ){
 

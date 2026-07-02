@@ -46,4 +46,7 @@ public interface SalaryDAO {
 
     //해당 월에 근태 마감된 인원
     int getCntClosed(String ym);
+
+    //서명 대기중인 계약서 조회
+    SalaryContractVO getPendingContract(int sabun);
 }

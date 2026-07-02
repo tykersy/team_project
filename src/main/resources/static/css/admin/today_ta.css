@@ -115,3 +115,8 @@
 .data-table td.tag.absent {
     color: #C62828 !important; /* 결근: 레드 */
 }
+
+a{
+    text-decoration: none;
+    color:black;
+}

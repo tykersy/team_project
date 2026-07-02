@@ -3,6 +3,7 @@ package com.kh.project.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.project.vo.SalaryContractVO;
 import com.kh.project.vo.SawonVO;
 import com.kh.project.vo.TAVO;
 import com.kh.project.vo.UserVO;
@@ -29,6 +30,4 @@ public interface UserDAO {
 
     //비밀번호 변경
     int changePW(UserVO vo);
-
-
 }

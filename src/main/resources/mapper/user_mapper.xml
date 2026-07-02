@@ -14,11 +14,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!-- 마이페이지 조회 -->
     <select id="userMyPage" parameterType="int" resultType="user">
         select s.sabun, s.deptno ,s.saname, s.sajob , s.saemail ,s.satel , s.sahire , s.saaddr, s.sastatus, s.sazipcode,
-	           d.dname , sc.base_salary as base_pay
+	           d.dname , sc.base_pay
         from
             sawon as s join dept as d
             on s.deptno = d.deptno
-            left join salary_contract sc
+            left join (
+                select sabun, base_salary AS base_pay
+                from salary_contract
+                where signed_at is not null
+                and (
+                        (end_date IS NOT NULL AND CURDATE() BETWEEN start_date AND end_date)
+                        OR
+                        (end_date IS NULL AND CURDATE() &gt;= start_date)
+                    )
+                order by start_date DESC, created_at DESC
+                limit 1
+            ) AS sc
             on sc.sabun = s.sabun
         where s.sabun=#{sabun}
     </select>
