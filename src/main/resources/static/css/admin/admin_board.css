@@ -197,3 +197,17 @@
 .btn-red { background-color: #ef4444; }
 .pagination-row { text-align: center; font-weight: bold; padding: 5px 0; }
 .pagination-row a { text-decoration: none; color: #333; margin: 0 10px; }
+
+/* 1. 기본 폰트 사이즈 정의 */
+.ql-snow .ql-picker.ql-size .ql-picker-label::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item::before {
+    content: attr(data-value) !important; /* data-value 속성을 그대로 표시 */
+}
+
+/* 2. 에디터 툴바 컨테이너 보호 (이 부분이 핵심!) */
+.ql-toolbar {
+    white-space: normal !important;
+}
+.ql-picker-options {
+    white-space: nowrap !important;
+}
