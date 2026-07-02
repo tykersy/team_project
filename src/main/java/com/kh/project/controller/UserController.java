@@ -129,7 +129,8 @@ public class UserController {
         SleaveVO userSleave = sleaveDAO.sawonLeave(sabun); // 사원 연차 조회
         List<SleaveLogVO> userSleaveLog = sleaveDAO.sleaveLogSelect(sabun); //사원 연차 사용 조회
         SalaryLedgerVO userSalary = salaryDao.getLedgerinfo(monthlyTAMap); //사원 이번달 월급 정보 조회(서명필요한 계약서 정보로 변경해야함!)
-        SalaryContractVO userContract = salaryDao.getPendingContract(sabun); // 서명 대기중인 근로계약서 조회 
+        SalaryContractVO pendingContract = salaryDao.getPendingContract(sabun); // 서명 대기중인 근로계약서 조회
+        SalaryContractVO userContract = salaryDao.getContractBySabun(sabun); //가장 최근에 서명한 근로계약서 조회
         List<SalaryLedgerVO> userSalaryList = salaryDao.getLedgerbySabun(sabun);
         
         if(userContract != null){
@@ -153,8 +154,9 @@ public class UserController {
         model.addAttribute("sleave", userSleave);
         model.addAttribute("leaveLogList", userSleaveLog);
         model.addAttribute("userSalary", userSalary);
-        model.addAttribute("userContract", userContract);
+        model.addAttribute("pendingContract", pendingContract);
         model.addAttribute("userSalaryList", userSalaryList);
+        model.addAttribute("userContract", userContract);
         
 
         return "user/mypage";
