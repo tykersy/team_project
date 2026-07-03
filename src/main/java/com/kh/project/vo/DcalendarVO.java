@@ -19,4 +19,6 @@ public class DcalendarVO {
     private int viewStartDay;
     private int viewEndDay;
 
+    private String dname;
+
 }

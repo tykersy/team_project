@@ -18,6 +18,8 @@ public interface CalendarDAO {
 
     List<DcalendarVO> selectDcalByDeptno(Map<String, Object> map);
 
+    List<DcalendarVO> selectDcalAllByMonth(Map<String, Object> map);
+
     List<ScalendarVO> selectScalBySabun(Map<String, Object> map);
 
     List<CalendarVO> selectDept(int deptNo); 

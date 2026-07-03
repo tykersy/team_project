@@ -36,11 +36,11 @@ function insertSchedule() {
     }
 }
 
-function openDcalDetail(idx, title, start, end, content, writerSabun) {
+function openDcalDetail(idx, dname, title, start, end, content, writerSabun) {
 
     document.getElementById("scheduleIdx").value = idx;
     document.getElementById("scheduleType").value = "dcal";
-
+    document.getElementById("detailDept").innerText = dname;
     document.getElementById("detailTitle").innerText = title;
     document.getElementById("detailStart").innerText = start.substring(0, 10);
     document.getElementById("detailEnd").innerText = end.substring(0, 10);
@@ -121,6 +121,7 @@ function openDcalDetailByEl(el) {
 
     openDcalDetail(
         el.dataset.idx,
+        el.dataset.dname,
         el.dataset.title,
         el.dataset.start,
         el.dataset.end,
