@@ -63,7 +63,12 @@ public class CalendarController {
         param.put("monthStart", monthStart.toString());
         param.put("monthEnd", monthEnd.toString());
 
-        List<DcalendarVO> dcalList = calendardao.selectDcalByDeptno(param);
+        List<DcalendarVO> dcalList;
+            if (sabun == 1) {
+                dcalList = calendardao.selectDcalAllByMonth(param);
+            } else {
+                dcalList = calendardao.selectDcalByDeptno(param);
+            }
         List<ScalendarVO> scalList = calendardao.selectScalBySabun(param);
 
         for(DcalendarVO vo : dcalList){

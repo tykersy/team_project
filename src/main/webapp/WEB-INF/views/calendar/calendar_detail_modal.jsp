@@ -25,6 +25,11 @@
             </tr>
 
             <tr>
+                <th>부서</th>
+                <td id="detailDept"></td>
+            </tr>
+
+            <tr>
                 <th>시작일</th>
                 <td id="detailStart"></td>
             </tr>

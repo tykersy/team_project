@@ -109,6 +109,7 @@
                                                 day <= dvo.viewEndDay}">
 
                                                         <div class="dcal-item" data-idx="${dvo.dcal_idx}"
+                                                            data-dname = "${dvo.dname}"
                                                             data-title="${dvo.title}" data-start="${dvo.start_date}"
                                                             data-end="${dvo.end_date}" data-content="${dvo.content}"
                                                             data-writer="${dvo.sabun}"
