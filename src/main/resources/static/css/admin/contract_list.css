@@ -55,9 +55,9 @@
 }
 
 .contract-card:hover {
-    transform: translateY(-2px);
-    border-color: #94A3B8;
-    box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.05);
+    transform: translateY(-4px); /* 조금 더 입체감 있게 위로 이동 */
+    box-shadow: 0 12px 20px -8px rgba(15, 23, 42, 0.08), 
+                0 4px 12px -2px rgba(15, 23, 42, 0.03); /* 다단 그림자로 깊이감 부여 */
 }
 
 .contract-card::before {
@@ -159,6 +159,7 @@
 
 .erp-table {
     width: 100%;
+    table-layout: fixed;
     border-collapse: collapse;
     text-align: left;
 }
