@@ -174,7 +174,6 @@
         transform: translateY(-1px);
         box-shadow: 0 4px 6px rgba(0,0,0,0.15);
     }
-@charset "UTF-8";
 
 /* ─── 레이아웃 구조 (사이드바 연동) ─── */
 .manager-container {
@@ -343,4 +342,37 @@ select.form-control {
     background-color: #F1F5F9;
     color: #1E293B;
     border-color: #94A3B8;
+}
+
+/* 우편번호 입력창과 버튼을 가로로 정렬 */
+.zipcode-wrapper {
+    display: flex;
+    gap: 8px;            /* 입력창과 버튼 사이의 간격 */
+    align-items: center;
+}
+
+/* 정렬했을 때 입력창이 왼쪽 공간을 채우도록 설정 */
+.zipcode-wrapper .form-control {
+    flex: 1;
+}
+
+/* 주소검색 버튼 커스텀 스타일 */
+.zipcode-wrapper .btn-zipcode-search {
+    height: 46px;        /* .form-control의 높이와 통일 */
+    padding: 0 16px;     /* 글자 양옆 여백 */
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap; /* 글자가 아래로 꺾이는 것 방지 */
+    background-color: #111827; /* 폼 테마와 맞춘 미드나잇 블랙 */
+    color: #ffffff;
+    border: 1px solid #111827;
+    border-radius: 8px;  /* 입력창 둥글기 맞춤 */
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* 버튼 마우스 호버 효과 */
+.zipcode-wrapper .btn-zipcode-search:hover {
+    background-color: #1f2937;
+    border-color: #1f2937;
 }

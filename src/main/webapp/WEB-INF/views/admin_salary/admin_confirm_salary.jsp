@@ -22,13 +22,16 @@
                 </div>
 
                 <div class="salary-status-wrapper" id="salaryStatusWrapper">
-                    <div class="status-card pending">
-                        <h3>당월 정산 대기 건수</h3>
-                        <div class="count">${countLedgers}건</div>
+                    <!-- 당월 정산 대기 카드 (주황 포인트) -->
+                    <div class="dashboard-card card-amber">
+                        <span class="card-label">당월 정산 대기 건수</span>
+                        <span class="card-value">${countLedgers != null ? countLedgers : 0} <span>건</span></span>
                     </div>
-                    <div class="status-card completed">
-                        <h3>당월 정산 완료 건수</h3>
-                        <div class="count">${countConfirmedLedgers}건</div>
+                    
+                    <!-- 당월 정산 완료 카드 (초록 포인트) -->
+                    <div class="dashboard-card card-emerald">
+                        <span class="card-label">당월 정산 완료 건수</span>
+                        <span class="card-value">${countConfirmedLedgers != null ? countConfirmedLedgers : 0} <span>건</span></span>
                     </div>
                 </div>
 
@@ -44,14 +47,14 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th style="width: 40px;"><input type="checkbox" id="checkAll"></th>
-                                <th>사번</th>
-                                <th>사원</th>
-                                <th>부서</th>
-                                <th>지급 식대</th>
-                                <th>총 지급액</th>
-                                <th>정산 상태</th>
-                                <th style="text-align: center;">액션</th>
+                                <th style="width: 50px;"><input type="checkbox" id="checkAll"></th>
+                                <th style="width: 10%;">사번</th>
+                                <th style="width: 12%;">사원</th>
+                                <th style="width: 12%;">부서</th>
+                                <th style="width: 18%;">지급 식대</th>
+                                <th style="width: 18%;">총 지급액</th>
+                                <th style="width: 12%;">정산 상태</th>
+                                <th style="text-align: center; width: 20%;">액션</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -254,18 +257,27 @@
         // 기존 /admin/salary_confirm 매핑을 재사용해 fetch로 비동기 조회
         function reloadSalaryConfirm(ym) {
             fetch("/admin/salary_confirm?ym=" + encodeURIComponent(ym))
-            .then(res => res.text())
+            .then(res => res => {
+                if (!res.ok) throw new Error("네트워크 응답에 문제가 있습니다.");
+                return res.text();
+            })
             .then(html => {
                 const doc = new DOMParser().parseFromString(html, "text/html");
 
-                const newStatus = doc.getElementById("salaryStatusWrapper");
-                const newSection = doc.getElementById("sectionContainer");
+                // document.querySelector를 이용해 ID 기반으로 확실하게 추출
+                const newStatus = doc.querySelector("#salaryStatusWrapper");
+                const newSection = doc.querySelector("#sectionContainer");
 
-                if (newStatus) {
+                if (newStatus && document.getElementById("salaryStatusWrapper")) {
                     document.getElementById("salaryStatusWrapper").innerHTML = newStatus.innerHTML;
+                } else {
+                    console.warn("salaryStatusWrapper 요소를 찾을 수 없습니다.");
                 }
-                if (newSection) {
+                
+                if (newSection && document.getElementById("sectionContainer")) {
                     document.getElementById("sectionContainer").innerHTML = newSection.innerHTML;
+                } else {
+                    console.warn("sectionContainer 요소를 찾을 수 없습니다.");
                 }
 
                 bindCheckAll();

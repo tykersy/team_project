@@ -219,14 +219,17 @@ public class TAController {
         }
         //마감 완료 인원 조회
         int completeCnt = salarydao.getCntClosed(ym);
+        //마감 완료된 TA리스트 조회
+        List<SalaryClosedVO> confirmedTAList = salarydao.getConfirmedList(ym);
 
         // 3. 바인딩 및 포워딩
         // model.addAttribute("attendanceList", dummyList); //정산 대상자 목록
         model.addAttribute("selectedYm", ym); //선택 년월
         model.addAttribute("waitCnt", attendanceList.size()); //마감 대기자 수
         model.addAttribute("completeCnt", completeCnt); //마감 완료자 수
+        model.addAttribute("confirmedTAList", confirmedTAList); //이달 마감 근태 리스트
 
-        model.addAttribute("attendanceList", attendanceList);
+        model.addAttribute("attendanceList", attendanceList); //마감 대기 근태 리스트
 
         return "admin_ta/admin_ta_contirm";
     }

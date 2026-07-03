@@ -3,7 +3,10 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <aside class="sidebar">
-    <div class="logo">🔗 Linked</div>
+    
+    <div class="logo" onclick="location.href='/admin/main'">
+        🔗 Linked
+    </div>
 
     <nav class="sidebar-menu">
         <div class="menu-group">
