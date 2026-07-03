@@ -20,15 +20,36 @@
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 
     <style>
-    /* 글쓰기 title 스타일적용 */
     .board-table th {
         background-color: #F8FAFC !important;
         color: #475569 !important;    
         text-align: center !important;
         font-weight: bold !important;
+        border: 1px solid #e2e8f0;
     }
-    </style>
+
+    /* 툴바 항목에 실제 이름/숫자 표시 */
+    .ql-snow .ql-picker.ql-font .ql-picker-label::before,
+    .ql-snow .ql-picker.ql-font .ql-picker-item::before { content: attr(data-value) !important; }
+    .ql-snow .ql-picker.ql-size .ql-picker-label::before,
+    .ql-snow .ql-picker.ql-size .ql-picker-item::before { content: attr(data-value) !important; }
+
+    /* 툴바 너비 조절 */
+    .ql-snow .ql-picker.ql-font { min-width: 120px !important; }
+    .ql-snow .ql-picker.ql-size { min-width: 60px !important; }
+
+    /* 스타일 매핑 */
+    .ql-font-malgun-gothic { font-family: 'Malgun Gothic', sans-serif; }
+    .ql-font-nanum-gothic { font-family: 'Nanum Gothic', sans-serif; }
+    .ql-size-10 { font-size: 10px; }
+    .ql-size-12 { font-size: 12px; }
+    .ql-size-14 { font-size: 14px; }
+    .ql-size-16 { font-size: 16px; }
+    .ql-size-18 { font-size: 18px; }
+    .ql-size-20 { font-size: 20px; }
     
+    #editor-container .ql-editor { font-size: 14px; line-height: 1.6; min-height: 300px; }
+    </style>
 </head>
 
 <body>
@@ -50,7 +71,7 @@
                         <tbody>
                             <tr>
                                 <th>제목</th>
-                                <td><input type="text" name="title" class="input-text" required></td>
+                                <td><input type="text" name="title" class="input-text" required style="width: 98%; padding: 8px;"></td>
                             </tr>
                             <tr>
                                 <th>작성 부서</th>
@@ -76,24 +97,26 @@
 </div>
 
 <script>
-    // 1. 폰트 설정
-    var Font = Quill.import('formats/font');
-    Font.whitelist = [false, 'malgun-gothic', 'nanum-gothic', 'serif', 'monospace']; 
+    // 1. 설정값 정의
+    const fontList = ['malgun-gothic', 'nanum-gothic', 'serif', 'monospace'];
+    const sizeList = ['10', '12', '14', '16', '18', '20'];
+
+    // 2. Quill 설정
+    const Font = Quill.import('formats/font');
+    Font.whitelist = fontList;
     Quill.register(Font, true);
 
-    // 2. 사이즈 설정
-    var Size = Quill.import('formats/size');
-    Size.whitelist = ['10', '12', '14', '16', '18', '20'];
+    const Size = Quill.import('formats/size');
+    Size.whitelist = sizeList;
     Quill.register(Size, true);
 
-    // 3. 에디터 초기화 및 툴바 상세 설정
-    var quill = new Quill('#editor-container', {
+    // 3. 에디터 초기화
+    const quill = new Quill('#editor-container', {
         theme: 'snow',
         modules: {
             toolbar: [
-                [{ 'font': [false, 'malgun-gothic', 'nanum-gothic', 'serif', 'monospace'] }],
-                [{ 'size': ['10', '12', '14', '16', '18', '20'] }], 
-                [{ 'header': [1, 2, 3, false] }],
+                [{ 'font': fontList }],
+                [{ 'size': sizeList }],
                 ['bold', 'italic', 'underline', 'strike'],
                 [{ 'color': [] }, { 'background': [] }],
                 [{ 'align': [] }],
@@ -103,17 +126,16 @@
         }
     });
 
-    // 4. 폼 전송
+    // 4. 폼 전송 로직
     function submitForm() {
-        var contentField = document.getElementById('content');
-        var quillContent = quill.root.innerHTML;
+        const contentField = document.getElementById('content');
         
-        if (quill.getText().trim() === '') {
+        if (quill.getText().trim() === '' && quill.getContents().ops.length === 1) {
             alert('내용을 입력해주세요.');
             return;
         }
 
-        contentField.value = quillContent;
+        contentField.value = quill.root.innerHTML;
         document.getElementById('writeForm').submit();
     }
 </script>

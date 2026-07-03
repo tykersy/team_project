@@ -60,4 +60,11 @@ public class BoardDAO {
         sqlSession.delete(NAMESPACE + "deleteBoard", idx);
     }
 
+    // 관리자(팀장) 권한 확인
+    public boolean isLeader(int sabun) {
+        // sqlSession.selectOne이 null을 반환하면 권한이 없는 것으로 간주
+        Integer result = sqlSession.selectOne(NAMESPACE + "isLeader", sabun);
+        return result != null;
+    }
+
 }
