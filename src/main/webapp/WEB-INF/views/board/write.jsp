@@ -20,13 +20,31 @@
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 
     <style>
-    /* 글쓰기 title 스타일적용 */
-    .board-table th {
-        background-color: #F8FAFC !important;
-        color: #475569 !important;    
-        text-align: center !important;
-        font-weight: bold !important;
-    }
+    /* 1. 테이블 스타일 (관리자/사용자 공통) */
+    .board-table th { background-color: #F8FAFC !important; color: #475569 !important; text-align: center !important; font-weight: bold !important; border: 1px solid #e2e8f0; }
+    .input-text { width: 98%; padding: 8px; border: 1px solid #e2e8f0; border-radius: 4px; }
+
+    /* 2. Quill 툴바 스타일 (이 부분을 페이지마다 직접 넣어주세요) */
+    .ql-snow .ql-picker.ql-font .ql-picker-label::before,
+    .ql-snow .ql-picker.ql-font .ql-picker-item::before { content: attr(data-value) !important; }
+    .ql-snow .ql-picker.ql-size .ql-picker-label::before,
+    .ql-snow .ql-picker.ql-size .ql-picker-item::before { content: attr(data-value) !important; }
+
+    .ql-snow .ql-picker.ql-font { min-width: 120px !important; }
+    .ql-snow .ql-picker.ql-size { min-width: 60px !important; }
+
+    /* 3. 폰트/사이즈 클래스 매핑 (실제 적용용) */
+    .ql-font-malgun-gothic { font-family: 'Malgun Gothic', sans-serif; }
+    .ql-font-nanum-gothic { font-family: 'Nanum Gothic', sans-serif; }
+    .ql-size-10 { font-size: 10px; }
+    .ql-size-12 { font-size: 12px; }
+    .ql-size-14 { font-size: 14px; }
+    .ql-size-16 { font-size: 16px; }
+    .ql-size-18 { font-size: 18px; }
+    .ql-size-20 { font-size: 20px; }
+
+    /* 4. 에디터 높이 및 기본 글자 크기 */
+    #editor-container .ql-editor { font-size: 14px; line-height: 1.6; min-height: 300px; }
     </style>
     
 </head>
@@ -54,7 +72,7 @@
                             </tr>
                             <tr>
                                 <th>작성 부서</th>
-                                <td><c:out value="${member.dname}" default="부서 정보 없음" /></td>
+                                <td><c:out value="${loginMember.dname}" default="부서 정보 없음" /></td>
                             </tr>
                             <tr>
                                 <th>내용</th>
@@ -76,24 +94,23 @@
 </div>
 
 <script>
-    // 1. 폰트 설정
-    var Font = Quill.import('formats/font');
-    Font.whitelist = [false, 'malgun-gothic', 'nanum-gothic', 'serif', 'monospace']; 
+    const fontList = ['malgun-gothic', 'nanum-gothic', 'serif', 'monospace'];
+    const sizeList = ['10', '12', '14', '16', '18', '20'];
+
+    const Font = Quill.import('formats/font');
+    Font.whitelist = fontList;
     Quill.register(Font, true);
 
-    // 2. 사이즈 설정
-    var Size = Quill.import('formats/size');
-    Size.whitelist = ['10', '12', '14', '16', '18', '20'];
+    const Size = Quill.import('formats/size');
+    Size.whitelist = sizeList;
     Quill.register(Size, true);
 
-    // 3. 에디터 초기화 및 툴바 상세 설정
-    var quill = new Quill('#editor-container', {
+    const quill = new Quill('#editor-container', {
         theme: 'snow',
         modules: {
             toolbar: [
-                [{ 'font': [false, 'malgun-gothic', 'nanum-gothic', 'serif', 'monospace'] }],
-                [{ 'size': ['10', '12', '14', '16', '18', '20'] }], 
-                [{ 'header': [1, 2, 3, false] }],
+                [{ 'font': fontList }],
+                [{ 'size': sizeList }],
                 ['bold', 'italic', 'underline', 'strike'],
                 [{ 'color': [] }, { 'background': [] }],
                 [{ 'align': [] }],
@@ -103,17 +120,13 @@
         }
     });
 
-    // 4. 폼 전송
     function submitForm() {
-        var contentField = document.getElementById('content');
-        var quillContent = quill.root.innerHTML;
-        
-        if (quill.getText().trim() === '') {
+        const contentField = document.getElementById('content');
+        if (quill.getText().trim() === '' && quill.getContents().ops.length === 1) {
             alert('내용을 입력해주세요.');
             return;
         }
-
-        contentField.value = quillContent;
+        contentField.value = quill.root.innerHTML;
         document.getElementById('writeForm').submit();
     }
 </script>

@@ -178,7 +178,7 @@ button.btn-custom {
     background:#f3f4f6;
     white-space:pre-line;
     color:#333;
-    line-height:0.8;
+    line-height:1.0;
     min-height:80px;
     border-radius:6px;
 }

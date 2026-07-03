@@ -74,5 +74,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="deleteBoard" parameterType="int">
         DELETE FROM board WHERE idx = #{idx}
     </delete>
+
+    <select id="isLeader" parameterType="int" resultType="int">
+        SELECT sabun FROM sawonleader WHERE sabun = #{sabun}
+    </select>
     
 </mapper>
