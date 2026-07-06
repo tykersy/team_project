@@ -55,9 +55,9 @@
             <a href="/admin/board/list" class="sidebar-item">공지사항</a>
         </div>
         <div class="menu-group">
+ 
 
-
-            <a href="${pageContext.request.contextPath}/admin/system_role" class="sidebar-item">시스템 관리</a>
+            <a href="/admin/system_role" class="sidebar-item">시스템 관리</a>
 
         </div>
     </nav>

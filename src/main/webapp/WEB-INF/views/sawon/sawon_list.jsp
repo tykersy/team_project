@@ -28,6 +28,46 @@
             });
         }
 
+        //부서별 사원 리스트 출력
+        function deptFilter(deptno, dname){
+
+            fetch("/admin/dept_sawon_list?deptno="+deptno, {method:'POST' })
+            .then(res=>res.json())
+            .then(data=>{
+                let resStr = "";
+                if( data.deptSawonList !== null || data.deptSawonList !== ""){
+                    data.deptSawonList.forEach( function(vo) {
+                        resStr += '<tr>';
+                        resStr += '<td>'+vo.sabun+'</td>';
+                        resStr += '<td>';
+
+                        if( vo.sabun !== '1' ){
+                            resStr += '<a href="javascript:void(0);" onclick="openSawonViewModal('+vo.sabun+')" >'+vo.saname+'</a>';
+                        }else{
+                            resStr += vo.saname;
+                        }
+
+                        resStr += '</td>';
+                        resStr += '<td>'+vo.deptno+'</td>';
+                        resStr += '<td>'+vo.sajob+'</td>';
+                        resStr += '<td>'+vo.sahire+'</td>';
+                        resStr += '<td>';
+
+                        if( vo.sabun !== '1' ){
+                            resStr += '<input type="button" value="수정" onclick="location.href='+"'"+'/admin/sawon_modify?sabun='+vo.sabun+"'"+'"/>';
+                            resStr += '<input type="button" value="퇴사" onclick="del('+vo.sabun+', '+vo.saname+')"/>';
+                        }
+                        resStr += '</td>'
+                    })
+                            
+                }
+
+                document.getElementById("list-box").style.display="none";
+                document.getElementById("deptSawonList-box").innerHTML = resStr;
+                document.getElementById("deptSawonList-box").style.display="";
+            })
+        }
+
         // fetch로 사원 상세보기 모달 열기
         function openSawonViewModal(sabun){
             fetch("/admin/sawon_view?sabun="+sabun)
@@ -80,11 +120,24 @@
             <h2>직원 관리 페이지</h2>
 
             <div class="btn-group">
+                <div class="dept-button">
+                    <c:forEach var="dept" items="${deptList}">
+                        <input type="button" value="${dept.dname}" onclick="deptFilter('${dept.deptno}', '${dept.dname}')"/>
+                    </c:forEach>
+                </div>
                 <input type="button" value="PDF다운로드" onclick="location.href='/admin/sawon_download_pdf'"/>
                 <input type="button" value="+사원 추가하기" onclick="location.href='/admin/sawon_add'"/>
             </div>
 
             <table border="1">
+                <colgroup>
+                        <col style="width: 10%;">
+                        <col style="width: 20%;">
+                        <col style="width: 15%;">
+                        <col style="width: 15%;">
+                        <col style="width: 20%;">
+                        <col style="width: 20%;">
+                    </colgroup>
                 <thead>
                     <tr>
                         <th>사원번호</th>
@@ -96,7 +149,7 @@
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody id="list-box" style="display: '';">
                     <c:forEach var="vo" items="${list}">
                         <tr>
                             <td>${vo.sabun}</td>
@@ -121,6 +174,9 @@
                             </td>
                         </tr>
                     </c:forEach>
+                </tbody>
+                <tbody id="deptSawonList-box" style="display: none;">
+
                 </tbody>
             </table>
         </div>
