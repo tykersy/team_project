@@ -130,7 +130,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                            AND l.approve = 1
                            
     <!-- 오늘 날짜 근태 기록 확인 (TA 테이블의 day 기준) -->
-    LEFT JOIN TA ta ON s.sabun = ta.sabun 
+    LEFT JOIN ta ON s.sabun = ta.sabun 
                      AND DATE(ta.day) = CURDATE() 
                      
     ORDER BY d.deptno ASC, 
