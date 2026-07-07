@@ -144,7 +144,7 @@
 
                                 <c:forEach var="dept" items="${chartList}">
 
-                                    <c:if test="${dept.deptno != prevDeptno}">
+                                    <c:if test="${dept.deptno != prevDeptno && dept.deptno != 1}">
 
                                         <div class="dept-box" data-search="${dept.dname} ${dept.dtel}">
 
