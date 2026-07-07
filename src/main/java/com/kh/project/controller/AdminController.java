@@ -272,16 +272,16 @@ public class AdminController {
     //이름 클릭시 사원(최근) 계약서 상세보기 페이지
     @GetMapping("/admin_contract_detail")
     @ResponseBody
-    public Map<String, Object> showDetailOfContract(String sabun){
+    public Map<String, Object> showDetailOfContract(String contract_id){
 
-        int i_sabun = 0;
+        int i_contract_id = 0;
         SalaryContractVO contract;
         Map<String, Object> map = new HashMap<>();
 
         //방어 코드
-        if( sabun != null && sabun != ""){
-            i_sabun = Integer.parseInt(sabun);
-            contract = salarydao.getContractBySabun(i_sabun);
+        if( contract_id != null && contract_id != ""){
+            i_contract_id = Integer.parseInt(contract_id);
+            contract = salarydao.getContractDetail(i_contract_id);
             
             map.put("contract", contract);
 

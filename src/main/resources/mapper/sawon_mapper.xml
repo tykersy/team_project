@@ -199,7 +199,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="getDeptSawonList"
             parameterType="int"
             resultType="sawon">
-        select sabun, saname from sawon where deptno = #{deptno} and sastatus = '재직'
+        select sabun, saname, deptno, sajob, sahire 
+        from sawon where deptno = #{deptno} and sastatus = '재직'
     </select>
 
     <!-- 사번으로 관리자 권한 확인 -->
@@ -209,6 +210,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select * 
         from sawonleader
         where sabun = #{sabun}
+    </select>
+
+    <!-- 사번 자동 부여 -->
+    <select id="getLastSabun"
+            resultType="int">
+        select sabun 
+        from sawon
+        order by sabun desc
+        limit 1
     </select>
 
 </mapper>

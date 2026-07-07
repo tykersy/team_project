@@ -1,4 +1,6 @@
-/* 기본 초기화 및 폰트 설정 */
+/* ==========================================================================
+   1. 기본 초기화 및 레이아웃 구조
+   ========================================================================== */
 body {
     margin: 0;
     padding: 0;
@@ -7,33 +9,35 @@ body {
     color: #1f2937;
 }
 
-/* ─── 레이아웃 구조 ─── */
 .manager-container {
     display: flex;       
     min-height: 100vh;
     width: 100%;
 }
 
-/* 부서 관리의 .main-content와 동일한 1400px 규격 적용 */
 .container {
     flex: 1;             
     padding: 40px 45px;  
     box-sizing: border-box;
     max-width: 1400px;   
     margin: 0;           
+    background-color: #f3f4f6;
 }
 
 /* ─── 페이지 헤더 ─── */
 h2 {
     font-size: 28px;    
     font-weight: 700;
-    color: #111827; /* [포인트] 미드나잇 블랙 적용 */
+    color: #111827; /* 미드나잇 블랙 적용 */
     margin: 0 0 32px 0;
     border-bottom: 2px solid #e5e7eb;
     padding-bottom: 16px;
 }
 
-/* ─── 상단 버튼 그룹 스타일 ─── */
+
+/* ==========================================================================
+   2. 상단 버튼 그룹 스타일 (글자 사라짐 오류 해결)
+   ========================================================================== */
 .btn-group {
     display: flex;
     justify-content: flex-end; /* 버튼들을 우측 정렬 */
@@ -41,27 +45,49 @@ h2 {
     margin-bottom: 20px;
 }
 
+.dept-button {
+    border: 1px solid rgb(231, 229, 229);
+    border-radius: 14px;
+    padding: 10px;
+    background-color: #ffffff;
+}
+
+/* 상단 버튼 공통 기본 스타일 정의 */
 .btn-group input[type="button"] {
     padding: 10px 18px;
     border-radius: 8px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
 
-/* +사원 추가하기 버튼 (메인 포인트 테마) */
+/* 부서별 필터용 input 버튼들 기본/호버 스타일 */
+.dept-button input[type="button"] {
+    background-color: #FFFFFF;
+    color: #475569;
+    border: 1px solid #CBD5E1;
+    margin-right: 4px;
+}
+.dept-button input[type="button"]:hover {
+    background-color: #F1F5F9;
+    color: #1E293B;
+    border-color: #CBD5E1;
+}
+
+/* [+사원 추가하기] 버튼 전용 테마 스타일 */
 .btn-group input[type="button"][value="+사원 추가하기"] {
-    background-color: #111827; /* [포인트] 진한 블랙으로 시선 집중 */
-    color: #ffffff;
+    background-color: #111827; 
+    color: #ffffff !important; /* 마우스 오버 시 글자색 유지 보장 */
     border: 1px solid #111827;
 }
 .btn-group input[type="button"][value="+사원 추가하기"]:hover {
     background-color: #1f2937;
+    color: #ffffff !important; /* 덮어쓰기 방지를 위한 강제 적용 */
     border-color: #1f2937;
 }
 
-/* PDF 다운로드 버튼 (서브 테마) */
+/* [PDF 다운로드] 버튼 전용 테마 스타일 */
 .btn-group input[type="button"][value="PDF다운로드"] {
     background-color: #ffffff;
     color: #4b5563;
@@ -74,17 +100,19 @@ h2 {
 }
 
 
-/* ─── 테이블 카드 감싸기 및 디자인 ─── */
-/* 테이블을 감싸는 흰색 보드판 효과 */
+/* ==========================================================================
+   3. 메인 테이블 디자인
+   ========================================================================== */
 table {
     width: 100%;
+    table-layout: fixed;
     border-collapse: collapse; 
     text-align: left;
     background: #ffffff; 
     border-radius: 14px; 
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
     border: 1px solid #e5e7eb;
-    overflow: hidden; /* 테이블 라운딩 처리가 잘리도록 설정 */
+    overflow: hidden; 
 }
 
 th, td {
@@ -103,8 +131,10 @@ tr:hover {
     background-color: #f9fafb; 
 }
 
+tr:last-child td {
+    border-bottom: none;
+}
 
-/* ─── 테이블 내부 텍스트 & 링크 스타일 ─── */
 /* 사원명 링크 스타일 */
 td a {
     color: #111827;
@@ -114,7 +144,7 @@ td a {
     transition: border-color 0.2s;
 }
 td a:hover {
-    border-color: #111827; /* 마우스 올리면 밑줄 스르륵 */
+    border-color: #111827; 
 }
 
 /* 최고 관리자 텍스트 스타일 */
@@ -132,12 +162,16 @@ td input[type="button"] {
     font-size: 13px;    
     font-weight: 500;
     cursor: pointer;
-    border: 1px solid transparent;
+    border: 1px solid #E2E8F0;
+    background-color: #FFFFFF;
     transition: all 0.2s;
     margin-right: 4px;
 }
+td input[type="button"]:hover {
+    background-color: #F1F5F9;
+}
 
-/* 수정 버튼 */
+/* 수정 버튼 전용 */
 td input[type="button"][value="수정"] {
     background-color: #f3f4f6;
     color: #111827; 
@@ -149,118 +183,31 @@ td input[type="button"][value="수정"]:hover {
     border-color: #111827;
 }
 
-/* 퇴사 버튼 (부서관리의 '삭제'와 동일한 톤으로 매칭) */
+/* 퇴사 버튼 전용 */
 td input[type="button"][value="퇴사"] {
     background-color: #fef2f2;
     color: #ef4444;
+    border: 1px solid transparent;
 }
 td input[type="button"][value="퇴사"]:hover {
     background-color: #ef4444;
     color: #ffffff;
 }
 
-@charset "UTF-8";
 
 /* ==========================================================================
-   1. 기본 레이아웃 및 직원 목록 테이블 스타일 (기존 스타일 유지/보완)
-   ========================================================================== */
-.container {
-    padding: 40px;
-    background-color: #FAFAFA;
-    min-height: 100vh;
-}
-
-.container h2 {
-    font-size: 24px;
-    color: #1E293B;
-    margin-bottom: 24px;
-    font-weight: 700;
-}
-
-.btn-group {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-.btn-group input[type="button"] {
-    padding: 10px 16px;
-    border-radius: 8px;
-    border: 1px solid #CBD5E1;
-    background-color: #FFFFFF;
-    color: #475569;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-group input[type="button"]:hover {
-    background-color: #F1F5F9;
-    color: #1E293B;
-}
-
-/* 메인 테이블 구도 정밀화 */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #FFFFFF;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    border: 1px solid #E2E8F0;
-}
-
-th, td {
-    padding: 14px 16px;
-    text-align: left;
-    border-bottom: 1px solid #E2E8F0;
-}
-
-th {
-    background-color: #F8FAFC;
-    color: #475569;
-    font-weight: 600;
-    font-size: 14px;
-}
-
-td {
-    color: #334155;
-    font-size: 14px;
-}
-
-tr:last-child td {
-    border-bottom: none;
-}
-
-/* 테이블 내부 버튼들 */
-td input[type="button"] {
-    padding: 6px 12px;
-    border-radius: 6px;
-    border: 1px solid #E2E8F0;
-    background-color: #FFFFFF;
-    cursor: pointer;
-    margin-right: 4px;
-    font-size: 13px;
-}
-td input[type="button"]:hover {
-    background-color: #F1F5F9;
-}
-
-
-/* ==========================================================================
-   2. 고급 모달 팝업 레이아웃 (정중앙 고정 및 블러 이펙트)
+   4. 고급 모달 팝업 레이아웃 (정중앙 고정 및 블러 이펙트)
    ========================================================================== */
 .modal-overlay {
-    display: none; /* JS 호출 전까지 기본 숨김 처리 */
+    display: none; 
     position: fixed;
-    z-index: 9999 !important; /* 타 요소에 가려짐 방지 */
+    z-index: 9999 !important; 
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(15, 23, 42, 0.4); /* 프리미엄 톤 어두운 배경 */
-    backdrop-filter: blur(4px); /* 뒷배경 흐리게 처리 */
+    background-color: rgba(15, 23, 42, 0.4); 
+    backdrop-filter: blur(4px); 
     align-items: center;
     justify-content: center;
 }
@@ -307,6 +254,7 @@ td input[type="button"]:hover {
     border-collapse: collapse;
     margin-bottom: 24px;
     box-shadow: none;
+    border: none;
 }
 
 .modal-table th {
@@ -322,11 +270,10 @@ td input[type="button"]:hover {
     padding: 12px 14px;
     border: 1px solid #E2E8F0;
     color: #1E293B;
+    background-color: #ffffff;
 }
 
-/* ==========================================================================
-   3. 모달 내부 전용 휴가 현황 배지 스타일
-   ========================================================================== */
+/* ─── 모달 내부 휴가 현황 배지 스타일 ─── */
 .leave-badge {
     display: inline-block;
     padding: 4px 10px;
