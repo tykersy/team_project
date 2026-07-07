@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="checkIn" 
             parameterType="int">
         insert into ta(sabun, day, checkin)
-        values(#{sabun}, now(), now())
+        values(#{sabun}, CURDATE(), now())
     </insert>
 
     <update id="checkOut" 
@@ -39,5 +39,286 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where sabun = #{sabun}
         order by day desc
     </select>
+
+    <!-- 관리자 페이지 근태 관련 -->
+    <!-- 부서별 근태 현황 -->
+    <select id="selectDeptTA" parameterType="int" resultType="java.util.Map">
+        WITH RECURSIVE calendar AS (
+            SELECT DATE(CONCAT(YEAR(CURDATE()), '-01-01')) AS day
+            UNION ALL
+            SELECT DATE_ADD(day, INTERVAL 1 DAY)
+            FROM calendar 
+            WHERE day &lt; DATE(CONCAT(YEAR(CURDATE()), '-12-31'))
+        )
+        SELECT 
+            s.sabun,
+            s.saname,
+            s.sahire,
+            s.deptno,
+            COUNT(CASE WHEN sl.use_date IS NULL AND t.checkin IS NOT NULL AND TIME(t.checkin) &lt;= '09:00:00' THEN 1 END) AS normalCount,
+            COUNT(CASE WHEN sl.use_date IS NULL AND t.checkin IS NOT NULL AND TIME(t.checkin) &gt; '09:00:00' THEN 1 END) AS lateCount,
+            COUNT(CASE WHEN sl.use_date IS NOT NULL AND sl.approve = 1 THEN 1 END) AS leaveCount,
+            COUNT(CASE WHEN (t.day IS NULL OR t.checkin IS NULL AND t.checkout IS NULL) AND sl.use_date IS NULL THEN 1 END) AS absentCount,
+            ROUND(
+                COALESCE(
+                    SUM(CASE WHEN sl.use_date IS NULL AND t.checkin IS NOT NULL AND t.checkout IS NOT NULL
+                        THEN TIME_TO_SEC(TIMEDIFF(t.checkout, t.checkin)) / 3600 END),
+                    0
+                ), 1
+            ) AS totalWorkTime
+        FROM calendar c
+        JOIN sawon s ON s.deptno = #{deptno} AND s.sastatus = '재직'
+        LEFT JOIN ta t
+            ON t.sabun = s.sabun
+            AND DATE(t.day) = c.day
+        LEFT JOIN sleave_log sl
+            ON sl.sabun = s.sabun
+            AND sl.use_date = c.day
+            AND sl.approve = true
+        WHERE
+            DAYOFWEEK(c.day) NOT IN (1, 7)
+            AND c.day &lt;= CURDATE()
+        GROUP BY s.sabun, s.saname, s.sahire, s.deptno
+        ORDER BY s.deptno, s.sabun
+    </select>
+
+    <!-- 일일 회사 근태 현황-->
+    <select id="totalAllTa" resultType="java.util.Map">
+        SELECT 
+            COUNT(CASE
+                WHEN sl.use_date IS NULL
+                AND t.checkin IS NOT NULL
+                AND TIME(t.checkin) &lt;= '09:00:00' THEN 1
+            END) AS normalCount,        -- 정상 출근
+
+            COUNT(CASE
+                WHEN sl.use_date IS NULL
+                AND t.checkin IS NOT NULL
+                AND TIME(t.checkin) > '09:00:00' THEN 1
+            END) AS lateCount,          -- 지각
+
+            COUNT(CASE
+                WHEN sl.use_date IS NOT NULL
+                AND sl.approve = true
+                AND sl.use_days = 0.5 THEN 1
+            END) AS halfCount,          -- 반차
+
+            COUNT(CASE
+                WHEN sl.use_date IS NOT NULL
+                AND sl.approve = true
+                AND sl.use_days = 1 THEN 1
+            END) AS leaveCount,         -- 연차
+
+            COUNT(CASE
+                WHEN t.checkin IS NULL
+                AND t.checkout IS NULL
+                AND sl.use_date IS NULL THEN 1
+            END) AS absentCount         -- 결근
+
+        FROM sawon s
+        LEFT JOIN ta t
+            ON t.sabun = s.sabun
+            AND date(t.day) = CURDATE()           -- 오늘 날짜만
+        LEFT JOIN sleave_log sl
+            ON sl.sabun = s.sabun
+            AND sl.approve = true
+            AND sl.use_date = CURDATE()     -- 오늘 날짜만
+        WHERE s.sastatus = '재직'
+    </select>
+
+    <!-- 해당 년월의 사원들의 출근 일수 조회하기(퇴사하거나 근태가 마감된 사람은 제외) -->
+    <select id="getAllMonthlyTA"
+            parameterType="String"
+            resultType="salaryclosed">
+        SELECT 
+            s.sabun,
+            s.saname,
+            d.dname,
+            
+            -- 1. 출근일수: checkin(출근시간)이 찍힌 날의 총 개수를 구합니다.
+            COUNT(ta.checkin) AS worked_days,
+            
+            -- 2. 결근일수: 우선 0으로 던지고 자바 서비스단에서 (기준일수 - 출근일수)로 계산합니다.
+            0 AS absence_days,
+            
+            -- 3. 총 연장근무 시간 계산
+            -- [원리] 퇴근시간과 출근시간의 차이(분 단위)를 구한 뒤, 기본근무 8시간(480분)을 뺀 나머지를 시간 단위로 환산합니다.
+            IFNULL(
+                SUM(
+                    CASE 
+                        WHEN TIMESTAMPDIFF(MINUTE, ta.checkin, ta.checkout) > 480 
+                        THEN (TIMESTAMPDIFF(MINUTE, ta.checkin, ta.checkout) - 480) / 60.0
+                        ELSE 0 
+                    END
+                ), 0
+            ) AS overtime_hours
+
+        FROM sawon s
+        -- 해당 년월(예: 2026-06)의 근태 데이터만 매핑
+        LEFT JOIN ta ta ON s.sabun = ta.sabun AND ta.day LIKE CONCAT(#{ym}, '%')
+            JOIN dept d ON s.deptno = d.deptno
+        -- 마감 테이블에 해당 년월 마감 데이터가 있는 사원은 제외
+        WHERE s.sastatus = '재직'
+        AND NOT EXISTS (
+            SELECT *
+            FROM salary_closed_attendance sca
+            WHERE sca.sabun = s.sabun
+             AND sca.closed_ym = #{ym}
+         )
+        GROUP BY s.sabun, s.saname
+    </select>
+
+    <!-- 해당 사원의 해당 년월의 근태 마감 여부 확인 -->
+    <select id="alreadyApproved"
+            parameterType="java.util.Map"
+            resultType="String">
+        select status from salary_closed_attendance
+        where sabun = #{sabun} and closed_ym = #{ym}
+    </select>
+
+    <!-- 해당 사원의 근태 기록 수정 -->
+    <update id="updateTaReport"
+            parameterType="ta">
+        <foreach collection="userTaList" item="item" separator=";">
+            <if test="(item.checkin != null and item.checkin != '')
+                    or(item.checkout != null and item.checkout != '')">
+                insert into ta (sabun, day, checkin, checkout)
+                values( #{sabun}, CAST(#{item.day} AS DATE), 
+                <choose>
+                    <when test="item.checkin != null and item.checkin != ''">
+                        concat(#{item.day},' ', #{item.checkin}, ':00')
+                    </when>
+                    <otherwise>null</otherwise>
+                </choose>,
+                <choose>
+                    <when test="item.checkout != null and item.checkout != ''">    
+                        concat(#{item.day}, ' ', #{item.checkout}, ':00')
+                    </when>
+                    <otherwise>null</otherwise>
+                </choose>
+                )
+                on duplicate key update
+                checkin = <choose>
+                            <when test="item.checkin != null and item.checkin != ''">
+                                CONCAT(#{item.day}, ' ', #{item.checkin}, ':00')
+                            </when>
+                            <otherwise>NULL</otherwise>
+                        </choose>,
+                checkout = <choose>
+                                <when test="item.checkout != null and item.checkout != ''">    
+                                    CONCAT(#{item.day}, ' ', #{item.checkout}, ':00')
+                                </when>
+                                <otherwise>NULL</otherwise>
+                            </choose>
+            </if>
+        </foreach>
+    </update>
+
+    <!-- 근태 마감후 테이블에 정산된 값 넣기 -->
+    <insert id="insertClosedAttendance"
+            parameterType="salaryclosed">
+        INSERT INTO salary_closed_attendance(
+            closed_ym, sabun, standard_days, worked_days, absence_days, leave_days,
+            overtime_hours, status, updated_at)
+        VALUES( #{closed_ym}, #{sabun}, #{standard_days}, #{worked_days}, #{absence_days}, #{leave_days},
+            #{overtime_hours}, '완료', NOW() )
+        ON DUPLICATE KEY UPDATE
+            worked_days = #{worked_days},
+            absence_days = #{absence_days},
+            overtime_hours = #{overtime_hours},
+            status = "완료"
+    </insert>
+
+    <!-- 근태 마감 후 월급 명세서 테이블에 정산된 값 넣기 -->
+    <insert id="insertSalaryLedger"
+            parameterType="ledger">
+        INSERT INTO salary_ledger(
+            pay_ym, sabun, base_pay, finalBasePay, overtime_pay, meal_pay,
+            national_pension, health_insurance, long_term_care, employment_insurance,
+            income_tax, local_income_tax, net_pay, status
+        )
+        VALUES (
+            #{pay_ym}, #{sabun}, #{base_pay}, #{finalBasePay}, #{overtime_pay}, #{meal_pay},
+            #{national_pension}, #{health_insurance}, #{long_term_care}, #{employment_insurance},
+            #{income_tax}, #{local_income_tax}, #{net_pay}, '대기'
+        )
+    </insert>
+
+    <!-- 부서별 연차 소진율 -->
+    <select id="selectDeptAnnualUseAvg">
+        SELECT 
+            d.dname,
+            COUNT(DISTINCT s.sabun) AS sawonCount,
+            ROUND(AVG(
+                IFNULL(used.totaluse, 0) / 15.0 * 100
+            ), 1) AS useAvg
+        FROM sawon s
+        JOIN dept d ON s.deptno = d.deptno
+        LEFT JOIN (
+            SELECT sabun, SUM(use_days) AS totaluse
+            FROM sleave_log
+            WHERE leave_type = 'annual' AND approve = 1
+            AND YEAR(use_date) = YEAR(CURDATE())
+            GROUP BY sabun
+        ) used ON s.sabun = used.sabun
+        WHERE s.sastatus = '재직'
+        GROUP BY d.deptno, d.dname
+        ORDER BY useAvg DESC;
+    </select>
+
+    <!-- 당일 회사 출근율 -->
+    <select id="selectTodayCommuteAvg" resultType="Double">
+        SELECT 
+            ROUND(
+                COUNT(CASE WHEN t.checkin IS NOT NULL THEN 1 END) 
+                / COUNT(*) * 100
+            , 1) AS commuteAvg
+        FROM sawon s
+        LEFT JOIN ta t
+            ON t.sabun = s.sabun
+            AND DATE(t.day) = CURDATE()
+        WHERE s.sastatus = '재직';
+    </select>
+
+    <!-- 해당 월 퇴사자 조회 -->
+    <select id="selectMonthLeaveSawon" resultType="int">
+        SELECT 
+            count(*) as leave_sawon
+        FROM sawon s
+        JOIN dept d ON s.deptno = d.deptno
+        WHERE s.sastatus = '퇴직'
+        AND DATE_FORMAT(s.saretire, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+        ORDER BY s.saretire DESC;
+    </select>
+
+    <!-- 해당 월 입사자 조회-->
+    <select id="selectMonthJoinedSawon" resultType="int">
+        SELECT 
+            count(*) as joined_sawon
+        FROM sawon s
+        JOIN dept d ON s.deptno = d.deptno
+        WHERE s.sastatus = '재직'
+        AND DATE_FORMAT(s.sahire, '%Y-%m') = DATE_FORMAT(#{date}, '%Y-%m')
+        ORDER BY s.saretire DESC;
+    </select>
+
+    <select id="selectListByMonth" parameterType="map" resultType="ta">
+        SELECT 
+            sabun,
+            DATE_FORMAT(day, '%Y-%m-%d') AS day,
+            DATE_FORMAT(checkin, '%H:%i') AS checkin,
+            DATE_FORMAT(checkout, '%H:%i') AS checkout
+        FROM ta
+        WHERE sabun = #{sabun}
+        AND DATE_FORMAT(day, '%Y-%m') = #{month}
+        ORDER BY day DESC
+    </select>
+    <select id="selectMonthList" parameterType="int" resultType="string">
+        SELECT DISTINCT DATE_FORMAT(day, '%Y-%m')
+        FROM ta
+        WHERE sabun = #{sabun}
+        ORDER BY DATE_FORMAT(day, '%Y-%m') DESC
+    </select>
+    
     
 </mapper>

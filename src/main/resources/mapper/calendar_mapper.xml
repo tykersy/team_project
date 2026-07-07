@@ -26,10 +26,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <select id="selectDcalByDeptno"
                 parameterType="map"
                 resultType="dcal">
-                SELECT * FROM dcalendar
-                WHERE deptno = #{deptno}
-                AND start_date &lt;= #{monthEnd}
-                AND end_date &gt;= #{monthStart}
+            SELECT c.*,
+                    d.dname
+            FROM dcalendar c
+            Join dept d ON c.deptno = d.deptno
+            WHERE c.deptno = #{deptno}
+            AND c.start_date &lt;= #{monthEnd}
+            AND c.end_date &gt;= #{monthStart}
+        </select>
+        
+        <select id="selectDcalAllByMonth"
+                parameterType="map"
+                resultType="dcal">
+            SELECT c.*,
+                    d.dname
+            FROM dcalendar c
+            Join dept d ON c.deptno = d.deptno
+            WHERE c.start_date &lt;= #{monthEnd}
+            AND c.end_date &gt;= #{monthStart}
         </select>
 
         <select id="selectScalBySabun"
@@ -42,7 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </select>
 
         <select id="selectDept" parameterType="int" resultType="com.kh.project.vo.CalendarVO">
-            SELECT * FROM calendar WHERE deptno = #{deptno}
+            SELECT * FROM dcalendar WHERE deptno = #{deptno}
         </select>
 
         <select id="selectDcalWriter" parameterType="int" resultType="int">
@@ -102,5 +116,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             WHERE scal_idx = #{scal_idx}
 
         </update>
+
+        <select id="selectDeptToday" parameterType="int" resultType="dcal">
+            SELECT dcal_idx, deptno, sabun, DATE_FORMAT(start_date, '%Y-%m-%d') AS start_date, 
+            DATE_FORMAT(end_date, '%Y-%m-%d') AS end_date, title, content
+            FROM dcalendar 
+            WHERE deptno = #{deptno} 
+            AND CURDATE() BETWEEN DATE(start_date) AND DATE(end_date)
+        </select>
+
+        <select id = "isLeader" parameterType="int" resultType = "int">
+            select count(*)
+            from sawonleader
+            where sabun = #{sabun}
+        </select>
 
 </mapper>

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.project.dao.ChatDAO">
+
+    <select id="selectListChatRoom" resultType="chat">
+        SELECT
+            c_room.room_id,
+            c_room.room_type,
+
+            CASE
+                WHEN c_room.room_type = 'ONE' THEN COALESCE(other_sawon.saname, c_room.room_name)
+                ELSE c_room.room_name
+            END AS room_name,
+
+            c_room.created_at,
+            c_member.joined_at,
+            lm.sent_at,
+            lm.content AS last_message,
+            CASE
+                WHEN DATE(lm.sent_at) = CURDATE()
+                    THEN DATE_FORMAT(lm.sent_at, '%H:%i')
+                ELSE
+                    DATE_FORMAT(lm.sent_at, '%Y-%m-%d')
+            END AS last_message_time,
+            c_member.liked
+        FROM chat_room c_room
+
+        JOIN chat_member c_member
+            ON c_room.room_id = c_member.room_id
+
+        LEFT JOIN chat_member other_member
+		    ON c_room.room_type = 'ONE'
+		    AND c_room.room_id = other_member.room_id
+		    AND other_member.sabun != #{sabun}
+		
+		LEFT JOIN sawon other_sawon
+		    ON c_room.room_type = 'ONE'
+		    AND other_member.sabun = other_sawon.sabun
+
+        LEFT JOIN (
+            SELECT room_id, content, sent_at
+            FROM chat_message
+            WHERE (room_id, message_id) IN (
+                SELECT room_id, MAX(message_id)
+                FROM chat_message
+                GROUP BY room_id
+            )
+        ) lm
+            ON c_room.room_id = lm.room_id
+		
+        WHERE c_member.sabun = #{sabun}
+        
+        ORDER BY lm.sent_at desc
+    </select>
+    
+    <!--메시지 작성시 로그 저장-->
+    <insert id="insertChatLog" parameterType="chatMsg" >
+        insert into chat_message(room_id, sender_sabun, saname, content, sent_at)
+            values(#{room_id}, #{sender_sabun}, #{saname}, #{content}, now());
+    </insert>
+
+    <!--채팅방 최근 메시지 100건 조회-->
+    <select id="selectRecentLogs" resultType="chatMsg">
+        select * from chat_message
+            where room_id = #{room_id}
+            order by sent_at desc
+            limit #{limit}
+    </select>
+
+    <!--특정 시각 이후 메시지-->
+    <select id="selectLogsBefore" resultType="chatMsg">
+        select * from chat_message
+            where room_id = #{room_id}
+                and message_id &lt; #{lastLogId}
+            order by sent_at desc
+            limit #{limit}
+    </select>
+
+    <!--특정 방의 멤버 sabun 목록-->
+    <select id="selectRoomMemberSabuns" resultType="int">
+        select sabun from chat_member where room_id = #{room_id}
+    </select>
+
+
+    <!-- 즐겨찾기를 위한 조회 -->
+    <select id="selectRoomLikedCheck">
+        select liked from chat_member where room_id=#{room_id} and sabun=#{sabun}
+    </select>
+
+    <!-- 즐겨찾기 수정 -->
+    <update id="updateChatRoomLiked">
+        update chat_member set liked=#{liked}
+            where room_id=#{room_id} and sabun=#{sabun}
+    </update>
+
+    <!-- 즐겨찾기 해놓은 채팅방 조회 -->
+    <select id="selectListLikedChatRoom" resultType="chat">
+        SELECT
+            c_room.room_id,
+            c_room.room_type,
+
+            CASE
+                WHEN c_room.room_type = 'ONE' THEN COALESCE(other_sawon.saname, c_room.room_name)
+                ELSE c_room.room_name
+            END AS room_name,
+
+            c_room.created_at,
+            c_member.joined_at,
+            lm.sent_at,
+            lm.content AS last_message,
+            CASE
+                WHEN DATE(lm.sent_at) = CURDATE()
+                    THEN DATE_FORMAT(lm.sent_at, '%H:%i')
+                ELSE
+                    DATE_FORMAT(lm.sent_at, '%Y-%m-%d')
+            END AS last_message_time,
+            c_member.liked
+        FROM chat_room c_room
+
+        JOIN chat_member c_member
+            ON c_room.room_id = c_member.room_id
+
+        LEFT JOIN chat_member other_member
+		    ON c_room.room_type = 'ONE'
+		    AND c_room.room_id = other_member.room_id
+		    AND other_member.sabun != #{sabun}
+		
+		LEFT JOIN sawon other_sawon
+		    ON c_room.room_type = 'ONE'
+		    AND other_member.sabun = other_sawon.sabun
+
+        LEFT JOIN (
+            SELECT room_id, content, sent_at
+            FROM chat_message
+            WHERE (room_id, message_id) IN (
+                SELECT room_id, MAX(message_id)
+                FROM chat_message
+                GROUP BY room_id
+            )
+        ) lm
+            ON c_room.room_id = lm.room_id
+
+        WHERE c_member.sabun = #{sabun} and c_member.liked = true
+        ORDER BY lm.sent_at DESC
+      </select>
+
+    <!--채팅방 생성-->
+    <insert id="createRoom"
+            parameterType="chat"
+            useGeneratedKeys="true"
+            keyProperty="room_id">
+
+        INSERT INTO chat_room(room_type, room_name)
+        VALUES(#{room_type}, #{room_name})
+
+    </insert>
+
+    <!--채팅상대-->
+    <insert id="insertChatMember">
+
+        INSERT INTO chat_member(
+            room_id,
+            sabun
+        )
+        VALUES(
+            #{roomId},
+            #{sabun}
+        )
+
+    </insert>
+
+    <!--채팅방 조회(이미 존재하는 채팅방인지)-->
+    <select id="findOneRoom"
+            resultType="int">
+
+        SELECT cr.room_id
+        FROM chat_room cr
+        JOIN chat_member cm1 ON cr.room_id = cm1.room_id
+        JOIN chat_member cm2 ON cr.room_id = cm2.room_id
+        WHERE cr.room_type = 'ONE'
+            AND cm1.sabun = #{mySabun}
+            AND cm2.sabun = #{targetSabun}
+        LIMIT 1
+
+    </select>
+
+    <!--1:1 채팅방 나가기 전, 나가는 사람 이름을 room_name에 저장-->
+    <update id="updateRoomNameBeforeLeave">
+        UPDATE chat_room
+        SET room_name = (SELECT saname FROM sawon WHERE sabun = #{sabun})
+        WHERE room_id = #{room_id} AND room_type = 'ONE'
+    </update>
+
+    <!--시스템 메시지 저장 (sender_sabun = NULL)-->
+    <insert id="insertSystemLog">
+        insert into chat_message(room_id, sender_sabun, saname, content, sent_at)
+            values(#{room_id}, NULL, NULL, #{content}, now())
+    </insert>
+
+    <!-- 채팅방 나가기 -->
+    <delete id="deleteUserRoomLeave">
+        delete from chat_member where sabun=#{sabun} and room_id=#{room_id}
+    </delete>
+
+    <!-- 현재 채팅방에 있는 유저 목록 -->
+    <select id="selectRoomSawonList" resultType="sawon" parameterType="int">
+        select s.saname , s.sabun, d.dname  from 
+            chat_member cm join sawon s
+            on cm.sabun = s.sabun
+            join dept d
+            on d.deptno = s.deptno
+        where cm.room_id =  #{room_id};
+    </select>
+
+</mapper>

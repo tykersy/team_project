@@ -18,6 +18,8 @@ public interface CalendarDAO {
 
     List<DcalendarVO> selectDcalByDeptno(Map<String, Object> map);
 
+    List<DcalendarVO> selectDcalAllByMonth(Map<String, Object> map);
+
     List<ScalendarVO> selectScalBySabun(Map<String, Object> map);
 
     List<CalendarVO> selectDept(int deptNo); 
@@ -37,5 +39,10 @@ public interface CalendarDAO {
     int updateDcal(DcalendarVO vo);
 
     int updateScal(ScalendarVO vo);
+
+    // [추가] 대시보드 오늘 일정 조회용 메서드
+    List<CalendarVO> selectDeptToday(int deptno);
+
+    int isLeader(int sabun);
     
 } 

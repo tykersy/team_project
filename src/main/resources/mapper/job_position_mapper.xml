@@ -9,5 +9,58 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             resultType="job">
         select * from job_position
     </select>
+
+    <!-- 직급별 사원 수 조회 -->
+    <select id="position_cnt"
+            resultType="java.util.Map">
+        SELECT p.sajob,
+        COUNT(s.sabun) cnt
+        FROM job_position p
+        LEFT JOIN sawon s
+        ON p.sajob = s.sajob AND s.sastatus = '재직'
+        GROUP BY p.sajob;
+    </select>
+
+    <!-- 직급 갯수 조회 -->
+    <select id="job_cnt"
+            resultType="int">
+        select count(job_id) cnt from job_position
+    </select>
     
+    <!-- 직급명 중복체크 -->
+    <select id="chId"
+            resultType="job"
+            parameterType="job">
+        select * from job_position
+            <where>
+                <choose> 
+                    <when test="job_id != 0">
+                        job_id != #{job_id} and sajob = #{sajob}
+                    </when>
+                    <otherwise>
+                        sajob = #{sajob}
+                    </otherwise>
+                </choose>
+            </where>
+    </select>
+
+    <!-- 직급 추가 -->
+    <insert id="insert"
+            parameterType="job">
+        INSERT INTO job_position(sajob) values( #{sajob} )
+    </insert>
+
+    <!-- 직급 정보 수정 -->
+    <update id="update" 
+            parameterType="java.util.Map">
+        update job_position set job_id = #{job_id}, sajob = #{sajob}
+        WHERE job_id = #{ori_job_id}
+    </update>
+
+    <!-- 직급 삭제 -->
+    <delete id="delete"
+            parameterType="int">
+        delete from job_position where job_id = #{job_id}
+    </delete>
+
 </mapper>

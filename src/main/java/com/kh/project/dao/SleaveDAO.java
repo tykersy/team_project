@@ -1,6 +1,7 @@
 package com.kh.project.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.kh.project.vo.SleaveLogVO;
 import com.kh.project.vo.SleaveVO;
@@ -21,4 +22,40 @@ public interface SleaveDAO {
     //사원 연차 사용
     int sleaveApplyUpdate(SleaveLogVO vo);
 
+    // [추가] 오늘 날짜 기준으로 휴가 중인 사원 목록 조회
+    List<Map<String, Object>> getDeptVacationList(String today);
+
+    // [추가] 로그인한 사원의 승인 대기 건수만 조회
+    int countMyPendingLeaves(int sabun);
+
+    //[추가] 승인 대기건
+    int countPendingLeaves();
+
+    //최근 승인 완료된 연차 5개 정보 조회
+    List<SleaveLogVO> selectApprovedLeaves();
+
+    //오늘 승인 완료된 연차 갯수 조회
+    int countAporovedLeaves();
+
+    //오늘 휴가중인 인원
+    int countOnLeaveToday();
+
+    //승인 대기중인 휴가 리스트 조회
+    List<SleaveLogVO> selectpendingList();
+
+    //log_id로 승인할 연차 정보 불러오기
+    SleaveLogVO selectOne(int log_id);
+
+    //승인된 연차 approve 상태를 1로 변경
+    int changeApprove(int log_id);
+
+    //검색한 사원의 연차 사용 히스토리
+    List<SleaveLogVO> search_leave_history(String search_name);
+
+    //연차 사용 신청 반려
+    int reject(Map<String, Object> map);
+
+    //해당 사원의 해당 달 사용 연차 갯수
+    int getCountPendingTa( Map<String, Object> map );
+    
 }

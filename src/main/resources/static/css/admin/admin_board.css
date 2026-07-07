@@ -1,0 +1,207 @@
+/* 1. 전체 레이아웃: 사이드바와 메인을 수평으로 나열 */
+.layout { 
+    display: flex; 
+    width: 100%; 
+    height: 100vh; 
+    overflow: hidden; /* 레이아웃 자체의 스크롤을 막아 화면 깨짐 방지 */
+}
+
+/* 2. 메인 콘텐츠: 사이드바 너비만큼을 제외한 나머지 공간 활용 */
+.main-content {
+    flex: 1; 
+    flex: 1;
+    height: 100vh; 
+    overflow-y: auto; /* 세로 스크롤 */
+    overflow-x: auto; /* 창이 좁아지면 가로 스크롤바 생성 */
+    padding: 20px;
+    background-color: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 콘텐츠를 항상 중앙으로 */
+    box-sizing: border-box;
+    min-width: 0;
+
+}
+
+/* 3. 카드 박스 */
+.content-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 1200px; /* 큰 화면에서는 너무 커지지 않게 */
+    min-width: 800px;  /* 작은 화면에서도 테이블 찌그러짐 방지 */
+    margin: 20px 0;
+    box-sizing: border-box;
+}
+
+/* 제목: 중앙 배치 */
+.content-card h1 {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #1a1a2e;
+}
+
+/* 4. 테이블 스타일: 반응형 및 잘림 방지 */
+.board-table { 
+    width: 100%; 
+    table-layout: fixed; /* 테이블 셀 너비를 강제로 고정 */
+    border-collapse: collapse; 
+    margin-bottom: 40px; 
+}
+.board-table th { background-color: #F8FAFC !important; color: #475569 !important; padding: 15px; text-align: center; }
+.board-table td { 
+    padding: 15px; 
+    border-bottom: 1px solid #eee; 
+    text-align: center;
+    white-space: nowrap;      /* 글자 줄바꿈 금지 */
+    overflow: hidden;         /* 넘치는 부분 숨김 */
+    text-overflow: ellipsis;  /* 넘치면 ...으로 표시 */
+}
+/* 제목 열만 예외: 좌측 정렬 및 글자 줄바꿈 허용 */
+.board-table td:nth-child(2) { 
+   overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+    padding-left: 20px;
+}
+
+/* 1. 전체 레이아웃: 사이드바와 메인을 수평으로 나열 */
+.layout { 
+    display: flex; 
+    width: 100%; 
+    height: 100vh; /* 화면 전체 높이 고정 */
+    overflow: hidden; /* 레이아웃 자체의 스크롤을 막아 찌그러짐 방지 */
+}
+
+/* 2. 메인 콘텐츠: 사이드바 제외한 나머지 공간 사용 */
+.main-content {
+    flex: 1; /* 사이드바를 제외한 나머지 모든 공간 차지 */
+    height: 100vh; /* 화면 전체 높이만큼 확보 */
+    overflow-y: auto; /* 내용이 길면 메인 콘텐츠 안에서만 스크롤 발생 */
+    overflow-x: auto; /* 창이 좁아지면 가로 스크롤바 생성 */
+    padding: 20px;
+    background-color: #f8fafc;
+    box-sizing: border-box;
+
+}
+
+/* 3. 카드 박스: 최소 너비 보장 */
+.content-card {
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    min-width: 800px; /* 창이 작아져도 테이블이 최소 크기 800px 유지 */
+    max-width: 1400px;
+    margin: 20px auto;
+    box-sizing: border-box;
+}
+
+/* 제목: 중앙 배치 */
+.content-card h1 {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #1a1a2e;
+}
+
+/* 4. 테이블 스타일: 깨짐 방지 */
+.board-table { 
+    width: 100%; 
+    table-layout: fixed; 
+    border-collapse: collapse; 
+    margin-bottom: 40px; 
+}
+.board-table th { background-color: #F8FAFC !important; color: #475569 !important; padding: 15px; text-align: center; }
+.board-table td { 
+    padding: 15px; 
+    border-bottom: 1px solid #eee; 
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; 
+}
+.board-table td:nth-child(2) { 
+    text-align: left; 
+    padding-left: 20px;
+    white-space: normal; 
+}
+
+/* 5. 검색창 + 작성 버튼 */
+.action-row {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    position: relative;
+    margin-bottom: 15px;
+    padding: 0 20px;
+}
+/* 검색창 박스 */
+.search-box { 
+    display: flex; 
+    align-items: center; 
+    border: 1px solid #d1d5db; 
+    padding: 0 15px; 
+    width: 300px; 
+    height: 40px; 
+    background: white; 
+    border-radius: 6px;
+}
+
+.search-box input { 
+    border: none; 
+    outline: none; 
+    width: 100%; 
+    font-size: 14px; 
+}
+
+/* 작성 버튼 */
+.btn-write {
+    position: absolute;
+    right: 0;
+    background: #475569;
+    color: white;
+    padding: 7px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* 관리 버튼 셀(.btn-td-container) 처리 */
+.btn-td-container {
+    padding: 10px 5px !important;
+    white-space: nowrap !important; /* 버튼이 줄바꿈 되는 것 방지 */
+    text-align: center;
+}
+
+/* 버튼 및 페이징 */
+.btn-sm {
+    display: inline-block;
+    padding: 8px 17px;
+    font-size: 14px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1.2;
+}
+
+.btn-blue { background-color: #3b82f6; }
+.btn-red { background-color: #ef4444; }
+.pagination-row { text-align: center; font-weight: bold; padding: 5px 0; }
+.pagination-row a { text-decoration: none; color: #333; margin: 0 10px; }
+
+/* 에디터 툴바 컨테이너 보호 */
+.ql-toolbar {
+    white-space: normal !important;
+}
+.ql-picker-options {
+    white-space: nowrap !important;
+}

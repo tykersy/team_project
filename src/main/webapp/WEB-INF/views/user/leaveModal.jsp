@@ -114,6 +114,7 @@
                 let start  = new Date(document.getElementById('leaveStart').value);
                 let end    = new Date(document.getElementById('leaveEnd').value);
                 let isHalf = document.getElementById('leaveHalf').value === 'half';
+                let leave_type = document.getElementById('leave_type').value;
                 let result = document.getElementById('calcResult');
                 let use_days = document.getElementById('use_days');
                 use_days.value = 0;

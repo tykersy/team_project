@@ -25,7 +25,7 @@
     inset: 0;
     background: rgba(15, 23, 42, 0.45);
     backdrop-filter: blur(2px);
-    z-index: 500;
+    z-index: 3000;
     align-items: center;
     justify-content: center;
     }

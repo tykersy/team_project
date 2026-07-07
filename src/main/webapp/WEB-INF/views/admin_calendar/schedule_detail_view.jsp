@@ -6,7 +6,6 @@
 <html>
 
     <head>
-        <title>${date}</title>
         <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
         .popup-header { border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
@@ -57,6 +56,8 @@
     </div>
 
     <hr>
+    <button type="button" class="btn-add" 
+        onclick="location.href='/admin/add_schedule?date?=${date}&deptno=${schedule.deptno}'"></button>
     <button type="button" class="btn-close" onclick="window.close();">닫기</button>
     </body>
     

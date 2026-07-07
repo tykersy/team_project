@@ -1,0 +1,170 @@
+/* ──────────────────────────────────────────────────
+   [공통 레이아웃 구조 정의] - 페이지 간 덜컹거림 원천 차단
+   ────────────────────────────────────────────────── */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #F8FAFC;
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    color: #2f3542;
+    overflow-x: hidden;
+}
+
+.manager-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* 메인 콘텐츠 영역 패딩 통일 (여기서 픽셀이 다르면 화면이 튑니다) */
+.container, .main-content {
+    flex: 1;
+    padding: 40px 50px; 
+    box-sizing: border-box;
+    max-width: calc(100% - 260px);
+}
+
+/* ──────────────────────────────────────────────────
+   [공통 타이틀 & 상단 바 영역 디자인 (정렬 통일)]
+   ────────────────────────────────────────────────── */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end; /* 부서 관리 페이지와 버튼/텍스트 하단 정렬 통일 */
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #E2E8F0; /* 타이틀 하단 구분선 유지 */
+}
+
+.title-area {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* ★ 세로 막대(border-left)와 좌측 패딩을 완전히 제거하여 시작 위치를 일치시킵니다. */
+.title-area h2 {
+    color: #111827;            /* 다른 페이지와 동일한 시그니처 다크 네이비/블랙 */
+    font-size: 24px;           /* 타이틀 글씨 크기 고정 */
+    font-weight: 700;          /* pretandard 굵은 폰트 적용 */
+    line-height: 1.2;
+    margin: 0;
+    padding: 0;                /* 왼쪽 여백 제거 */
+    border-left: none;         /* 검은색 세로 막대 효과 삭제 */
+}
+
+/* 사원 정보 서브 텍스트 위치도 타이틀 시작점과 정확히 일치 */
+.sub-info {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+    padding: 0;
+}
+.sub-info strong {
+    color: #111827;
+    font-weight: 600;
+}
+
+/* 우측 상단 버튼 그룹 그룹화 */
+.btn-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* ──────────────────────────────────────────────────
+   [공통 버튼 테마 - Primary / Secondary 분리 및 고급화]
+   ────────────────────────────────────────────────── */
+button, input[type="button"] {
+    font-family: 'Pretendard', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+/* 메인 액션 버튼 (+사원추가, 수정사항 저장 등) */
+.btn-primary, input[value="+사원 추가하기"], input[value="수정"] {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    background-color: #1e272e;
+    color: white;
+    font-weight: 500;
+}
+.btn-primary:hover, input[value="+사원 추가하기"]:hover, input[value="수정"]:hover {
+    background-color: #0984e3;
+    transform: translateY(-1px);
+}
+
+/* 서브 액션 버튼 (뒤로가기, PDF 다운로드 등) */
+.btn-secondary, input[value="PDF다운로드"] {
+    padding: 10px 20px;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #475569;
+    font-weight: 500;
+}
+.btn-secondary:hover, input[value="PDF다운로드"]:hover {
+    background-color: #F1F5F9;
+    color: #1e272e;
+}
+
+/* ──────────────────────────────────────────────────
+   [데이터 테이블 고급화 세팅]
+   ────────────────────────────────────────────────── */
+.content-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    padding: 24px;
+    border: 1px solid #E2E8F0;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.data-table th {
+    background-color: #F8FAFC;
+    color: #475569;
+    font-weight: 600;
+    padding: 14px 16px;
+    border-bottom: 2px solid #E2E8F0;
+    text-align: left;
+}
+
+.data-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #F1F5F9;
+    color: #334155;
+    vertical-align: middle;
+}
+
+/* 입력 필드 디자인 요소 요소 추가 */
+.input-time, .select-status {
+    width: 100%;
+    padding: 8px 12px;
+    font-family: inherit;
+    font-size: 14px;
+    color: #334155;
+    outline: none;
+    background-color: #fff;
+}
+.input-time:focus, .select-status:focus {
+    border-color: #0984e3;
+    box-shadow: 0 0 0 3px rgba(9, 132, 227, 0.1);
+}
+
+.no-data {
+    text-align: center;
+    padding: 40px !important;
+    color: #94A3B8;
+    font-size: 15px;
+}

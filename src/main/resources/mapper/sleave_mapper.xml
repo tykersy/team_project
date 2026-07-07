@@ -14,21 +14,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into sleave values (#{sabun}, 15.0, 0, 0, 0);
     </insert>
 
-    <!-- 연차 사용 -->
+    <!-- 연차 사용시 잔여 갯수 차감 -->
     <update id="sleaveApplyUpdate" parameterType="sleavelog">
         update sleave
         <set>
             <choose>
-                <when test="leave_type eq 'annual'">
+                <when test="leave_type == 'annual'">
                     annual = annual - #{use_days}
                 </when>
-                <when test="leave_type eq 'mc'">
+                <when test="leave_type == 'mc'">
                     mc = mc - #{use_days}
                 </when>
-                <when test="leave_type eq 'health'">
+                <when test="leave_type == 'health'">
                     health = health - #{use_days}
                 </when>
-                <when test="leave_type eq 'etc'">
+                <when test="leave_type == 'etc'">
                     etc = etc - #{use_days}
                 </when>
             </choose>
@@ -36,4 +36,87 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where sabun=#{sabun}
     </update>
 
+    <!-- 부서별 휴가현황 연동  -->
+    <select id="getDeptVacationList" resultType="map">
+    SELECT 
+    d.dname AS "deptName",
+    COUNT(l.sabun) AS "count"
+    FROM sleave_log l
+    JOIN sawon s ON l.sabun = s.sabun
+    JOIN dept d ON s.deptno = d.deptno
+    WHERE l.use_date = #{today}
+    AND l.approve = 1
+    GROUP BY d.dname
+    </select>
+
+    <!-- 승인 대기 연동 -->
+    <select id="countPendingLeaves" resultType="int">
+    SELECT COUNT(*) 
+    FROM sleave_log 
+    WHERE approve = 0
+    </select>
+
+    <!-- 최근 승인 완료된 휴가 5건 정보 조회 -->
+    <select id="selectApprovedLeaves"
+            resultType="sleavelog">
+        SELECT s.saname, d.dname, l.leave_type, l.use_date, l.use_days, l.reason, l.created_at, l.approve
+        FROM sleave_log l
+        JOIN sawon s ON l.sabun = s.sabun
+        JOIN dept d ON s.deptno = d.deptno
+        ORDER BY l.created_at DESC
+        LIMIT 5
+    </select>
+    
+    <!-- 오늘 승인된 휴가 건수 -->
+    <select id="countAporovedLeaves"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM sleave_log
+        WHERE approve = 1
+            AND DATE(approved_at) = CURDATE()
+    </select>
+
+    <!-- 오늘 휴가중인 직원 수 -->
+    <select id="countOnLeaveToday"
+            resultType="int">
+        SELECT COUNT(DISTINCT sabun) 
+        FROM sleave_log
+        WHERE approve = 1 
+        AND use_date &lt;= CURDATE()
+        AND (
+            DATEDIFF(CURDATE(), use_date) + 1 
+            - (FLOOR((DATEDIFF(CURDATE(), use_date) + WEEKDAY(use_date)) / 7) * 2)
+            - (CASE WHEN WEEKDAY(use_date) = 6 THEN 1 ELSE 0 END)
+            - (CASE WHEN WEEKDAY(CURDATE()) = 5 THEN 1 ELSE 0 END)
+        ) &lt;= use_days
+    </select>
+
+    <!-- 승인 대기중인 휴가 요청 리스트 조회 -->
+    <select id="selectpendingList"
+            resultType="sleavelog">
+        SELECT 
+            l.log_id,
+            l.sabun,
+            s.saname AS saname,          d.dname AS dname,        l.leave_type,
+            l.use_date,
+            l.use_days,
+            l.reason,
+            l.created_at,
+            l.approve
+        FROM sleave_log l
+        INNER JOIN sawon s ON l.sabun = s.sabun
+        LEFT JOIN dept d ON s.deptno = d.deptno
+        WHERE l.approve = false
+        ORDER BY l.created_at ASC
+    </select>
+
+    <!-- 본인 승인대기 건수만 조회 -->
+    <select id="countMyPendingLeaves" parameterType="int" resultType="int">
+    SELECT COUNT(*) 
+    FROM sleave_log 
+    WHERE sabun = #{sabun} 
+    AND approve = 0
+    </select>
+
+    
 </mapper>

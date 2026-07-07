@@ -11,8 +11,52 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!-- 사원 연차 insert -->
     <insert id="sleave_logApplyInsert" parameterType="sleavelog">
-        insert into sleave_log
-        values(null, #{sabun}, #{leave_type}, #{use_date}, #{use_days}, #{reason}, now(), DEFAULT);
+        insert into sleave_log(sabun, leave_type, use_date, use_days, reason, created_at, approve)
+        values(#{sabun}, #{leave_type}, #{use_date}, #{use_days}, #{reason}, now(), DEFAULT);
     </insert>
 
+    <!-- 관리자가 승인할 연차정보 log_id로 불러오기 -->
+    <select id="selectOne"
+            parameterType="int"
+            resultType="sleavelog">
+        select * from sleave_log
+        WHERE log_id = #{log_id}
+    </select>
+
+    <!-- 연차 승인 처리 (approve상태를 1로 변경)-->
+    <update id="changeApprove"
+            parameterType="int">
+        update sleave_log set approve = 1, approved_at=now()
+        WHERE log_id = #{log_id}
+    </update>
+
+    <!-- 검색한 사원의 연차 신청 히스토리 -->
+    <select id="search_leave_history"
+            resultType="sleavelog"
+            parameterType="String">
+        SELECT s.saname, d.dname, l.leave_type, l.use_date, l.use_days, l.reason, l.created_at, l.approve
+        FROM sleave_log l
+        JOIN sawon s ON l.sabun = s.sabun
+        JOIN dept d ON s.deptno = d.deptno
+        WHERE s.saname = #{search_name}
+        ORDER BY l.created_at DESC
+    </select>
+
+    <!-- 연차 사용 신청 반려 -->
+    <update id="reject"
+            parameterType="java.util.Map">
+        update sleave_log set approve = 2 , reject_reason = #{reject_reason}
+        WHERE log_id = #{log_id}
+    </update>
+
+    <!-- 사원의 해당 년월의 연차 사용 일수 -->
+    <select id="getCountPendingTa"
+            parameterType="java.util.Map"
+            resultType="int">
+        SELECT COALESCE(SUM(use_days), 0)
+        FROM sleave_log
+        WHERE sabun = #{sabun}
+        AND DATE_FORMAT(use_date, '%Y-%m') = #{ym}
+    </select>
+    
 </mapper>

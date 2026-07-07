@@ -5,8 +5,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Linked</title>
-        <link rel="stylesheet" href="/css/user/sawon_add.css">
+        <title>[Linked : 사원 추가]</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/user/sawon_add.css">
 
         <%-- 카카오 도로명 검색을 위한 API 호출 --%>
         <script src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -33,7 +33,6 @@
                 let sabun = f.sabun.value; //사번
                 let saname= f.saname.value; //이름
                 let pwd = f.pwd.value; //비밀번호
-                let sapay = f.sapay.value; //급여
                 let sahire = f.sahire.value; //입사일
                 let saemail = f.saemail.value; //이메일
                 let satel = f.satel.value; //전화번호
@@ -44,7 +43,6 @@
                 if(sabun == ''){alert("사번을 입력해 주세요."); return;}
                 if(saname == ''){alert("이름을 입력해 주세요."); return;}
                 if(pwd == ''){alert("비밀번호를 입력해 주세요."); return;}
-                if(sapay == ''){alert("급여를 입력해 주세요."); return;}
                 if(sahire == ''){alert("입사일을 입력해 주세요."); return;}
                 if(saemail == ''){alert("이메일을 입력해 주세요."); return;}
 
@@ -62,12 +60,12 @@
 
                 let formData = new FormData(f);
 
-                fetch("/sawonAdd", { method:"post" , body : formData})
+                fetch("/admin/sawon_add", { method:"post" , body : formData})
                     .then(res => res.json())
                     .then(data => {
                         if(data.result == 1){
                             alert("등록이 완료되었습니다.");
-                            location.href = "/sawon_list.do";
+                            location.href = "/admin/sawon_list";
                         }else{
                             alert("등록이 실패했습니다.");
                             return;
@@ -84,7 +82,7 @@
                 <tr>
                     <th>사번</th>
                     <td>
-                        <input name="sabun" type="number" />
+                        <input name="sabun" type="number" value="${newSabun}" readonly="readonly" style="background-color: lightgray;"/>
                     </td>
                 </tr>
                 <tr>
@@ -108,12 +106,6 @@
                     <td>
                         <input name="pwd" type="password"/>
                     <td>
-                </tr>
-                <tr>
-                    <th>급여</th>
-                    <td>
-                        <input name="sapay" type="number" />
-                    </td>
                 </tr>
                 <tr>
                     <th>직급</th>
@@ -166,7 +158,7 @@
                         <input type="button" value="추가"
                                onclick="send(this.form)"/>
                     </td>
-                </tr>
+                </tr> 
             </table>
         </form>
     </body>

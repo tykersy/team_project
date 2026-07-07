@@ -1,200 +1,308 @@
-:root {
-        --primary-navy: #1e272e;
-        --accent-blue: #0984e3;
-        --bg-light: #f5f6fa;
-        --text-dark: #2f3542;
-    }
-
-    body {
-        font-family: 'Pretendard', -apple-system, sans-serif;
-        background-color: var(--bg-light);
-        color: var(--text-dark);
-        margin: 0;
-        padding: 0; /* 전체 패딩은 해제하고 내부 콘텐츠에서 조절 */
-        overflow-x: hidden; /* 가로 스크롤 방지 */
-    }
-
-    /* ──────────────────────────────
-    ★ 세로 정렬을 가로 정렬로 바꿔주는 핵심 코드
-    ────────────────────────────── */
-    .manager-container {
-        display: flex;       /* 자식인 사이드바와 main-content를 가로로 배치 */
-        min-height: 100vh;   /* 화면 전체 높이 차지 */
-        width: 100%;
-    }
-
-    .main-content {
-        flex: 1;             /* 사이드바를 제외한 나머지 모든 가로 공간을 차지 */
-        padding: 40px;       /* 여백을 이쪽으로 이동 */
-        box-sizing: border-box;
-    }
-
-    /* ────────────────────────────── */
-
-    h2 {
-        color: var(--primary-navy);
-        font-size: 24px;
-        margin-bottom: 30px;
-        border-left: 5px solid var(--primary-navy);
-        padding-left: 15px;
-    }
-
-/* 기본 리셋 및 폰트 설정 */
-* {
+/* ==========================================================================
+   1. 기본 초기화 및 레이아웃 구조
+   ========================================================================== */
+body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    background-color: #f3f4f6; /* 연한 그레이 배경 통일 */
+    color: #1f2937;
 }
 
-body {
-    background-color: #f3f4f6; /* 전체 배경: 연한 그레이 (눈이 편안한 톤) */
-    color: #111827; /* 메인 텍스트 컬러 */
-    min-height: 100vh;
-}
-
-/* 1. 사이드바와 컨텐츠를 가로로 배치하는 최외곽 컨테이너 */
 .manager-container {
-    display: flex;
-    width: 100%;
+    display: flex;       
     min-height: 100vh;
+    width: 100%;
 }
 
-/* [참고] 사이드바 너비만큼 컨텐츠가 밀리도록 설정 */
-/* 사이드바 가로 크기가 다를 경우 width만 맞춰주세요 */
-.manager-container > :first-child {
-    width: 260px;
-    min-width: 260px;
-    background-color: #111827; /* 사이드바 배경도 메인컬러와 통일 추천 */
-}
-
-/* 2. 실제 본문 컨텐츠가 들어가는 우측 영역 */
 .container {
-    flex: 1; /* 남은 가로 공간을 모두 차지 */
-    padding: 40px 50px;
-    max-width: 1200px; /* 너무 퍼지지 않도록 최대 너비 제한 */
-    margin: 0 auto; /* 중앙 정렬 효과 */
+    flex: 1;             
+    padding: 40px 45px;  
+    box-sizing: border-box;
+    max-width: 1400px;   
+    margin: 0;           
+    background-color: #f3f4f6;
 }
 
-/* 3. 타이틀 스타일 */
+/* ─── 페이지 헤더 ─── */
 h2 {
-    font-size: 26px;
+    font-size: 28px;    
     font-weight: 700;
-    color: #111827;
-    margin-bottom: 30px;
-    position: relative;
-    padding-bottom: 12px;
-}
-h2::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 60px;
-    height: 4px;
-    background-color: #111827; /* 포인트 바 */
-    border-radius: 2px;
+    color: #111827; /* 미드나잇 블랙 적용 */
+    margin: 0 0 32px 0;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 16px;
 }
 
-/* 4. 상단 버튼 그룹 */
+
+/* ==========================================================================
+   2. 상단 버튼 그룹 스타일 (글자 사라짐 오류 해결)
+   ========================================================================== */
 .btn-group {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-end; /* 버튼들을 우측 정렬 */
     gap: 12px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
-input[type="button"] {
-    border: none;
-    padding: 12px 20px;
+.dept-button {
+    border: 1px solid rgb(231, 229, 229);
+    border-radius: 14px;
+    padding: 10px;
+    background-color: #ffffff;
+}
+
+/* 상단 버튼 공통 기본 스타일 정의 */
+.btn-group input[type="button"] {
+    padding: 10px 18px;
+    border-radius: 8px;
     font-size: 14px;
     font-weight: 600;
-    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s ease;
 }
 
-/* PDF 다운로드 (심플한 서브 버튼) */
-input[type="button"]:nth-child(1) {
+/* 부서별 필터용 input 버튼들 기본/호버 스타일 */
+.dept-button input[type="button"] {
+    background-color: #FFFFFF;
+    color: #475569;
+    border: 1px solid #CBD5E1;
+    margin-right: 4px;
+}
+.dept-button input[type="button"]:hover {
+    background-color: #F1F5F9;
+    color: #1E293B;
+    border-color: #CBD5E1;
+}
+
+/* [+사원 추가하기] 버튼 전용 테마 스타일 */
+.btn-group input[type="button"][value="+사원 추가하기"] {
+    background-color: #111827; 
+    color: #ffffff !important; /* 마우스 오버 시 글자색 유지 보장 */
+    border: 1px solid #111827;
+}
+.btn-group input[type="button"][value="+사원 추가하기"]:hover {
+    background-color: #1f2937;
+    color: #ffffff !important; /* 덮어쓰기 방지를 위한 강제 적용 */
+    border-color: #1f2937;
+}
+
+/* [PDF 다운로드] 버튼 전용 테마 스타일 */
+.btn-group input[type="button"][value="PDF다운로드"] {
     background-color: #ffffff;
     color: #4b5563;
-    border: 1px solid #d1d5db;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    border: 1px solid #e5e7eb;
 }
-input[type="button"]:nth-child(1):hover {
+.btn-group input[type="button"][value="PDF다운로드"]:hover {
     background-color: #f9fafb;
     color: #111827;
-    border-color: #9ca3af;
+    border-color: #d1d5db;
 }
 
-/* +직원 추가하기 (포인트 메인 버튼) */
-input[type="button"]:nth-child(2) {
-    background-color: #111827;
-    color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-input[type="button"]:nth-child(2):hover {
-    background-color: #1f2937;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-}
 
-/* 5. 테이블 섹션 (하얀 카드 위에 올라간 깔끔한 형태) */
+/* ==========================================================================
+   3. 메인 테이블 디자인
+   ========================================================================== */
 table {
     width: 100%;
-    border-collapse: collapse;
-    font-size: 15px;
-    text-align: center;
-    background-color: #ffffff; /* 흰색 배경으로 컨텐츠 주목도 UP */
-    border-radius: 12px;
-    overflow: hidden;
-    border: none;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+    table-layout: fixed;
+    border-collapse: collapse; 
+    text-align: left;
+    background: #ffffff; 
+    border-radius: 14px; 
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    border: 1px solid #e5e7eb;
+    overflow: hidden; 
 }
 
-/* 테이블 헤더 (#111827 매칭) */
-th {
-    background-color: #111827;
-    color: #ffffff;
-    font-weight: 600;
-    padding: 16px;
-    font-size: 14px;
-    letter-spacing: 0.5px;
-}
-
-/* 테이블 바디 셀 */
-td {
-    padding: 16px;
-    color: #374151;
+th, td {
+    padding: 16px 20px; 
+    font-size: 15px;    
     border-bottom: 1px solid #f3f4f6;
 }
 
-/* 행 호버 효과 */
-tbody tr {
-    transition: background-color 0.15s ease;
-}
-tbody tr:hover {
-    background-color: #f9fafb; /* 마우스 올렸을 때 소프트한 피드백 */
+th {
+    background-color: #f9fafb; 
+    color: #4b5563;
+    font-weight: 600;
 }
 
-/* 마지막 줄은 부드러운 라운딩 처리를 위해 테두리 제거 */
-tbody tr:last-child td {
+tr:hover {
+    background-color: #f9fafb; 
+}
+
+tr:last-child td {
     border-bottom: none;
 }
 
-/* 6. 인라인 링크 및 텍스트 강조 */
+/* 사원명 링크 스타일 */
 td a {
-    color: #2563eb; /* 가독성 좋은 비즈니스 블루 */
+    color: #111827;
     text-decoration: none;
     font-weight: 600;
-    transition: color 0.15s ease;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
 }
 td a:hover {
-    color: #1d4ed8;
-    text-decoration: underline;
+    border-color: #111827; 
 }
 
+/* 최고 관리자 텍스트 스타일 */
 .admin-text {
+    color: #9ca3af;
+    font-weight: 500;
+    font-style: italic;
+}
+
+
+/* ─── 테이블 내 비고 버튼(수정/퇴사) 스타일 ─── */
+td input[type="button"] {
+    padding: 7px 14px;  
+    border-radius: 7px;
+    font-size: 13px;    
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid #E2E8F0;
+    background-color: #FFFFFF;
+    transition: all 0.2s;
+    margin-right: 4px;
+}
+td input[type="button"]:hover {
+    background-color: #F1F5F9;
+}
+
+/* 수정 버튼 전용 */
+td input[type="button"][value="수정"] {
+    background-color: #f3f4f6;
+    color: #111827; 
+    border: 1px solid #e5e7eb;
+}
+td input[type="button"][value="수정"]:hover {
+    background-color: #111827; 
+    color: #ffffff;
+    border-color: #111827;
+}
+
+/* 퇴사 버튼 전용 */
+td input[type="button"][value="퇴사"] {
+    background-color: #fef2f2;
+    color: #ef4444;
+    border: 1px solid transparent;
+}
+td input[type="button"][value="퇴사"]:hover {
+    background-color: #ef4444;
+    color: #ffffff;
+}
+
+
+/* ==========================================================================
+   4. 고급 모달 팝업 레이아웃 (정중앙 고정 및 블러 이펙트)
+   ========================================================================== */
+.modal-overlay {
+    display: none; 
+    position: fixed;
+    z-index: 9999 !important; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.4); 
+    backdrop-filter: blur(4px); 
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 460px;
+    padding: 28px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #E2E8F0;
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+}
+
+.modal-header h3 {
+    font-size: 18px;
     font-weight: 700;
-    color: #111827;
+    color: #0F172A;
+    margin: 0;
+}
+
+.modal-close-btn {
+    font-size: 24px;
+    color: #94A3B8;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+.modal-close-btn:hover {
+    color: #475569;
+}
+
+/* 모달 전용 상세 규격 테이블 */
+.modal-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+    box-shadow: none;
+    border: none;
+}
+
+.modal-table th {
+    width: 35%;
+    padding: 12px 14px;
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    color: #475569;
+    font-weight: 600;
+}
+
+.modal-table td {
+    padding: 12px 14px;
+    border: 1px solid #E2E8F0;
+    color: #1E293B;
+    background-color: #ffffff;
+}
+
+/* ─── 모달 내부 휴가 현황 배지 스타일 ─── */
+.leave-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+}
+.badge-annual { color: #2563EB; background-color: #EFF6FF; } /* 연차: 블루 */
+.badge-unpaid { color: #D97706; background-color: #FFFBEB; } /* 기타: 오렌지 */
+.badge-mc { color: #DC2626; background-color: #FEF2F2; }     /* 병가: 레드 */
+.badge-health { color: #059669; background-color: #ECFDF5; } /* 보건: 그린 */
+
+/* 모달 하단 확인 영역 */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-close-confirm {
+    padding: 10px 20px;
+    background: #0F172A;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-close-confirm:hover {
+    background: #1E293B;
 }

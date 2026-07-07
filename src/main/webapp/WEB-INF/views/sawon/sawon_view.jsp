@@ -5,8 +5,9 @@
 <html>
 
     <head>
-        <link rel="stylesheet" href="css/admin/sawon_view.css"/>
-        <link rel="stylesheet" href="css/admin/sidebar.css" />
+        <title>[Linked : 사원 정보]</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sawon_view.css"/>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebar.css" />
         <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     </head>
 
@@ -14,7 +15,7 @@
         <div class="manager-container">
             <jsp:include page="/WEB-INF/views/admin_common/admin_sidebar.jsp"/>
             <div class="sawon_container">
-            <h2>사원별 관리 페이지</h2>
+            <h2>사원 정보 상세보기</h2>
 
             <table>
                 <tr>
@@ -47,7 +48,8 @@
                     </tr>
                 <tr>
                     <td colspan="2" align="center">
-                        <input type="button" value=""/>
+                        <input type="button" value="뒤로가기"
+                            onclick="history.back()"/>
                     </td>
                 </tr>
             </table>

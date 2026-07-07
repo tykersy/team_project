@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+html {
+    overflow-y: scroll;
+}
+
 body {
     background: #F8FAFC;
     font-family: Pretendard, sans-serif;
@@ -14,14 +18,19 @@ body {
 }
 
 .sidebar {
-    width: 260px;
+    /* width: 260px; */
+    flex: 0 0 260px; /* 고정 크기를 260px로 하되, 억지로 늘어나지 않게 설정 */
     height: 100vh;
     background: #111827;
     border-right: 1px solid #E2E8F0;
     padding: 24px;
-
+    overflow-y: auto;  /* 이 속성이 있어야 사이드바가 길 때 스크롤바가 생깁니다 */
+    
+    flex-shrink: 0;    /* 레이아웃 찌그러짐 방지 */
     display: flex;
     flex-direction: column;
+    position: sticky;
+    top: 0;
 }
 
 /* 상단 로고 영역 */
@@ -33,6 +42,9 @@ body {
     font-weight: 700;
     color: #ffffff;
     margin-bottom: 40px;
+    position: relative; /* 레이어 순서 지정을 위해 필요 */
+    z-index: 999;       /* 다른 요소보다 무조건 위로 올림 */
+    cursor: pointer;    /* 마우스를 올렸을 때 손가락 모양으로 변경 */
 }
 
 .sidebar-menu {
@@ -105,6 +117,12 @@ a.sidebar-item {
     transition: max-height 0.3s ease-in-out, opacity 0.2s ease-in-out;
 }
 
+/* 페이지 로드 시 애니메이션 비활성화 */
+.no-transition .submenu,
+.no-transition .sidebar-item {
+    transition: none !important;
+}
+
 /* 서브메뉴 내부의 링크 스타일 */
 .submenu li a {
     display: block;
@@ -123,11 +141,26 @@ a.sidebar-item {
 }
 
 /* ⭐ 마우스 올렸을 때 서브메뉴 열림 처리 */
-.dropdown:hover .submenu {
-    max-height: 300px; /* 서브메뉴가 다 열릴 수 있는 충분한 높이 지정 */
+.dropdown:hover .submenu,
+.dropdown.active .submenu {
+    max-height: 300px;
     opacity: 1;
     margin-top: 4px;
     margin-bottom: 8px;
+}
+
+/* 활성화된 서브메뉴 항목 */
+.submenu li a.active {
+    background: #DBEAFE;
+    color: #1D4ED8;
+    font-weight: 600;
+}
+
+/* 활성화된 드롭다운 그룹의 대메뉴 */
+.dropdown.active > .sidebar-item {
+    background: rgba(219, 234, 254, 0.15);
+    color: #60A5FA;
+    font-weight: 600;
 }
 
 /* 하단 관리자/로그아웃 섹션 고정 */
@@ -148,4 +181,3 @@ a.sidebar-item {
     font-weight: 600;
     transition: 0.2s;
 }
-

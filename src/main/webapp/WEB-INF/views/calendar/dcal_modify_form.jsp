@@ -7,7 +7,7 @@
 
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar/scal_insert.css">
-            <link rel="stylesheet" href="/css/dashboard.css"> 
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
 
             <script>
                 function send(f) {
@@ -65,58 +65,72 @@
                 <div class="main-content">
                     <jsp:include page="/WEB-INF/views/common/header.jsp" />
                     <div class="schedule-page">
-                        <form>
-                            <div class="form-box">
-                                <input type="hidden" name="dcal_idx" value="${vo.dcal_idx}" />
-                                <div class="form-header">
-                                    <button type="button" onclick="history.back()">X</button>
-                                    <span>부서 일정</span>
-                                    <button type="button" onclick="send(this.form)">수정</button>
-                                </div>
-                                <div>
+                        <form class="schedule-card">
+                            <input type="hidden" name="dcal_idx" value="${vo.dcal_idx}" />
 
-                                    <table class="schedule-table">
-                                        <tr>
-                                            <th>일정</th>
-                                            <td colspan="3">
-                                                <input name="title" placeholder="일정을 입력하세요" value="${vo.title}" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>
-                                                <span>부서번호</span>
-                                            </th>
-                                            <td>
-                                                <input name="deptno" value="${vo.deptno}" readonly />
-                                            </td>
-                                            <th>
-                                                <span>사번</span>
-                                            </th>
-                                            <td>
-                                                <input name="sabun" value="${vo.sabun}" readonly />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>시작</th>
-                                            <td>
-                                                <input type="date" name="start_date"
-                                                    value="${vo.start_date.substring(0,10)}" />
-                                            </td>
-                                            <th>종료</th>
-                                            <td>
-                                                <input type="date" name="end_date"
-                                                    value="${vo.end_date.substring(0,10)}" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>내용</th>
-                                            <td colspan="3">
-                                                <input name="content" placeholder="설명" value="${vo.content}" />
-                                            </td>
-                                        </tr>
-                                    </table>
+                            <div class="schedule-header">
+
+                                <div class="schedule-heading">
+                                    <button type="button" class="back-btn" onclick="history.back()">
+                                        ←
+                                    </button>
+
+                                    <div>
+                                        <h2>부서 일정 수정</h2>
+                                        <p>등록된 부서 일정을 수정하세요.</p>
+                                    </div>
                                 </div>
+
+                                <div class="schedule-actions">
+                                    <button type="button" class="cancel-btn" onclick="history.back()">
+                                        취소
+                                    </button>
+
+                                    <button type="button" class="save-btn" onclick="send(this.form)">
+                                        수정하기
+                                    </button>
+                                </div>
+
                             </div>
+
+                            <div class="schedule-body">
+
+                                <div class="form-group full">
+                                    <label>일정명 <span>*</span></label>
+                                    <input name="title" placeholder="일정을 입력하세요" value="${vo.title}" />
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>부서번호 <span>*</span></label>
+                                        <input name="deptno" value="${vo.deptno}" readonly />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>사번 <span>*</span></label>
+                                        <input name="sabun" value="${vo.sabun}" readonly />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>시작일 <span>*</span></label>
+                                        <input type="date" name="start_date" value="${vo.start_date.substring(0,10)}" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>종료일 <span>*</span></label>
+                                        <input type="date" name="end_date" value="${vo.end_date.substring(0,10)}" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group full">
+                                    <label>내용</label>
+                                    <textarea name="content" placeholder="일정 내용을 입력하세요">${vo.content}</textarea>
+                                </div>
+
+                            </div>
+
                         </form>
                     </div>
                 </div>

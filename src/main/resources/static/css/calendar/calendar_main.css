@@ -3,7 +3,6 @@
 }
 
 .calendar-header {
-    margin: 0 0 20px 0;
     text-align: center;
 }
 
@@ -198,23 +197,23 @@
 
 .bottom-btn {
 
-    position: fixed;
+    position: absolute;
 
     right: 20px;
-    bottom: 40px;
+    top: 80px;
 
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
 
     border: none;
 
-    border-radius: 50%;
+    border-radius: 10px;
 
-    background: #4a67ff;
+    background: white;
 
-    color: white;
+    color: #4a67ff;
 
-    font-size: 40px;
+    font-size: 25px;
 
     cursor: pointer;
 
@@ -227,7 +226,7 @@
 }
 
 .bottom-btn:hover {
-    transform: translateY(-5px) scale(1.08);
+    transform: translateY(-3px) scale(1.02);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
 }
 
@@ -235,18 +234,15 @@
     transform: scale(0.95);
 }
 
-.bottom-btn.open {
-    transform: rotate(135deg);
-}
 
 .bottom-menu {
 
-    position: fixed;
+    position: absolute;
 
     right: 40px;
-    bottom: 115px;
+    top: 130px;
 
-    width: 180px;
+    width: 164px;
 
     padding: 12px 0;
 
@@ -263,7 +259,8 @@
     opacity: 0;
     visibility: hidden;
 
-    transform: translateY(20px) scale(0.9);
+    transform-origin: top right;
+    transform: translateY(-20px) scale(0.9);
 
     transition: all 0.3s ease;
 }
@@ -285,6 +282,8 @@
     gap: 12px;
 
     width: 100%;
+
+    margin-left: 12px;
 
     padding: 10px 15px;
 
@@ -314,6 +313,10 @@
     font-size: 11px;
 }
 
+.dcal-item:hover{
+    cursor: pointer;
+}
+
 .scal-item {
 
     margin-top: 2px;
@@ -325,6 +328,10 @@
     border-radius: 4px;
 
     font-size: 11px;
+}
+
+.scal-item:hover{
+    cursor: pointer;
 }
 
 .detail-modal {
@@ -458,4 +465,58 @@ body {
 .other-month {
     color: #aaa;
     background: #f8f8f8;
+}
+
+.calendar-legend{
+    width:80%;
+    margin:0 auto 15px;
+
+    display:flex;
+    justify-content:flex-end;
+    gap:20px;
+
+    font-size:14px;
+    font-weight:bold;
+}
+
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:7px;
+}
+
+.legend-color{
+    width:14px;
+    height:14px;
+    border-radius:4px;
+    display:inline-block;
+}
+
+.dcal-color{
+    background:#dce8ff;
+}
+
+.scal-color{
+    background:#dff7df;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    width: 6px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }

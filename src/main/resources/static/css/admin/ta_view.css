@@ -1,0 +1,126 @@
+/* ──────────────────────────────────────────────────
+   [근태 상세보기 페이지 전용 레이아웃 및 폰트 컬러 CSS]
+   ────────────────────────────────────────────────── */
+
+/* 1. 상단 타이틀 밑줄 및 높낮이 일치 */
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #E2E8F0;
+    width: 100%;
+}
+
+.detail-header h2 {
+    color: #111827;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+    padding: 0 !important;
+    border-left: none !important; /* 세로 막대 효과 제거 */
+}
+
+/* 2. 필터 및 수정하기 버튼 제어 바 */
+.ta-control-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    padding: 14px 20px;
+    border-radius: 10px;
+    border: 1px solid #E2E8F0;
+    margin-bottom: 24px;
+}
+
+/* 조회 폼 구성 */
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.search-form input[type="month"] {
+    padding: 8px 12px;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #334155;
+    outline: none;
+}
+
+/* 버튼 디자인 */
+.btn-view, .btn-ta-modify {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+
+.btn-view {
+    background-color: #111827;
+    color: #ffffff;
+    border: none;
+}
+.btn-view:hover { background-color: #1F2937; }
+
+.btn-ta-modify {
+    background-color: #ffffff;
+    color: #475569;
+    border: 1px solid #E2E8F0;
+}
+.btn-ta-modify:hover {
+    background-color: #F8FAFC;
+    color: #111827;
+}
+
+/* 3. 테이블 레이아웃 고정 및 정렬 */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* ★ colgroup의 16.66% 수치를 칼같이 고정하는 핵심 속성 */
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.data-table th {
+    background-color: #F8FAFC;
+    color: #475569;
+    font-weight: 600;
+    padding: 14px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid #E2E8F0;
+    text-align: center;
+}
+
+.data-table td {
+    padding: 16px 12px;
+    font-size: 14px;
+    color: #334155;
+    border-bottom: 1px solid #F1F5F9;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* 4. ★ [요구사항] 비고 칸 알약효과 없이 순수 텍스트 컬러만 깔끔하게 변경 */
+.data-table td.tag {
+    font-weight: 700;
+    font-size: 14px;
+    background: none !important;
+    border: none !important;
+}
+
+.data-table td.tag.normal { color: #2E7D32 !important; }  /* 정상: 그린 */
+.data-table td.tag.leave  { color: #1565C0 !important; }  /* 휴가: 블루 */
+.data-table td.tag.half   { color: #0288D1 !important; }  /* 반차: 라이트블루 */
+.data-table td.tag.late   { color: #E65100 !important; }  /* 지각: 딥 오렌지 */
+.data-table td.tag.absent { color: #C62828 !important; }  /* 결근: 레드 */

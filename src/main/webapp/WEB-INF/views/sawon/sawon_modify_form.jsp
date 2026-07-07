@@ -5,9 +5,12 @@
 <html>
 
     <head>
-        <link rel="stylesheet" href="/css/admin/sawon_modify_form.css"/>
-        <link rel="stylesheet" href="css/admin/sidebar.css" />
+        <title>[Linked : ${sawon.saname} 사원 정보 수정]</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sawon_modify_form.css"/>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebar.css" />
 
+        <!-- 카카오 도로명 검색을 위한 API 호출 -->
+        <script src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
         <script>
 
             window.onload = function(){
@@ -17,7 +20,7 @@
                 let deptnoSelect = document.getElementById("deptno"); //부서선택상자
                 let deptno = "${sawon.deptno}";
                 let num_list = [ 1, 10, 20, 30, 40, 50 ];
-                for( let i = 0; i < num_list.length; i++ ){
+                for( let i = 0; i < num_list.length; i++ ){ 
                     if( num_list[i] == deptno ){
                         deptnoSelect.value = num_list[i];
                       
@@ -40,15 +43,30 @@
 
             }
 
+            function addr(){
+                new kakao.Postcode({
+                    oncomplete: function(data) {
+                        // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+
+                        //도로명 주소
+                        let addr = document.getElementById("saaddr");
+                        //우편 번호
+                        let sazipcode = document.getElementById("sazipcode");
+                        
+                        sazipcode.value = data.zonecode;
+                        addr.value = data.roadAddress;
+                    }
+                }).open();
+            }
+
             function modify(f){
 
                 let saname = f.saname.value;
                 let deptno = f.deptno.value;
-
                 let sabun = f.sabun.value;
                 let new_pwd = f.new_pwd.value;
                 let sajob = f.sajob.value;
-                let sapay = f.sapay.value;
+                let sapay = f.base_pay.value;
                 let sahire = f.sahire.value;
                 let saemail = f.saemail.value;
                 let satel = f.satel.value;
@@ -57,7 +75,6 @@
 
                 //이전에 유효성 체크 후 경고창을 띄웠다면 초기화
                 document.getElementById("error_saname").innerHTML = "";
-                document.getElementById("error_sapay").innerHTML= "";
                 document.getElementById("error_sahire").innerHTML= "";
                 document.getElementById("error_saemail").innerHTML= "";
                 document.getElementById("error_satel").innerHTML= "";
@@ -69,13 +86,6 @@
                     alert("이름을 입력해주세요")
                     document.getElementById("error_saname").innerHTML = 
                         "이름을 입력해주세요"
-                    return;
-                }
-
-                if( sapay == '' ){
-                    alert("연봉을 입력해주세요")
-                    document.getElementById("error_sapay").innerHTML=
-                        "연봉을 입력해주세요"
                     return;
                 }
 
@@ -120,7 +130,7 @@
                 if( new_pwd != '' ){
 
                     //1.기존 비밀번호와 같은지 확인
-                    fetch( "/admin_check_pwd", { method:'post', body:formData } )
+                    fetch( "/admin/check_pwd", { method:'post', body:formData } )
                     .then( res => res.json() )
                     .then( data => {
 
@@ -134,14 +144,14 @@
                 }
 
 
-                fetch( "/admin_sawon_modify", { method:"post", body:formData } )
+                fetch( "/admin/sawon_modify", { method:"post", body:formData } )
                 .then( res => res.json() )
                 .then( data => {
 
 
                     if( data.result == 1 ){
                         alert(saname+"사원의 정보가 성공적으로 변경 되었습니다")
-                        location.href="/sawon_view.do?sabun="+sabun;
+                        location.href="/admin/sawon_list";
                     }else{
                         alert(saname+"사원 정보 수정에 실패했습니다. 다시 시도해주세요")
                     }
@@ -156,132 +166,116 @@
     <body>
         <div class="manager-container">
             <jsp:include page="/WEB-INF/views/admin_common/admin_sidebar.jsp"/>
+            
             <div class="main-content">
-                <div class="header">
-                    <h2>${sawon.saname}사원 정보 수정</h2>
+                <div class="page-title-section">
+                    <h2 class="page-title">${sawon.saname} 사원 정보 수정</h2>
                     <p>관리자 권한으로 사원의 인사 정보를 수정합니다.</p>
+                    <hr class="title-divider"/>
                 </div>
+                
                 <form>
                     <div class="form-grid">
                         <input name="ori_pwd" type="hidden" value="${sawon.pwd}"/>
+                        
                         <div class="form-group">
                             <label for="empId">사원번호 (변경 불가)</label>
                             <input id="empId" name="sabun" class="form-control" value="${sawon.sabun}" readonly>
                         </div>
 
                         <div class="form-group">
-
                             <label for="empName">사원명
-                                <font size="1" color="red">
-                                    <span id="error_saname"></span></font>
+                                <span id="error_saname" class="error-msg"></span>
                             </label>
-
                             <input id="empName" name="saname" class="form-control" value="${sawon.saname}" required>
                         </div>
 
                         <div class="form-group">
-
                             <label for="empPw">변경할 비밀번호
-                                <font size="1" color="red">
-                                    <span id="error_pwd">영문 대·소문자, 숫자, 특수문자를 포함하여 8자 이상</span></font>
+                                <span id="error_pwd" class="error-msg">※ 영문 대·소문자, 숫자, 특수문자 포함 8자 이상</span>
                             </label>
-
                             <input type="password" id="empPw" name="new_pwd" class="form-control" placeholder="변경 시에만 입력하세요">
                         </div>
 
                         <div class="form-group">
-                            <label for="deptId">부서</label>
+                            <label for="deptno">부서</label>
                             <c:if test="${sawon.deptno eq 1}">
-                                <input class="form-control" placeholder="관리자" readonly="readonly"/>
+                                <select id="deptno" name="deptno" class="form-control" required readonly>
+                                    <option value="${deptList[0].deptno}">${deptList[0].dname}</option>
+                                </select>
                             </c:if>
                             <c:if test="${sawon.deptno ne 1}">
-
-                            <select id="deptno" name="deptno" class="form-control" required>
-
-                                <c:forEach var="dept" items="${deptList}">
-                                    <option value="${dept.deptno}">${dept.dname}</option>
-                                </c:forEach>
-                            </select>
+                                <select id="deptno" name="deptno" class="form-control" required>
+                                    <c:forEach var="dept" items="${deptList}">
+                                        <option value="${dept.deptno}" ${dept.deptno eq sawon.deptno ? 'selected' : ''}>${dept.dname}</option>
+                                    </c:forEach>
+                                </select>
                             </c:if>
                         </div>
 
                         <div class="form-group">
                             <label for="empPosition">직급</label>
-
                             <select id="empPosition" name="sajob" class="form-control">
                                 <c:forEach var="job" items="${jobList}">
-                                    <option value="${job.sajob}">${job.sajob}</option>
-
+                                    <option value="${job.sajob}" ${job.sajob eq sawon.sajob ? 'selected' : ''}>${job.sajob}</option>
                                 </c:forEach>
                             </select>
                         </div>
 
                         <div class="form-group">
 
-                            <label for="salary">연봉 (원)
+                            <label for="salary">월급 (원)
                                 <font size="1" color="red">
                                     <span id="error_sapay"></span></font>
                             </label>
 
-                            <input type="number" id="salary" name="sapay" class="form-control" value="${sawon.sapay}">
+                            <input type="number" id="salary" name="base_pay" class="form-control" value="${sawon.base_pay}" readonly>
                         </div>
 
                         <div class="form-group">
 
                             <label for="hireDate">입사일
-                                <font size="1" color="red">
-                                    <span id="error_sahire"></span></font>
+                                <span id="error_sahire" class="error-msg"></span>
                             </label>
-
                             <input type="date" id="hireDate" name="sahire" class="form-control" value="${sawon.sahire}">
                         </div>
 
                         <div class="form-group">
-
                             <label for="email">이메일 주소
-                                <font size="1" color="red">
-                                    <span id="error_saemail"></span></font>
+                                <span id="error_saemail" class="error-msg"></span>
                             </label>
-
                             <input type="email" id="email" name="saemail" class="form-control" value="${sawon.saemail}">
                         </div>
 
                         <div class="form-group">
-
                             <label for="phone">전화번호
-                                <font size="1" color="red">
-                                    <span id="error_satel"></span></font>
+                                <span id="error_satel" class="error-msg"></span>
                             </label>
-
                             <input type="tel" id="phone" name="satel" class="form-control" value="${sawon.satel}" placeholder="010-0000-0000">
                         </div>
 
                         <div class="form-group">
-
                             <label for="zipCode">우편번호
-                                <font size="1" color="red">
-                                    <span id="error_sazipcode"></span></font>
+                                <span id="error_sazipcode" class="error-msg" ></span>
                             </label>
-
-                            <input id="zipCode" name="sazipcode" class="form-control" value="${sawon.sazipcode}">
-                        </div>
-
-                        <div class="form-group">
-                            <div class="form-group">
-
-                                <label for="address">주소
-                                    <font size="1" color="red">
-                                        <span id="error_saaddr"></span></font>
-                                </label>
-
-                                <input id="address" name="saaddr" class="form-control" value="${sawon.saaddr}">
+                            <div class="zipcode-wrapper">
+                                <input id="sazipcode" name="sazipcode" class="form-control" 
+                                        readonly="readonly" value="${sawon.sazipcode}">
+                                <input type="button" value="주소검색" class="btn-zipcode-search" onclick="addr()"/>
                             </div>
                         </div>
 
-                        <div class="btn-group">
-                            <input type="button" value="수정"
-                                onclick="modify(this.form)"/>
-                            <input type="button" value="뒤로가기" onclick="history.back()"/>
+                        <div class="form-group">
+                            <label for="address">주소
+                                <span id="error_saaddr" class="error-msg"></span>
+                            </label>
+                            <input id="saaddr" name="saaddr" class="form-control"
+                                    readonly="readonly" value="${sawon.saaddr}">
+                        </div>
+
+                        <div class="form-btn-group">
+                            <input type="button" value="수정 완료" class="btn-submit" onclick="modify(this.form)"/>
+                            <input type="button" value="뒤로가기" class="btn-back" onclick="history.back()"/>
                         </div>
 
                     </div>

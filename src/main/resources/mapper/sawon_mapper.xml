@@ -6,24 +6,55 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id = "sawonList"
             resultType="sawon">
-        select * from sawon
+        select * from sawon where sastatus = '재직'
+    </select>
+
+    <!-- 사번으로 사원정보 조회 -->
+    <select id="selectSawon"
+            parameterType="int"
+            resultType="sawon">
+        select * from sawon where sabun = #{sabun}
     </select>
 
     <!-- 사원별 정보 조회 -->
     <select id="sawonView"
             parameterType="int"
             resultType="sawon">
-        select * from sawon where sabun = #{sabun}
+        SELECT
+            s.sabun,
+            s.deptno,
+            s.saname,
+            s.sajob,
+            s.saemail,
+            s.satel,
+            s.sahire,
+            s.saaddr,
+            s.sastatus,
+            s.sazipcode,
+            d.dname,
+            sc.base_salary AS base_pay
+        FROM sawon s
+        JOIN dept d
+            ON s.deptno = d.deptno
+        LEFT JOIN salary_contract sc
+            ON sc.contract_id = (
+                SELECT contract_id
+                FROM salary_contract
+                WHERE sabun = s.sabun
+                ORDER BY created_at DESC
+                LIMIT 1
+            )
+        WHERE s.sabun = #{sabun};
     </select>
 
     <!-- 사원 추가 -->
     <insert id="sawonInsert" parameterType="sawon">
-        insert into sawon values(
+        insert into sawon(sabun, saname, deptno, pwd, sajob, sahire, saemail, satel, saaddr, sazipcode)
+        values(
             #{sabun},
             #{saname},
             #{deptno},
             #{pwd},
-            #{sapay},
             #{sajob},
             #{sahire},
             #{saemail},
@@ -34,25 +65,160 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <!-- 사원삭제 -->
-    <delete id="sawonDelete"
+    <update id="sawonDelete"
             parameterType="int">
-        delete from sawon where sabun = #{sabun}
-    </delete>
+        update sawon set sastatus="퇴직" where sabun = #{sabun}
+    </update>
 
     <!-- 사원 정보 수정 -->
     <update id="sawonUpdate"
             parameterType="sawon">
-        update sawon set saname = #{saname},
-                         deptno = #{deptno},
-                         pwd = #{pwd},
-                         sapay = #{sapay},
-                         sajob = #{sajob},
-                         sahire = #{sahire},
-                         saemail = #{saemail},
-                         satel = #{satel},
-                         saaddr = #{saaddr},
-                         sazipcode = #{sazipcode}
+        update
+            sawon
+        set 
+            saname = #{saname},
+            deptno = #{deptno},
+            pwd = #{pwd},
+            sajob = #{sajob},
+            sahire = #{sahire},
+            saemail = #{saemail},
+            satel = #{satel},
+            saaddr = #{saaddr},
+            sazipcode = #{sazipcode}
         where sabun = #{sabun}
     </update>
+
+    <!-- 전체 사원 수 조회 -->
+    <select id="sawonCnt"
+            resultType="int">
+        select count(sabun)cnt from sawon where sastatus = '재직'
+    </select>
+
+    <!-- 최근 충원 부서 조회 -->
+    <select id="cur_upd_dept"
+            resultType="java.util.Map">
+        SELECT s.saname, s.deptno, d.dname
+        FROM sawon s
+        LEFT JOIN dept d on s.deptno = d.deptno
+        ORDER BY s.sahire DESC
+        LIMIT 1;
+    </select>
+
+    <!-- 최근 충원 직급 조회 -->
+    <select id="cur_upd_position"
+            resultType="sawon">
+        SELECT s.sajob
+        FROM sawon s
+        LEFT JOIN job_position p on s.sajob = p.sajob
+        ORDER BY s.sahire DESC
+        LIMIT 1;
+    </select>
+
+    <select id="member_list" resultType="sawon">
+
+        SELECT
+            s.sabun,
+            s.saname,
+            s.deptno,
+            d.dname,
+            CASE
+                WHEN t.checkin IS NOT NULL
+                AND t.checkout IS NULL
+                THEN 'ONLINE'
+                ELSE 'OFFLINE'
+            END AS onlineStatus
+        FROM sawon s
+        JOIN dept d
+            ON s.deptno = d.deptno
+        LEFT JOIN ta t
+            ON s.sabun = t.sabun
+            AND DATE(t.day) = CURDATE()
+        WHERE s.sastatus = '재직'
+        ORDER BY d.deptno, s.saname
+
+    </select>
+
+    <select id="memberView"
+            parameterType="int"
+            resultType="sawon">
+
+        select s.*,
+            d.dname
+        from sawon s
+        join dept d
+        on s.deptno = d.deptno
+        where s.sabun = #{sabun}
+
+    </select>
+
+    <select id="selectSajob"
+            parameterType="int"
+            resultType="String">
+        select sajob from sawon where sabun=#{sabun}
+    </select>
+
+    <!-- 각팀별 팀장(관리자) 리스트 조회 -->
+    <select id="getLeaderList"
+            resultType="sawon">
+        select sl.sabun, s.saname, d.deptno, d.dname
+        from dept d
+        left join sawonleader sl on d.deptno = sl.deptno
+        left join sawon s on sl.sabun = s.sabun
+        order by d.deptno asc
+    </select>
+
+    <!-- 기존 팀장 정보 삭제 -->
+    <update id="deleteLeader"
+            parameterType="int">
+        update sawonleader set sabun = null
+        where deptno = #{deptno}
+    </update>
+
+    <!-- 팀장(관리자) 변경 -->
+    <update id="insertLeader"
+            parameterType="java.util.Map">
+        update sawonleader set sabun = #{sabun}
+        where deptno = #{deptno}
+    </update>
+
+    <!-- 접근 권한 체크용 쿼리 -->
+    <select id="checkRole"
+            parameterType="int"
+            resultType="String">
+        select case
+            when sl.sabun in null the 'user'
+            when sl.deptno = 10 then 'admin'
+            else 'manager'
+            end as current_role
+        from sawon s
+        join sawonleader sl on s.sabun - sl.sabun
+        where s.sabun = #{sabun}
+    </select>
+
+    <!-- 부서별 사원 목록 -->
+    <select id="getDeptSawonList"
+            parameterType="int"
+            resultType="sawon">
+        select sabun, saname, deptno, sajob, sahire 
+        from sawon where deptno = #{deptno} and sastatus = '재직'
+    </select>
+
+    <!-- 사번으로 관리자 권한 확인 -->
+    <select id="checkLeader"
+            parameterType="int"
+            resultType="sawon">
+        select * 
+        from sawonleader
+        where sabun = #{sabun}
+    </select>
+
+    <!-- 사번 자동 부여 -->
+    <select id="getLastSabun"
+            resultType="int">
+        select sabun 
+        from sawon
+        order by sabun desc
+        limit 1
+    </select>
 
 </mapper>

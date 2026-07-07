@@ -7,7 +7,7 @@
 
     <head>
         <meta charset="UTF-8">
-        <title>관리자 대시보드</title>
+        <title>[Linked : 관리자]</title>
 
         <!-- Chart.js 라이브러리 -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -33,6 +33,7 @@
             .card-row {
                 display: flex;
                 gap: 20px;
+                margin-bottom: 24px;
             }
             .summary-card {
                 flex: 1;
@@ -70,6 +71,58 @@
                 width: 100%;
                 height: 300px;
             }
+
+            /* 미승인 결재 카드 */
+            .approval-card { flex: 1.8; }
+            .approval-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin-top: 4px;
+            }
+            .approval-item {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 14px;
+                border-radius: 10px;
+                background: #f8f9fb;
+                text-decoration: none;
+                color: inherit;
+                transition: background 0.2s, transform 0.15s;
+            }
+            .approval-item:hover {
+                background: #eef1f6;
+                transform: translateY(-1px);
+            }
+            .approval-icon {
+                width: 34px;
+                height: 34px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                flex-shrink: 0;
+            }
+            .approval-icon.leave    { background: #dfe6fd; }
+            .approval-icon.ta       { background: #fef3c7; }
+            .approval-icon.salary   { background: #d1fae5; }
+            .approval-icon.contract { background: #fde2e2; }
+            .approval-label {
+                font-size: 13px;
+                color: #666;
+                flex: 1;
+            }
+            .approval-count {
+                font-size: 16px;
+                font-weight: 700;
+                white-space: nowrap;
+            }
+            .leave-count    { color: #4361ee; }
+            .ta-count       { color: #e67e22; }
+            .salary-count   { color: #27ae60; }
+            .contract-count { color: #d63031; }
         </style>
         
     </head>
@@ -80,23 +133,40 @@
             <div class="main-content">
             
                 <div class="card-row">
-                <div class="summary-card">
-                    <span class="title">미승인 결재 건수</span>
-                    <span class="value accent">5 건</span>
+                    <div class="summary-card approval-card">
+                        <span class="title">미승인 결재 건수</span>
+                        <div class="approval-grid">
+                            <a href="/admin/leave" class="approval-item">
+                                <span class="approval-icon leave"></span>
+                                <span class="approval-label">휴가/연차</span>
+                                <span class="approval-count leave-count">${countPendingLeaves} 건</span>
+                            </a>
+                            <a href="/admin/ta_confirm" class="approval-item">
+                                <span class="approval-icon ta"></span>
+                                <span class="approval-label">근태 마감</span>
+                                <span class="approval-count ta-count">${attendance} 건</span>
+                            </a>
+                            <a href="/admin/salary_confirm" class="approval-item">
+                                <span class="approval-icon salary"></span>
+                                <span class="approval-label">급여 정산</span>
+                                <span class="approval-count salary-count">${countLedgers} 건</span>
+                            </a>
+                            <a href="/admin/admin_contract_list" class="approval-item">
+                                <span class="approval-icon contract"></span>
+                                <span class="approval-label">근로계약</span>
+                                <span class="approval-count contract-count">${countsContract.pendingCount + countsContract.countsContract} 건</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <span class="title">오늘 전사 출근율</span>
+                        <span class="value">${todayCommuteAvg}%</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="title">이번 달 입/퇴사자</span>
+                        <span class="value">${monthJoinedSawon}명 / ${monthLeaveSawon}명</span>
+                    </div>
                 </div>
-                <div class="summary-card">
-                    <span class="title">오늘 전사 출근율</span>
-                    <span class="value">92%</span>
-                </div>
-                <div class="summary-card">
-                    <span class="title">이번 달 입/퇴사자</span>
-                    <span class="value">3명 / 1명</span>
-                </div>
-                <div class="summary-card">
-                    <span class="title">미체결 근로계약서</span>
-                    <span class="value" style="color: #d63031;">2 건</span>
-                </div>
-            </div>
 
             <div class="chart-row">
                 
@@ -117,7 +187,7 @@
             </div>
         </div>
 
-        <script>
+        <script th:inline="javascript">
         // 1. 근태 현황 도넛 차트 (Doughnut)
         const ctxAttendance = document.getElementById('attendanceChart').getContext('2d');
         new Chart(ctxAttendance, {
@@ -125,7 +195,13 @@
             data: {
                 labels: ['정상출근', '지각', '조퇴', '휴가/휴무', '결근'],
                 datasets: [{
-                    data: [120, 8, 3, 15, 2], // 임시 데이터 (나중에 DB값 매핑)
+                    data: [
+                        [[${todayTa.normalCount}]],
+                        [[${todayTa.lateCount}]],
+                        [[${todayTa.halfCount}]],
+                        [[${todayTa.leaveCount}]],
+                        [[${todayTa.absentCount}]]
+                        ], // 임시 데이터 (나중에 DB값 매핑)
                     backgroundColor: [
                         '#2ed573', // 정상출근 (초록)
                         '#ffa502', // 지각 (주황)
@@ -152,10 +228,18 @@
         new Chart(ctxVacation, {
             type: 'bar',
             data: {
-                labels: ['인사팀', '개발팀', '기획팀', '영업팀', '디자인팀', '재무팀'], // 부서명
+                labels: [
+                    <c:forEach items="${deptAnnualUseAvg}" var="dept" varStatus="status">
+                        "${dept.dname}"<c:if test="${!status.last}">,</c:if>
+                    </c:forEach>
+                    ], // 부서명
                 datasets: [{
                     label: '소진율 (%)',
-                    data: [65, 42, 55, 78, 38, 50], // 임시 소진율 데이터
+                    data:[
+                        <c:forEach items="${deptAnnualUseAvg}" var="dept" varStatus="status">
+                            ${dept.useAvg}<c:if test="${!status.last}">,</c:if>
+                        </c:forEach>
+                        ], // 소진율 데이터
                     backgroundColor: 'rgba(9, 132, 227, 0.8)', // accent-blue 색상 활용
                     borderColor: '#0984e3',
                     borderWidth: 1,

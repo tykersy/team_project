@@ -4,9 +4,16 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>로그인</title>
-        <link rel="stylesheet" href="/css/user/login.css">
+        <title>[Linked : 로그인]</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/user/login.css">
         <script>
+
+            function enterkey(){
+                if(window.event.keyCode == 13)
+                    document.getElementById("loginBtn").click();
+            }
+            
+
             function login(f){
                 let sabun = f.sabun.value;
                 let pwd = f.pwd.value;
@@ -36,7 +43,8 @@
         </script>
     </head>
     <body>
-        
+        <!--상단 아이콘 클릭되게 변경-->
+        <span class="logo-link" onclick="location.href='/'">Linked</span>
         <form>
             <h2>로그인</h2>
             <table>
@@ -49,12 +57,12 @@
                 <tr>
                     <th>비밀번호</th>
                     <td>
-                        <input name="pwd" type="password" />
+                        <input name="pwd" type="password" onkeyup="enterkey()" />
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2" align="center">
-                        <input type="button" value="로그인"
+                        <input type="button" value="로그인" id="loginBtn"
                                onclick="login(this.form)"/>
                     </td>
                 </tr>

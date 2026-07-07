@@ -8,24 +8,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectDept"
             parameterType="int"
             resultType="schedule">
-        select c.id, d.dname, d.deptno, c.title, c.start_date, c.end_date
+        select c.dcal_idx, d.dname, d.deptno, c.title, c.start_date, c.end_date
         from dcalendar c
         join dept d on c.deptno = d.deptno
         where c.deptno = #{deptno}
         order by c.start_date
     </select>
 
+    <!-- 오늘 일정(부서별 스케줄 확인) -->
+    <select id="selectDeptToday" parameterType="int" resultType="schedule">
+    select c.dcal_idx, d.dname, d.deptno, c.title, c.start_date, c.end_date
+    from dcalendar c
+    join dept d on c.deptno = d.deptno
+    where c.deptno = #{deptno}
+      and c.start_date like CONCAT(CURDATE(), '%')
+    order by c.start_date
+    </select>
+
     <!-- 입력받은 일정 DB에 저장 -->
     <insert id="insert"
             parameterType="schedule">
-        insert into dcalendar ( id, deptno, title, start_date, end_date )
+        insert into dcalendar ( dcal_idx, deptno, title, start_date, end_date )
         values ( "C0015", #{deptno}, #{title}, #{start_date}, #{end_date} )
     </insert>
 
     <!-- 전체 부서 스케쥴 확인하기 -->
     <select id="selectAll"
             resultType="schedule">
-        select c.id, d.dname, d.deptno, c.title, c.start_date, c.end_date
+        select c.dcal_idx, d.dname, d.deptno, c.title, c.start_date, c.end_date
         from dcalendar c
         join dept d on c.deptno = d.deptno
         order by c.start_date
@@ -35,10 +45,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="detailView"
             parameterType="java.util.Map"
             resultType="schedule">
-        select c.id, d.dname, d.deptno, c.title, c.start_date, c.end_date
+        select c.dcal_idx, d.dname, d.deptno, c.title, c.start_date, c.end_date
         from dcalendar c
         join dept d on c.deptno = d.deptno
-        where c.deptno = #{deptno} and c.start_date like CONCAT('%', #{date}, '%')
+        where c.deptno = #{deptno} and DATE(c.start_date) &lt;= #{date} and DATE(c.end_date) &gt;= #{date}
         order by c.start_date
     </select>
 
@@ -46,11 +56,55 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="detailViewAll"
             parameterType="String"
             resultType="schedule">
-        select c.id, d.dname, d.deptno, c.title, c.start_date, c.end_date
+        select c.dcal_idx, d.dname, d.deptno, c.title, c.start_date, c.end_date
         from dcalendar c
         join dept d on c.deptno = d.deptno
-        where c.start_date like CONCAT('%', #{date}, '%')
+        where DATE(c.start_date) &lt;= #{date} and DATE(c.end_date) &gt;= #{date}
         order by c.start_date
     </select>
+
+    <select id="selectOneSchedule"
+            parameterType="int"
+            resultType="dcal">
+
+        SELECT * FROM dcalendar
+        WHERE dcal_idx = #{dcal_idx}
+
+    </select>
+
+    <insert id = "insertSchedule"
+            parameterType="dcal">
+        INSERT INTO dcalendar
+        (deptno, sabun, start_date, end_date, title, content)
+
+        VALUES
+        (
+            #{deptno},
+            #{sabun},
+            #{start_date},
+            #{end_date},
+            #{title},
+            #{content}
+        )
+    </insert>
+
+    <update id="updateSchedule"
+            parameterType="dcal">
+
+        UPDATE dcalendar
+        SET
+            deptno = #{deptno},
+            start_date = #{start_date},
+            end_date = #{end_date},
+            title = #{title},
+            content = #{content}
+        WHERE dcal_idx = #{dcal_idx}
+
+    </update>
+
+    <delete id="deleteSchedule" parameterType="int">
+        delete From dcalendar
+        where dcal_idx=#{dcal_idx}
+    </delete>
 
 </mapper>

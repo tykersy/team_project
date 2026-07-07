@@ -272,6 +272,47 @@
   .tag.late    { background: rgba(245,158,11,0.12);  color: var(--yellow); }
   .tag.absent  { background: rgba(239,68,68,0.12);   color: var(--red); }
   .tag.early   { background: rgba(37,99,235,0.10);  color: var(--accent); }
+
+  /* 반려 사유 툴팁 */
+  .reject-tag {
+    position: relative;
+    cursor: help;
+  }
+  .reject-tag::after {
+    content: attr(data-reason);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a202c;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 400;
+    white-space: nowrap;
+    padding: 5px 10px;
+    border-radius: 6px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 10;
+  }
+  .reject-tag::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 1px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #1a202c;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 10;
+  }
+  .reject-tag:hover::after,
+  .reject-tag:hover::before {
+    opacity: 1;
+  }
  
   /* ── Salary ── */
   .salary-hero {
@@ -307,50 +348,7 @@
   .breakdown-row.total .amt  { font-size: 16px; color: var(--green); font-weight: 700; }
  
   .salary-history { margin-top: 0; }
- 
-  /* ── Attendance ── */
-  .attend-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-  .attend-stat {
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); padding: 18px;
-  }
-  .attend-stat .n {
-    font-family: 'DM Mono', monospace;
-    font-size: 28px; font-weight: 500; display: block; margin-bottom: 4px;
-  }
-  .attend-stat .n.green { color: var(--green); }
-  .attend-stat .n.yellow { color: var(--yellow); }
-  .attend-stat .n.red { color: var(--red); }
-  .attend-stat .n.blue { color: var(--accent); }
-  .attend-stat .lbl { font-size: 12px; color: var(--text-muted); }
- 
-  /* mini calendar */
-  .mini-cal { margin-top: 0; }
-  .cal-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 16px;
-  }
-  .cal-header .cal-title { font-size: 15px; font-weight: 600; }
-  .cal-nav {
-    display: flex; gap: 8px;
-  }
-  .cal-nav button {
-    background: var(--surface2); border: 1px solid var(--border);
-    color: var(--text); width: 28px; height: 28px;
-    border-radius: 6px; cursor: pointer; font-size: 12px;
-    transition: all 0.15s;
-  }
-  .cal-nav button:hover { border-color: var(--accent); color: var(--accent); }
-  
-  .cal-day-head {
-    text-align: center; font-size: 11px; color: var(--text-dim);
-    padding: 4px; font-weight: 600;
-  }
- 
-  /* legend */
-  .legend { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
-  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); }
-  .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
  
   /* scrollbar */
   ::-webkit-scrollbar { width: 6px; }
@@ -367,7 +365,7 @@
   inset: 0;
   background: rgba(15, 23, 42, 0.45);
   backdrop-filter: blur(2px);
-  z-index: 500;
+  z-index: 3000;
   align-items: center;
   justify-content: center;
 }
@@ -606,7 +604,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 3000;
 }
 .modal-box {
     background: #fff;

@@ -8,13 +8,13 @@
     <aside class="sidebar">
         
         <div class="logo" onclick="location.href='/dashboard'">
-            🔗Linked
+            🔗 Linked
         </div>
 
         <nav class="sidebar-menu">
 
             <a href="/dashboard" class="sidebar-item ${fn:contains(uri, '/dashboard') ? 'active' : ''}" >HOME</a>
-            <a href="/org_chart" class="sidebar-item ${fn:contains(uri, '/org_chart') ? 'active' : ''}" >조직도</a>
+            <a href="/dept_chart.do" class="sidebar-item ${fn:contains(uri, '/dept') ? 'active' : ''}" >조직도</a>
             <a href="/board/list" class="sidebar-item ${fn:contains(uri, '/board/list') ? 'active' : ''}">공지사항</a>
             <a href="/calendar_calendarmain" class="sidebar-item ${fn:contains(uri, '/calendar') ? 'active' : ''}" >캘린더</a>
             <a href="/ta_main.do" class="sidebar-item ${fn:contains(uri, '/ta') ? 'active' : ''}" >근태관리</a>
@@ -23,8 +23,8 @@
         </nav>
         
         <div class="admin-section">
-
-            <a href="/admin_main.do" class="admin-btn">⚙️관리자</a>
-
+            <c:if test="${manager eq 1}">
+                <a href="/admin/main" class="admin-btn">⚙️관리자</a>
+            </c:if>
         </div>
     </aside>

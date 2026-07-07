@@ -1,0 +1,29 @@
+/* 사이드바 포함 전체 화면 제어 */
+.main-container{
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.content-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* 화면 높이 고정 */
+    overflow: hidden; /* 스크롤 강제 차단 */
+}
+
+/* 조직도 영역 */
+#tree-wrapper {
+    flex: 1;
+    position: relative;
+    box-sizing: border-box;
+    overflow: auto; /* 조직도가 삐져나와도 숨김 */
+}
+
+/* 차트 자체를 꽉 차게 */
+#tree {
+    width: 100%;
+    height: 100%;
+}

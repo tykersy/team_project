@@ -1,0 +1,287 @@
+/* ==========================================
+   Linked ERP - 월급 정산 관리 전용 스타일
+   ========================================== */
+
+.manager-container {
+    display: flex;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+/* 1. 상단 타이틀 및 현황 카드 (휴가관리 스펙 이식) */
+.page-header {
+    margin-bottom: 24px;
+    border-bottom: 1px solid #E2E8F0;
+    padding-bottom: 16px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1E293B;
+}
+
+/* 공통 대시보드형 상단 요약 카드 래퍼 */
+.status-card-wrapper, .salary-status-wrapper, .contract-status-wrapper {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+/* 카드 기본 스타일 */
+.dashboard-card {
+    flex: 1;
+    background: #FFFFFF;
+    border: 1px solid #EEF2F6; /* 더 부드럽고 밝은 테두리 */
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.02); /* 기본 상태의 미세한 그림자 */
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* 부드러운 가속도 곡선 */
+    position: relative;
+    overflow: hidden;
+}
+
+/* 왼쪽 세로 포인트 선 */
+.dashboard-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0; width: 4px;
+}
+
+/* 컬러 포인트 정의 */
+.card-amber::before { background-color: #F59E0B; }   /* 대기/경고: 주황 */
+.card-emerald::before { background-color: #10B981; } /* 완료/승인: 초록 */
+.card-rose::before { background-color: #F43F5E; }    /* 재계약/위험: 빨강 */
+
+/* 내부 텍스트 및 수치 레이아웃 */
+.dashboard-card .card-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748B;
+    margin-bottom: 8px;
+}
+
+.dashboard-card .card-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0F172A;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.dashboard-card .card-value span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #475569;
+}
+
+/* 2. 메인 데이터 테이블 섹션 */
+.section-container {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.section-header-inline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1E293B;
+    margin: 0;
+}
+
+/* 3. 데이터 테이블 스펙 (부서/휴가 관리 완벽 일치) */
+.data-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.data-table th {
+    background: #F8FAFC;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 14px 16px;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.data-table td {
+    padding: 16px;
+    border-bottom: 1px solid #F1F5F9;
+    color: #334155;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+/* 상태 뱃지 스타일 */
+.badge {
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+}
+.badge-pending {
+    background-color: #FFEDD5;
+    color: #EA580C;
+}
+.badge-completed {
+    background-color: #DCFCE7;
+    color: #16A34A;
+}
+
+/* 4. 액션 버튼 스펙 (+부서 추가하기 톤앤매너 일치) */
+.btn-salary-action {
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    background: #111827;
+    color: #FFFFFF;
+    border: 1px solid #111827;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-salary-action:hover {
+    background: #1F2937;
+}
+
+.btn-batch {
+    padding: 10px 16px;
+    font-size: 14px;
+}
+
+/* ==========================================
+   Linked ERP - 급여 상세 모달 스타일
+   ========================================== */
+
+/* 모달 배경 (어둡게 처리) */
+.salary-modal {
+    display: none; /* 기본값은 숨김 */
+    position: fixed;
+    zIndex: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.6); /* Slate-900 60% 투명도 */
+    align-items: center;
+    justify-content: center;
+}
+
+/* 모달창 본체 */
+.salary-modal-content {
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 500px;
+    padding: 32px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    position: relative;
+    animation: modalFadeIn 0.25s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 닫기 버튼 */
+.modal-close-btn {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #94A3B8;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.modal-close-btn:hover {
+    color: #475569;
+}
+
+/* 명세서 타이틀 */
+.modal-title-wrapper {
+    text-align: center;
+    margin-bottom: 28px;
+}
+.modal-title-wrapper h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1E293B;
+    margin: 0 0 6px 0;
+}
+.modal-title-wrapper p {
+    font-size: 13px;
+    color: #64748B;
+    margin: 0;
+}
+
+/* 명세서 테이블 뷰 (영수증 감성) */
+.receipt-table {
+    width: 100%;
+    margin-bottom: 24px;
+    border-top: 2px solid #0F172A;
+    border-bottom: 2px solid #0F172A;
+    padding: 12px 0;
+}
+
+.receipt-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 4px;
+    font-size: 14px;
+    color: #334155;
+}
+
+.receipt-row.deduct {
+    color: #EF4444; /* 공제 항목은 빨간색 톤 */
+}
+
+.receipt-row.total-row {
+    border-top: 1px dashed #CBD5E1;
+    margin-top: 8px;
+    padding-top: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1E293B;
+}
+
+/* 상세조회용 서브 버튼 */
+.btn-salary-secondary {
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #FFFFFF;
+    color: #475569;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-right: 4px;
+}
+.btn-salary-secondary:hover {
+    background: #F8FAFC;
+    color: #1E293B;
+}

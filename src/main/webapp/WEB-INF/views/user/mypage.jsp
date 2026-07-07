@@ -1,15 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="ko">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title></title>
-        <link rel="stylesheet" href="/css/user/mypage.css">
-        <link rel="stylesheet" href="/css/dashboard.css">
-        <link rel="stylesheet" href="/css/sidebar.css">
+        <title>[Linked : 마이페이지]</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/user/mypage.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/toastui-calendar.min.css" />
         <script src="${pageContext.request.contextPath}/js/toastui-calendar.min.js"></script>
         
@@ -28,8 +29,7 @@
             <button class="tab-btn active" onclick="switchTab(0)"> 내 프로필 </button>
             <button class="tab-btn" onclick="switchTab(1)"> 출 / 퇴근</button>
             <button class="tab-btn" onclick="switchTab(2)"> 급여</button>
-            <button class="tab-btn" onclick="switchTab(3)"> 근태현황</button>
-            <button class="tab-btn" onclick="switchTab(4)"> 연차</button>
+            <button class="tab-btn" onclick="switchTab(3)"> 연차</button>
         </div>
         
         <!-- ─────────────────────────────── TAB 1: 내프로필 ─── -->
@@ -42,7 +42,14 @@
                     <div class="info-item"><label>소속 부서</label><div class="val">${info.dname}</div></div>
                     <div class="info-item"><label>직위</label><div class="val">${info.sajob}</div></div>
                     <div class="info-item"><label>입사일</label><div class="val mono">${info.sahire}</div></div>
-                    <div class="info-item"><label>계약 기간</label><div class="val mono">2024. 03. 04 ~ 2026. 03. 03</div></div>
+                    <div class="info-item"><label>계약 기간</label>
+                        <div class="val mono">
+                            ${userContract.start_date}
+                            <c:if test="${not empty userContract.end_date}">
+                             ~ ${userContract.end_date}
+                            </c:if>
+                        </div>
+                    </div>
                 </div>
             </div>
         
@@ -53,8 +60,8 @@
                 <div class="info-item"><label>근무 요일</label><div class="val">월 ~ 금</div></div>
                 <div class="info-item"><label>출근 시간</label><div class="val mono">09:00</div></div>
                 <div class="info-item"><label>퇴근 시간</label><div class="val mono">18:00</div></div>
-                <div class="info-item"><label>기본급</label><div class="val mono"><fmt:formatNumber value="${info.sapay}" pattern="#,###" /> 원</div></div>
-                <div class="info-item"><label>연봉</label><div class="val mono"><fmt:formatNumber value="${info.sapay*12}" pattern="#,###" /> 원</div></div>
+                <div class="info-item"><label>기본급</label><div class="val mono"><fmt:formatNumber value="${info.base_pay}" pattern="#,###" /> 원</div></div>
+                <div class="info-item"><label>연봉</label><div class="val mono"><fmt:formatNumber value="${info.base_pay*12}" pattern="#,###" /> 원</div></div>
             </div>
             </div>
         
@@ -71,6 +78,39 @@
                     </div>
                 </div>
             </div>
+            <!-- 서명 대기중인 근로계약건이 있을 경우에만 서명 대기 표기 -->
+            <c:if test="${not empty pendingContract}">
+                <div class="card">
+                    <div class="card-title"><span class="dot"></span>서명 대기중인 근로계약건</div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>계약서</label>
+                            <div class="val"> 
+                                <form id="myForm" action="/user_sign_contract" method="POST">
+                                    <input type="hidden" name="sabun" value="${info.sabun}"/>
+                                    <a href="javascript:document.getElementById('myForm').submit();" class="pw-edit-link">서명하기</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </c:if>
+            <c:if test="${empty pendingContract}">
+                <div class="card">
+                    <div class="card-title"><span class="dot"></span>나의 근로계약 정보</div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>계약서</label>
+                            <div class="val"> 
+                                <form id="myForm" action="/user_sign_contract" method="POST">
+                                    <input type="hidden" name="sabun" value="${info.sabun}"/>
+                                    <a href="javascript:document.getElementById('myForm').submit();" class="pw-edit-link">계약서 확인하기</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </c:if>
         </div>
         
         <!-- ─────────────────────────────── TAB 2: 출/퇴근 ─── -->
@@ -100,6 +140,7 @@
                 <tbody>
                     <c:forEach var="taList" items="${userTaList}">
                         <tr>
+                            <!--날짜부분 시간 안나오게 수정-->
                             <td class="label">${taList.day}</td>
                             <td>${taList.checkin}</td>
                             <td>${taList.checkout}</td>
@@ -107,6 +148,9 @@
                             <td>
                                 <span class="tag ${taList.status}">
                                     <c:choose>
+                                        <c:when test="${taList.status eq 'absent'}">결근</c:when>
+                                        <c:when test="${taList.status eq 'half'}">반차</c:when>
+                                        <c:when test="${taList.status eq 'leave'}">휴가</c:when>
                                         <c:when test="${taList.status eq 'late'}">지각</c:when>
                                         <c:when test="${taList.status eq 'normal'}">정상</c:when>
                                         <c:otherwise>기타</c:otherwise>
@@ -115,15 +159,6 @@
                             </td>
                         </tr>
                     </c:forEach>
-                    <%-- <tr><td class="label">05. 26 (금)</td><td>09:00</td><td>19:30</td><td>10h 30m</td><td><span class="tag normal">정상</span></td></tr>
-                    <tr><td class="label">05. 23 (목)</td><td>09:22</td><td>18:00</td><td>8h 38m</td><td><span class="tag late">지각</span></td></tr>
-                    <tr><td class="label">05. 22 (수)</td><td>09:00</td><td>18:00</td><td>8h 00m</td><td><span class="tag normal">정상</span></td></tr>
-                    <tr><td class="label">05. 21 (화)</td><td>09:00</td><td>18:00</td><td>8h 00m</td><td><span class="tag normal">정상</span></td></tr>
-                    <tr><td class="label">05. 20 (월)</td><td>—</td><td>—</td><td>—</td><td><span class="tag absent">결근</span></td></tr>
-                    <tr><td class="label">05. 17 (금)</td><td>08:50</td><td>17:55</td><td>9h 05m</td><td><span class="tag early">조기출근</span></td></tr>
-                    <tr><td class="label">05. 16 (목)</td><td>09:00</td><td>18:00</td><td>8h 00m</td><td><span class="tag normal">정상</span></td></tr>
-                    <tr><td class="label">05. 15 (수)</td><td>09:05</td><td>18:10</td><td>8h 55m</td><td><span class="tag normal">정상</span></td></tr>
-                    <tr><td class="label">05. 14 (화)</td><td>09:00</td><td>18:00</td><td>8h 00m</td><td><span class="tag normal">정상</span></td></tr> --%>
                 </tbody>
             </table>
             </div>
@@ -135,17 +170,20 @@
             <div class="card">
             <div class="salary-hero">
                 <div class="month">${today} 급여</div>
-                <div class="amount"><fmt:formatNumber value="${info.sapay}" pattern="#,###" /></div>
+                <div class="amount"><fmt:formatNumber value="${userSalary.net_pay}" pattern="#,###" /></div>
                 <div class="unit"> 원 (실수령액)</div>
             </div>
             <div class="salary-breakdown">
-                <div class="breakdown-row"><span class="name">기본급</span><span class="amt">3,200,000</span></div>
-                <div class="breakdown-row"><span class="name">초과근무수당</span><span class="amt">280,000</span></div>
-                <div class="breakdown-row deduct"><span class="name">국민연금</span><span class="amt">-144,000</span></div>
-                <div class="breakdown-row deduct"><span class="name">건강보험</span><span class="amt">-111,760</span></div>
-                <div class="breakdown-row deduct"><span class="name">고용보험</span><span class="amt">-28,800</span></div>
-                <div class="breakdown-row deduct"><span class="name">소득세</span><span class="amt">-15,440</span></div>
-                <div class="breakdown-row total"><span class="name">실수령액</span><span class="amt">3,380,000</span></div>
+                <c:if test="${userSalary ne null}">
+                    <div class="breakdown-row"><span class="name">기본급</span><span class="amt"><fmt:formatNumber value="${userSalary.base_pay}" pattern="#,###"/></span></div>
+                    <div class="breakdown-row"><span class="name">총 지급액</span><span class="amt"><fmt:formatNumber value="${userSalary.finalBasePay}" pattern="#,###"/></span></div>
+                    <div class="breakdown-row"><span class="name">초과근무수당</span><span class="amt"><fmt:formatNumber value="${userSalary.overtime_pay}" pattern="#,###"/></span></div>
+                    <div class="breakdown-row deduct"><span class="name">국민연금</span><span class="amt">-<fmt:formatNumber value="${userSalary.national_pension}" pattern="#,###"/></span></div>
+                    <div class="breakdown-row deduct"><span class="name">건강보험</span><span class="amt">-<fmt:formatNumber value="${userSalary.health_insurance}" pattern="#,###"/></span></div>
+                    <div class="breakdown-row deduct"><span class="name">고용보험</span><span class="amt">-<fmt:formatNumber value="${userSalary.employment_insurance}" pattern="#,###"/></span></div>
+                    <div class="breakdown-row deduct"><span class="name">소득세</span><span class="amt">-<fmt:formatNumber value="${userSalary.income_tax + userSalary.local_income_tax}" pattern="#,###"/></span></div>
+                </c:if> 
+                <div class="breakdown-row total"><span class="name">실수령액</span><span class="amt"><fmt:formatNumber value="${userSalary.net_pay}" pattern="#,###"/></span></div>
             </div>
             </div>
         
@@ -153,66 +191,15 @@
             <div class="card-title"><span class="dot"></span>급여 내역</div>
             <table>
                 <thead>
-                <tr><th>지급월</th><th>지급일</th><th>총 지급액</th><th>공제액</th><th>실수령액</th></tr>
+                <tr><th>지급월</th><th>총 지급액</th><th>공제액</th><th>실수령액</th></tr>
                 </thead>
                 <tbody>
-                <tr><td class="label">2025. 05</td><td>05. 25</td><td>3,480,000</td><td>300,000</td><td style="color:var(--green)">3,180,000</td></tr>
-                <tr><td class="label">2025. 04</td><td>04. 25</td><td>3,200,000</td><td>300,000</td><td style="color:var(--green)">2,900,000</td></tr>
-                <tr><td class="label">2025. 03</td><td>03. 25</td><td>3,200,000</td><td>300,000</td><td style="color:var(--green)">2,900,000</td></tr>
-                <tr><td class="label">2025. 02</td><td>02. 25</td><td>3,550,000</td><td>300,000</td><td style="color:var(--green)">3,250,000</td></tr>
-                <tr><td class="label">2025. 01</td><td>01. 25</td><td>3,200,000</td><td>300,000</td><td style="color:var(--green)">2,900,000</td></tr>
-                </tbody>
-            </table>
-            </div>
-        </div>
-        
-        <!-- ─────────────────────────────── TAB 4: 근태현황 ─── -->
-        <div class="panel" id="panel-3">
-            <div class="card">
-            <div class="card-title"><span class="dot"></span>이번 달 근태 요약</div>
-            <div class="attend-grid">
-                <div class="attend-stat"><span class="n green">${yearlyTA[0].normalCount}</span><span class="lbl">정상 출근</span></div>
-                <div class="attend-stat"><span class="n yellow">${yearlyTA[0].lateCount}</span><span class="lbl">지각</span></div>
-                <div class="attend-stat"><span class="n red">0</span><span class="lbl">결근</span></div>
-                <div class="attend-stat"><span class="n blue">0</span><span class="lbl">조기 출근</span></div>
-            </div>
-            </div>
-        
-            <div class="card mini-cal">
-                <div class="card-title"><span class="dot"></span>근태 캘린더</div>
-
-                <%-- 네비게이션 --%>
-                <div class="cal-header">
-                    <div class="cal-title" id="calTitle"></div>
-                </div>
-
-                <%-- TUI Calendar 컨테이너 --%>
-                <div id="tuiCal" style="height:580px;"></div>
-
-                <%-- 범례 --%>
-                <div class="legend">
-                    <div class="legend-item"><div class="legend-dot" style="background:rgba(34,197,94,0.5)"></div>정상출근</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:rgba(245,158,11,0.5)"></div>지각</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:rgba(239,68,68,0.4)"></div>결근</div>
-                    <div class="legend-item"><div class="legend-dot" style="background:rgba(99,102,241,0.5)"></div>휴가</div>
-                </div>
-            </div>
-        
-            <div class="card">
-            <div class="card-title"><span class="dot"></span>연간 근태 현황</div>
-            <table>
-                <thead>
-                <tr><th>월</th><th>정상</th><th>지각</th><th>결근</th><th>조기출근</th><th>총 근무(h)</th></tr>
-                </thead>
-                <tbody>
-                <c:forEach var="monthTA" items="${yearlyTA}" >
+                <c:forEach var="monthSalary" items="${userSalaryList}">
                     <tr>
-                        <td class="label">${monthTA.month}월</td>
-                        <td>${monthTA.normalCount}</td>
-                        <td>${monthTA.lateCount}</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>${monthTA.totalWorkTime}</td>
+                        <td class="label">${monthSalary.pay_ym}</td>
+                        <td><fmt:formatNumber value="${monthSalary.finalBasePay + monthSalary.overtime_pay}" pattern="#,###"/></td>
+                        <td><fmt:formatNumber value="${monthSalary.national_pension + monthSalary.health_insurance + monthSalary.employment_insurance + monthSalary.local_income_tax + monthSalary.income_tax}" pattern="#,###"/></td>
+                        <td style="color:var(--green)"><fmt:formatNumber value="${monthSalary.net_pay}" pattern="#,###"/></td>
                     </tr>
                 </c:forEach>
                 </tbody>
@@ -222,7 +209,7 @@
 
             <!-- 5 연차 탭 -->
 
-            <div class="panel" id="panel-4">
+            <div class="panel" id="panel-3">
 
                 <!-- 연차 잔여 현황 카드 -->
                 <div class="card">
@@ -287,15 +274,23 @@
                                                     <c:otherwise>기타</c:otherwise>
                                                 </c:choose>
                                             </td>
-                                            <td>${log.use_date}</td>
+                                            <td>
+                                                ${log.use_date}
+                                                <c:if test="${log.end_date ne log.use_date}">
+                                                    ~ ${log.end_date}
+                                                </c:if>
+                                            </td>
                                             <td>${log.use_days} 일</td>
                                             <td>${log.reason}</td>
                                             <td>
-                                                <c:if test="${log.approve}" >
+                                                <c:if test="${log.approve eq 1}" >
                                                     <span class="tag normal">승인완료</span>
                                                 </c:if>
-                                                <c:if test="${not log.approve}" >
-                                                    <span class="tag absent">승인중</span>
+                                                <c:if test="${log.approve eq 2}">
+                                                    <span class="tag absent reject-tag" data-reason="${log.reject_reason}">반려</span>
+                                                </c:if>
+                                                <c:if test="${log.approve eq 0}" >
+                                                    <span class="tag early">승인중</span>
                                                 </c:if>
                                             </td>
                                         </tr>
@@ -311,6 +306,7 @@
             </div>
 
         </div>
+        <jsp:include page="/WEB-INF/views/common/msg.jsp" />
         </main>
         </div>
         
@@ -329,144 +325,18 @@
                 });
             }
 
-            const taData = JSON.parse('${taJson}');
+            // ── URL 파라미터 확인 및 자동 탭 전환 ──
+            window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tab = urlParams.get('tab');
 
-            const styleMap = {
-                normal : { label: '정상출근', bg: 'rgba(34,197,94,0.15)',  border: '#16a34a', text: '#15803d' },
-                late   : { label: '지각',    bg: 'rgba(245,158,11,0.15)', border: '#d97706', text: '#b45309' },
-                absent : { label: '결근',    bg: 'rgba(239,68,68,0.12)',  border: '#dc2626', text: '#b91c1c' },
-                leave  : { label: '휴가',    bg: 'rgba(99,102,241,0.15)', border: '#6366f1', text: '#4338ca' },
-                half   : { label: '반차',    bg: 'rgba(99,102,241,0.10)', border: '#a5b4fc', text: '#6366f1' }
-            };
-
-            const taMap = {};
-            taData.forEach(function(item) { taMap[item.date] = item.status; });
-
-            const now          = new Date();
-            const currentYear  = now.getFullYear();
-            const currentMonth = now.getMonth();
-
-            function pad(n) { return String(n).padStart(2, '0'); }
-
-            function renderCal() {
-                document.getElementById('calTitle').textContent =
-                    currentYear + '년 ' + (currentMonth + 1) + '월';
-
-                const container = document.getElementById('tuiCal');
-                container.innerHTML = '';
-
-                const table = document.createElement('table');
-                table.style.cssText = 'width:100%; border-collapse:collapse; table-layout:fixed;';
-
-                // 요일 헤더
-                const thead = document.createElement('thead');
-                const headRow = document.createElement('tr');
-                ['일','월','화','수','목','금','토'].forEach(function(d, i) {
-                    const th = document.createElement('th');
-                    th.textContent = d;
-                    var color = (i === 0) ? '#dc2626' : (i === 6) ? '#6366f1' : '#6b7280';
-                    th.style.cssText =
-                        'padding:10px 0;' +
-                        'font-size:12px;' +
-                        'font-weight:600;' +
-                        'color:' + color + ';' +
-                        'text-align:center;' +
-                        'border-bottom:2px solid #e5e7eb;';
-                    headRow.appendChild(th);
-                });
-                thead.appendChild(headRow);
-                table.appendChild(thead);
-
-                const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-                const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-                const tbody = document.createElement('tbody');
-                let day = 1;
-                let row = document.createElement('tr');
-
-                for (let i = 0; i < firstDay; i++) {
-                    row.appendChild(makeEmptyCell());
-                }
-
-                while (day <= lastDate) {
-                    if (row.children.length === 7) {
-                        tbody.appendChild(row);
-                        row = document.createElement('tr');
-                    }
-
-                    const dateStr = currentYear + '-' + pad(currentMonth + 1) + '-' + pad(day);
-                    const status  = taMap[dateStr];
-                    const s       = status ? styleMap[status] : null;
-                    const dow     = (firstDay + day - 1) % 7;
-                    const isToday = now.getDate() === day;
-
-                    const td = document.createElement('td');
-                    td.style.cssText =
-                        'height:76px;' +
-                        'vertical-align:top;' +
-                        'padding:6px;' +
-                        'border:1px solid #f0f0f0;' +
-                        'background:' + (s ? s.bg : 'transparent') + ';' +
-                        (s ? 'border-left:3px solid ' + s.border + ';' : '');
-
-                    // 날짜 숫자
-                    const dateNum = document.createElement('div');
-                    dateNum.textContent = day;
-                    var numColor;
-                    if (isToday)       numColor = '#fff';
-                    else if (dow === 0) numColor = '#dc2626';
-                    else if (dow === 6) numColor = '#6366f1';
-                    else if (s)         numColor = s.text;
-                    else                numColor = '#374151';
-
-                    dateNum.style.cssText =
-                        'font-size:13px;' +
-                        'font-weight:' + (isToday ? '800' : '500') + ';' +
-                        'color:' + numColor + ';' +
-                        'width:24px;height:24px;' +
-                        'line-height:24px;' +
-                        'text-align:center;' +
-                        'border-radius:50%;' +
-                        'background:' + (isToday ? '#2563eb' : 'transparent') + ';' +
-                        'margin-bottom:5px;';
-                    td.appendChild(dateNum);
-
-                    // 상태 배지
-                    if (s) {
-                        const badge = document.createElement('div');
-                        badge.textContent = s.label;
-                        badge.style.cssText =
-                            'font-size:11px;' +
-                            'font-weight:600;' +
-                            'color:' + s.text + ';' +
-                            'background:white;' +
-                            'border:1px solid ' + s.border + ';' +
-                            'border-radius:4px;' +
-                            'padding:2px 5px;' +
-                            'display:inline-block;' +
-                            'white-space:nowrap;';
-                        td.appendChild(badge);
-                    }
-
-                    row.appendChild(td);
-                    day++;
-                }
-
-                while (row.children.length < 7) {
-                    row.appendChild(makeEmptyCell());
-                }
-                tbody.appendChild(row);
-                table.appendChild(tbody);
-                container.appendChild(table);
+            // 'leave' 파라미터가 있다면 4번째 탭(인덱스 3)으로 전환
+            if (tab === 'leave') {
+                switchTab(3);
             }
-
-            function makeEmptyCell() {
-                const td = document.createElement('td');
-                td.style.cssText = 'height:76px;border:1px solid #f0f0f0;background:#fafafa;';
-                return td;
-            }
-
-            renderCal();
+            // 필요에 따라 다른 탭도 추가 가능
+            // else if (tab === 'salary') { switchTab(2); }
+        });
         </script>
     </body>
 </html>

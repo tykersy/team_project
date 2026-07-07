@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.project.dao.SalaryDAO">
+
+    <!-- 사원의 서명대기중인 계약서 조회 -->
+    <select id="getPendingContract"
+            parameterType="int"
+            resultType="contract">
+        SELECT *
+        FROM salary_contract
+        WHERE sabun = #{sabun}
+        AND signed_at IS NULL
+        ORDER BY start_date DESC, created_at DESC 
+        LIMIT 1
+    </select>
+    
+    <!-- 사원의 서명된 가장 최근 근로 계약 정보 조회하기 -->
+    <select id="getContractBySabun"
+            parameterType="int"
+            resultType="contract">
+        SELECT *
+        FROM salary_contract
+        WHERE sabun = #{sabun}
+        AND signed_at IS NOT NULL
+        AND (
+            (end_date IS NOT NULL AND CURDATE() BETWEEN start_date AND end_date)
+            OR
+            (end_date IS NULL AND CURDATE() &gt;= start_date)
+        )
+        ORDER BY start_date DESC, created_at DESC 
+        LIMIT 1
+    </select>
+
+    <!-- 새로운 근로 계약 정보 등록 -->
+    <insert id="insertContract"
+            parameterType="contract">
+        insert into salary_contract( sabun, base_salary, meal_allowance, start_date, end_date )
+        values( #{sabun}, #{base_salary}, #{meal_allowance}, #{start_date}, #{end_date, jdbcType=DATE} )
+    </insert>
+
+    <!-- 계약서에 서명정보 추가 -->
+    <update id="updateSignature"
+            parameterType="contract">
+        update salary_contract set signature_data = #{signature_data},
+            signed_at = now()
+        where contract_id = #{contract_id}
+    </update>
+
+    <!-- 사원의 월급 명세서 정보 조회 -->
+    <select id="getLedgerbySabun"
+            parameterType="int"
+            resultType="ledger">
+        select * from salary_ledger
+        where sabun = #{sabun}
+    </select>
+
+    <!-- 사원의 정산 완료된 이번달 명세서 조회 -->
+    <select id="getLedgerinfo"
+            parameterType="java.util.Map"
+            resultType="ledger">
+        select * from salary_ledger
+        where sabun = #{sabun} and status = '완료' and pay_ym = #{ym}
+    </select>
+
+    <!-- 해당 년월 모든 월급 정산 대상 명세서 리스트 조회 -->
+    <select id="needConfirmLedgerList"
+            parameterType="String"
+            resultType="ledger">
+        select l.salary_id,
+               l.pay_ym,
+               l.sabun,
+               s.saname,
+               d.dname,
+               l.base_pay,
+               l.overtime_pay,
+               l.meal_pay,
+               l.national_pension,
+               l.health_insurance,
+               l.long_term_care,
+               l.employment_insurance,
+               l.income_tax,
+               l.local_income_tax,
+               l.net_pay,
+               l.status,
+               l.created_at
+        from salary_ledger l
+        join sawon s on s.sabun = l.sabun 
+        join dept d on s.deptno = d.deptno
+        where l.pay_ym = #{ym} and l.status = '대기'
+        order by sabun
+    </select>
+
+    <!-- 해당 년월 정산 대상 명세서 수 -->
+    <select id="getCountLedgers"
+            parameterType="String"
+            resultType="int">
+        select count(salary_id)
+        from salary_ledger
+        where status = '대기' and pay_ym = #{ym}
+    </select>
+
+    <!-- 해당 년월 정산 완료 명세서 수 -->
+    <select id="getCountConfirmedLedgers"
+            parameterType="String"
+            resultType="int">
+        select count(salary_id)
+        from salary_ledger
+        where status = '완료' and pay_ym = #{ym}
+    </select>
+
+    <!-- 사원 월급 정산 마감-->
+    <update id="salaryStatusComplete"
+            parameterType="int">
+        update salary_ledger set status = '완료'
+        where salary_id = #{salary_id}
+    </update>
+
+    <!-- 필터 별 계약서 갯수 조회 -->
+    <select id="getCountsContract"
+            resultType="java.util.Map">
+        select count(case when signed_at is null then 1 end) as pendingCount,
+               count(case when timestampdiff(year, start_date, curdate()) &gt;= 1 and
+                        signed_at is not null then 1 end) as renewalCount
+        from salary_contract
+    </select>
+
+    <!-- 필터링 된 계약서 리스트 -->
+    <select id="getfilteredList"
+            parameterType="java.util.Map"
+            resultType="contract">
+        select s.sabun, s.saname, d.dname,
+               sc.start_date,
+               sc.end_date,
+               sc.signed_at,
+               sc.contract_id
+        from sawon s
+        inner join dept d on s.deptno = d.deptno
+        left join salary_contract sc on s.sabun = sc.sabun
+            <where>
+                <if test="deptno != null and deptno != ''">
+                    and s.deptno = #{deptno}
+                </if>
+                <if test="saname != null and saname != ''">
+                    and s.saname like concat('%', #{saname}, '%')
+                </if>
+                <if test="filterType == 'PENDING'">
+                    AND sc.signed_at IS NULL and sc.contract_id is not null
+                </if>
+                <if test="filterType == 'RENEWAL'">
+                    AND TIMESTAMPDIFF(YEAR, sc.start_date, CURDATE()) &gt;= 1 AND sc.signed_at IS NOT NULL
+                </if>
+            </where>
+            <choose>
+                <when test="sortType == 'DEPT'">
+                    ORDER BY d.deptno ASC, s.sabun ASC
+                </when>
+                <otherwise>
+                    ORDER BY s.sabun ASC
+                </otherwise>
+            </choose>
+    </select>
+
+    <!-- 해당 사원의 계약서 디테일 -->
+    <select id="getContractDetail"
+            parameterType="int"
+            resultType="contract">
+        select s.sabun, s.saname, d.dname, sc.base_salary, sc.meal_allowance,
+                date_format(sc.start_date, '%y-%m-%d') as start_date,
+                date_format(sc.end_date, '%y-%m-%d') as end_date,
+                date_format(sc.signed_at, '%y-%m-%d %H:%i:%s') as signed_at
+        from sawon s
+        inner join dept d on s.deptno = d.deptno
+        left join salary_contract sc on s.sabun = sc.sabun
+        where sc.contract_id = #{contract_id}
+    </select>
+    
+    <!-- 해당 연월의 근태 마감된 인원 조회 -->
+    <select id="getCntClosed"
+            parameterType="String"
+            resultType="int">
+        select count(sabun)
+        from salary_closed_attendance
+        where closed_ym = #{ym} and status = '완료'
+    </select>
+
+    <!-- 마감된 근태 리스트 조회-->
+    <select id="getConfirmedList"
+            parameterType="String"
+            resultType="salaryclosed">
+        select sc.*, d.dname, s.saname
+        from salary_closed_attendance sc
+        join sawon s on sc.sabun = s.sabun
+        join dept d on s.deptno = d.deptno
+        where closed_ym = #{ym} and status = '완료'
+    </select>
+</mapper>

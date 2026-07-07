@@ -1,0 +1,252 @@
+/* ==========================================
+   Linked ERP - 전자 계약 관리 프리미엄 스타일
+   ========================================== */
+
+/* 1. 기본 레이아웃 및 타이틀 */
+.main-content {
+    padding: 40px;
+    background-color: #F8FAFC;
+    min-height: 100vh;
+    font-family: 'Pretendard', -apple-system, sans-serif;
+}
+
+.page-title-section {
+    margin-bottom: 24px;
+}
+
+.page-title-section h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0 0 6px 0;
+}
+
+.page-title-section p {
+    font-size: 14px;
+    color: #64748B;
+    margin: 0 0 20px 0;
+} 
+
+.title-divider {
+    border: 0;
+    height: 1px;
+    background-color: #E2E8F0;
+    margin: 0;
+}
+
+/* 2. 대시보드형 상단 요약 카드 (클릭 가능 인터랙션 추가) */
+.contract-status-wrapper {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.contract-card {
+    flex: 1;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.contract-card:hover {
+    transform: translateY(-4px); /* 조금 더 입체감 있게 위로 이동 */
+    box-shadow: 0 12px 20px -8px rgba(15, 23, 42, 0.08), 
+                0 4px 12px -2px rgba(15, 23, 42, 0.03); /* 다단 그림자로 깊이감 부여 */
+}
+
+.contract-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0; width: 4px;
+}
+.card-pending::before { background-color: #F59E0B; } /* 서명 대기: 주황 */
+.card-renewal::before { background-color: #EF4444; } /* 재계약 대상: 빨강 */
+
+.contract-card .card-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748B;
+    margin-bottom: 8px;
+}
+
+.contract-card .card-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0F172A;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.contract-card .card-value span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #475569;
+}
+
+/* 3. 컨트롤러 바 (검색 및 필터 영역) */
+.filter-control-bar {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.erp-select, .erp-input {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #CBD5E1;
+    font-size: 14px;
+    color: #334155;
+    background-color: #F8FAFC;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.erp-select:focus, .erp-input:focus {
+    border-color: #475569;
+    background-color: #FFFFFF;
+}
+
+.erp-input { width: 200px; }
+
+.btn-search {
+    padding: 10px 16px;
+    background: #0F172A;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn-search:hover { background: #1E293B; }
+
+/* 4. 데이터 테이블 스타일 */
+.table-container {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+    overflow: hidden;
+    padding: 8px;
+}
+
+.erp-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.erp-table th {
+    padding: 14px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    background-color: #F8FAFC;
+    border-bottom: 2px solid #E2E8F0;
+}
+
+.erp-table td {
+    padding: 16px 16px;
+    font-size: 14px;
+    color: #334155;
+    border-bottom: 1px solid #F1F5F9;
+    vertical-align: middle;
+}
+
+.erp-table tbody tr {
+    transition: background-color 0.15s ease;
+}
+.erp-table tbody tr:hover {
+    background-color: #F8FAFC;
+}
+
+.link-emp-name {
+    color: #2563EB;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+.link-emp-name:hover {
+    text-decoration: underline;
+}
+
+/* 5. 계약 상태 배지(Badge) */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+}
+.badge-signed { color: #10B981; background-color: #ECFDF5; } /* 서명 후 완료 */
+.badge-unsigned { color: #F59E0B; background-color: #FFFBEB; } /* 서명 전 대기 */
+
+/* 6. 우아한 모달 팝업 스타일 (상세보기창) */
+.contract-modal {
+    display: none;
+    position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%;
+    background-color: rgba(15, 23, 42, 0.4); align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
+}
+
+.contract-modal-content {
+    background-color: #FFFFFF; border-radius: 16px; width: 100%; max-width: 520px;
+    padding: 32px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    animation: modalFadeIn 0.2s ease-out;
+}
+
+.modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 20px;
+    background: #F8FAFC;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+}
+
+.grid-item {
+    display: flex;
+    flex-direction: column;
+}
+.grid-item label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748B;
+    margin-bottom: 4px;
+}
+.grid-item span {
+    font-size: 14px;
+    color: #1E293B;
+    font-weight: 500;
+}

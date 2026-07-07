@@ -6,16 +6,12 @@
 <html>
 
     <head>
+        <title>[Linked : 근무일정]</title>
         <!-- sidebar css -->
         <link rel="stylesheet" href="/css/admin/sidebar.css">
         <link rel="stylesheet" href="/css/admin/main.css">
-        <style>
-            /* 캘린더 출력할 div의 사이즈 조정 */
-            #calendarbox {
-                height:700px;
-                width:90%
-            }
-        </style>
+        <link rel="stylesheet" href="/css/admin/dcal.css">
+        
         <!-- toast ui 라이브러리 참조 & css참조 -->
         <meta charset="UTF-8">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/toastui-calendar.min.css" />
@@ -39,7 +35,7 @@
 
                     defaultView: 'month', //캘린더 방식
                     useFormPopup: false, //기본 팝업 설정 끄기
-                    useDetailPopup: true, //스케쥴 디테일을 볼 수 있는 팝업
+                    useDetailPopup: false, //스케쥴 디테일을 볼 수 있는 팝업
                     gridSelection: true,
                     isReadOnly: false,
                     calendars: [ //부서별로 색깔 다르게 표시
@@ -119,20 +115,83 @@
                     const localDate = new Date(eventData.start.getTime() - offset);
                     const clickedDate = localDate.toISOString().split('T')[0];
 
-                    // Controller로 보낼 URL 생성 (파라미터 포함)
-                    
-                    const url = "/schedule_view.do?deptno="+cur_deptno
-                                +"&date="+clickedDate;
-                    
-                    //미니 팝업 띄우기
-                    window.open(url, 'scheduleDetailPopup', 
-                                    'width=600, height=700, scrollbars=yes, resizable=no');
+                    //모달 날짜추가
+                    document.getElementById("modalTargetDate").innerText = clickedDate;
+
+                    // 모달을 위한 비동기fetch호출
+                    fetch( "/admin/schedule_view?deptno="+cur_deptno+"&date="+clickedDate)
+                    .then(res => res.json())
+                    .then(data =>{
+                        console.log("서버 응답 데이터:", data)
+
+                        //리스트 출력할 컨테이너 가져오기
+                        const listContainer = document.getElementById("scheduleListContainer");
+
+                        if (!listContainer) {
+                            console.error("scheduleListContainer 엘리먼트를 찾을 수 없습니다.");
+                            return;
+                        }
+                        listContainer.innerHTML = ""; // 기존 목록 초기화
+
+                        //scheudleList에 읽어온 정보 입력
+                        const scheduleList = data.list || data;
+
+                        //데이터 유무에 따라서 동적으로 값 넣기
+                        if (!scheduleList || scheduleList.length === 0) {
+                            listContainer.innerHTML = `
+                                <div class="sch-no-data">
+                                    <p>등록된 부서 일정이 없습니다.</p>
+                                    </div>
+                                    <div class="schedule-btn-area">
+                                    <input type="button" class="schedule_insert_btn" value="일정 추가" onclick="openScheduleInsert()" />
+                                    </div>
+                            `;
+                        } else {
+                            let html = '<ul class="sch-list-group">';
+                            scheduleList.forEach(item => {
+                                // 백엔드 ScheduleDTO 필드명(title, content, dname 등)에 맞게 매핑
+                                // 전체 부서 조회 시(deptno==1) 각 일정의 부서명을 뱃지로 달아주면 좋습니다.
+                                const deptBadge = `<span class="sch-dept-badge">\${item.dname}</span>`;
+                                const contentText = item.start_date && item.end_date ? `<p class="sch-item-content">\${item.start_date} ~ \${item.end_date}</p>` : '';
+
+                                html += `
+                                    <li class="sch-list-item">
+                                        <div class="sch-item-header">
+                                            <span class="sch-item-title">📌 \${item.title}</span>
+                                            \${deptBadge}
+                                        </div>
+                                        \${contentText}
+                                        <input type="button" value="일정 수정" onclick="openScheduleUpdate(\${item.dcal_idx})" />
+                                        <input type="button" value="일정 삭제" onclick="deleteSchedule(\${item.dcal_idx})" />
+                                        </li>
+                                        
+                                `;
+                            });
+                            html += 
+                            '<div class="schedule-btn-area"><input type="button" class="schedule_insert_btn" value="일정 추가" onclick="openScheduleInsert()" /></div></ul>';
+
+                            //html문장 주입
+                            listContainer.innerHTML = html;
+                        }
+
+                        //모달 열기
+                        document.getElementById("scheduleDetailModal").style.display = "flex";
+
+                    })
                 } )
             
             }
 
             allSchedule();
 
+            }
+
+            //모달 닫기
+            function closeScheduleModal(){
+                document.getElementById("scheduleDetailModal").style.display = "none";
+
+                //캘린더 하이라이트 제거
+                calendar.clearGridSelections();
             }
 
             //부서 버튼을 클릭하면 실행되는 함수
@@ -148,7 +207,7 @@
                 isSearched = false;
                 }
 
-                fetch( "/schedule_deptSchedule.do?deptno="+deptno  )
+                fetch( "/admin/schedule_dept?deptno="+deptno  )
                 .then( res => res.json() )
                 .then( data => {
                     
@@ -159,12 +218,13 @@
                     const events = data.list.map( item => {
 
                         return {
-                            id : item.id,
+                            id : item.dcal_idx,
                             calendarId : item.deptno,
                             title : item.title,
                             start : item.start_date,
                             end : item.end_date,
-                            category : 'time'
+                            category : 'allday',
+                            isAllday : true
                         };
 
                     } );
@@ -193,7 +253,7 @@
                 isSearched = false;
                 }
 
-                fetch( "/schedule_all.do" )
+                fetch( "/admin/schedule_all" )
                 .then( res => res.json() )
                 .then( data => {
 
@@ -203,12 +263,13 @@
                     const events = data.list.map( item => {
 
                         return {
-                            id : item.id,
+                            id : item.dcal_idx,
                             calendarId : item.deptno,
                             title : item.title,
                             start : item.start_date,
                             end : item.end_date,
-                            category : 'time'
+                            category : 'allday',
+                            isAllday : true
                         };
 
                     } );
@@ -238,7 +299,7 @@
 
                 searchbox.innerHTML = "" //기존 검색결과 초기화
 
-                fetch( "/schedule_search.do?search_name="+search_name )
+                fetch( "/admin/schedule_search?search_name="+search_name )
                 .then( res => res.json() )
                 .then( data => {
 
@@ -254,6 +315,8 @@
 
                         searchbox.innerHTML = `
                             <div class="search-result-header">
+
+                                // 수정필요!!!!!!!!****
                                 '<strong>${search_name}</strong>' 검색 결과 (총 ${data.dlist.length}건)
                             </div>
                             <div class="search-card-grid">`;
@@ -271,6 +334,138 @@
                 } )
 
             }
+            //버튼 색 변경
+            function selectDeptButton(btn) {
+
+                document.querySelectorAll(".dept-filters input")
+                    .forEach(item => item.classList.remove("active"));
+
+                btn.classList.add("active");
+            }
+
+            //일정 추가
+            function openScheduleInsert(){
+
+                document.getElementById("scheduleDetailModal").style.display = "none";
+                document.getElementById("scheduleForm").reset();
+                document.getElementById("dcal_idx").value = "";
+
+                const date = document.getElementById("modalTargetDate").innerText;
+
+                document.getElementById("start_date").value = date;
+                document.getElementById("end_date").value = date;
+
+                document.getElementById("scheduleFormModal").style.display = "flex";
+            }
+
+            //일정추가 종료
+            function closeScheduleFormModal(){
+                document.getElementById("scheduleFormModal").style.display = "none";
+
+                document.getElementById("scheduleDetailModal").style.display = "flex";
+            }
+
+            //일정 저장
+            function saveSchedule(){
+                const form = document.getElementById("scheduleForm");
+                const formData = new FormData(form);
+
+                const dcal_idx = document.getElementById("dcal_idx").value;
+                const title = document.getElementById("title").value.trim();
+                const startDate = document.getElementById("start_date").value;
+                const endDate = document.getElementById("end_date").value;
+
+                if(title === ""){
+                    alert("제목을 입력하세요.");
+                    return;
+                }
+
+                if(startDate === "" || endDate === ""){
+                    alert("시작일과 종료일을 선택하세요.");
+                    return;
+                }
+
+                if(startDate > endDate){
+                    alert("종료일은 시작일보다 빠를 수 없습니다.");
+                    return;
+                }
+
+                let url;
+                let successMsg;
+
+                if(dcal_idx === ""){
+                    // 추가
+                    url = "/admin/schedule_insert";
+                    successMsg = "일정이 추가되었습니다.";
+
+                    // insert는 auto_increment라 dcal_idx 보내면 안 됨
+                    formData.delete("dcal_idx");
+                }else{
+                    // 수정
+                    url = "/admin/schedule_update";
+                    successMsg = "일정이 수정되었습니다.";
+                }
+
+                fetch(url, {
+                    method: "POST",
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+
+                    if(data.result === "success"){
+                        alert(successMsg);
+
+                        document.getElementById("scheduleFormModal").style.display = "none";
+
+                        if(cur_deptno == 1){
+                            allSchedule();
+                        }else{
+                            dept_sawon(cur_deptno);
+                        }
+
+                    }else{
+                        alert("저장 실패");
+                    }
+                });
+            }
+
+            //일정 수정
+            function openScheduleUpdate(dcal_idx){
+
+                fetch("/admin/schedule_one?dcal_idx=" + dcal_idx)
+                .then(res => res.json())
+                .then(vo => {
+                    document.getElementById("dcal_idx").value = vo.dcal_idx;
+                    document.getElementById("deptno").value = vo.deptno;
+                    document.getElementById("title").value = vo.title;
+                    document.getElementById("start_date").value = vo.start_date.substring(0, 10);
+                    document.getElementById("end_date").value = vo.end_date.substring(0, 10);
+                    document.getElementById("content").value = vo.content || "";
+
+                    document.getElementById("scheduleDetailModal").style.display = "none";
+                    document.getElementById("scheduleFormModal").style.display = "flex";
+                });
+            }
+
+            function deleteSchedule(dcal_idx){
+                if(!confirm("일정을 삭제하시겠습니까?")){
+                    return;
+                }
+                fetch("/admin/schedule_delete?dcal_idx="+dcal_idx, {method: "POST"})
+                .then(res=>res.json())
+                .then(data=>{
+                    if(data.result === "success"){
+                        alert("삭제되었습니다.")
+                        
+                        closeScheduleModal();
+                        location.reload();
+                    }else{
+                        alert("삭제실패")
+                    }
+                });
+            }
+
         </script>
     </head>
 
@@ -283,10 +478,10 @@
 
             <div class="controls">
             <div class="dept-filters">
-                <input type="button" value="전체부서" style="background-color: #57606f;" 
-                        onclick="allSchedule()"/>
+                <input type="button" value="전체부서" class="active"  
+                        onclick="selectDeptButton(this); allSchedule()"/>
                 <c:forEach var="dept" items="${dept_list}">
-                    <input type="button" value="${dept.dname}" onclick="dept_sawon('${dept.deptno}')"/>
+                    <input type="button" value="${dept.dname}" onclick="selectDeptButton(this); dept_sawon('${dept.deptno}')"/>
                 </c:forEach>
             </div>
 
@@ -310,6 +505,63 @@
             <div id="searchbox"></div>
             </div>
         </div>
+
+        <div id="scheduleDetailModal" class="schedule-modal-overlay" onclick="if(event.target == this) closeScheduleModal();">
+            <div class="schedule-modal-content">
+                <div class="sch-modal-header">
+                    <h3>📅 일정 목록 (<span id="modalTargetDate"></span>)</h3>
+                    <button type="button" class="sch-close-btn" onclick="closeScheduleModal()">&times;</button>
+                </div>
+                
+                <div class="sch-modal-body" id="scheduleListContainer">
+                    </div>
+                
+                <div class="sch-modal-footer">
+                    <button type="button" class="btn-sch-close" onclick="closeScheduleModal()">확인</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="scheduleFormModal" class="schedule-modal-overlay"
+            style="display:none; z-index:100000;"  onclick="if(event.target==this) closeScheduleFormModal();">
+            <div class="schedule-modal-content">
+                <form id="scheduleForm">
+                    <input type="hidden" name="dcal_idx" id="dcal_idx">
+                    <div>
+                        <label>부서</label>
+                        <select name="deptno" id="deptno">
+                            <c:forEach var="dept" items="${dept_list}">
+                                <option value="${dept.deptno}">
+                                    ${dept.dname}
+                                </option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div>
+                        <label>제목</label>
+                        <input type="text" name="title" id="title">
+                    </div>
+                    <div>
+                        <label>시작일</label>
+                        <input type="date" name="start_date" id="start_date">
+                    </div>
+                    <div>
+                        <label>종료일</label>
+                        <input type="date" name="end_date" id="end_date">
+                    </div>
+                    <div>
+                        <label>내용</label>
+                        <textarea name="content" id="content"></textarea>
+                    </div>
+                    <div class="form-btn-area">
+                        <button type="button" onclick="saveSchedule()">저장</button>
+                        <button type="button" onclick="closeScheduleFormModal()">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        
     </body>
     
 </html>
