@@ -8,9 +8,9 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>[Linked : 마이페이지]</title>
-        <link rel="stylesheet" href="/css/user/mypage.css">
-        <link rel="stylesheet" href="/css/dashboard.css">
-        <link rel="stylesheet" href="/css/sidebar.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/user/mypage.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/toastui-calendar.min.css" />
         <script src="${pageContext.request.contextPath}/js/toastui-calendar.min.js"></script>
         

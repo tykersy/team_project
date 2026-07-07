@@ -6,9 +6,9 @@
 
             <head>
                 <title>[Linked : 조직도]</title>
-                <link rel="stylesheet" href="/css/dashboard.css">
+                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
-                <link rel="stylesheet" href="/css/org_chart/dept_chart.css">
+                <link rel="stylesheet" href="${pageContext.request.contextPath}/css/org_chart/dept_chart.css">
 
                 <script>
                     function openOrgProfile(name, job, dept, email, tel) {

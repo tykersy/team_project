@@ -7,7 +7,7 @@
 
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar/scal_insert.css">
-            <link rel="stylesheet" href="/css/dashboard.css">
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
 
             <script>
                 function send(f) {

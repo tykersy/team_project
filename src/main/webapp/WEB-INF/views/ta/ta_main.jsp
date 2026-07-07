@@ -82,7 +82,7 @@
         </script>
 
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
-        <link rel="stylesheet" href="/css/dashboard.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/ta/ta_main.css">
 
     </head>
