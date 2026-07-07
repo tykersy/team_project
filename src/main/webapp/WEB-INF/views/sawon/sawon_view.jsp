@@ -6,8 +6,8 @@
 
     <head>
         <title>[Linked : 사원 정보]</title>
-        <link rel="stylesheet" href="/css/admin/sawon_view.css"/>
-        <link rel="stylesheet" href="/css/admin/sidebar.css" />
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sawon_view.css"/>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebar.css" />
         <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     </head>
 

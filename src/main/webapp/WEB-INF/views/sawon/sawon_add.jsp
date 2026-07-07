@@ -6,7 +6,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>[Linked : 사원 추가]</title>
-        <link rel="stylesheet" href="/css/user/sawon_add.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/user/sawon_add.css">
 
         <%-- 카카오 도로명 검색을 위한 API 호출 --%>
         <script src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
