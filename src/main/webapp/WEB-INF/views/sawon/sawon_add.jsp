@@ -82,7 +82,7 @@
                 <tr>
                     <th>사번</th>
                     <td>
-                        <input name="sabun" type="number" />
+                        <input name="sabun" type="number" value="${newSabun}" readonly="readonly" style="background-color: lightgray;"/>
                     </td>
                 </tr>
                 <tr>

@@ -59,4 +59,7 @@ public interface SawonDAO {
     //사번으로 관리자 권한 확인
     SawonVO checkLeader(int sabun);
 
+    //사번 자동 부여를 위한 마지막 사번 조회
+    int getLastSabun();
+
 } 

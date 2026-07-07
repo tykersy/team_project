@@ -257,10 +257,10 @@
         // 기존 /admin/salary_confirm 매핑을 재사용해 fetch로 비동기 조회
         function reloadSalaryConfirm(ym) {
             fetch("/admin/salary_confirm?ym=" + encodeURIComponent(ym))
-            .then(res => res => {
+            .then(res => {
                 if (!res.ok) throw new Error("네트워크 응답에 문제가 있습니다.");
                 return res.text();
-            })
+            })  
             .then(html => {
                 const doc = new DOMParser().parseFromString(html, "text/html");
 

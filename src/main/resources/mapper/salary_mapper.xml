@@ -169,7 +169,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!-- 해당 사원의 계약서 디테일 -->
     <select id="getContractDetail"
-            parameterType="java.util.Map"
+            parameterType="int"
             resultType="contract">
         select s.sabun, s.saname, d.dname, sc.base_salary, sc.meal_allowance,
                 date_format(sc.start_date, '%y-%m-%d') as start_date,
@@ -178,7 +178,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from sawon s
         inner join dept d on s.deptno = d.deptno
         left join salary_contract sc on s.sabun = sc.sabun
-        where s.sabun = #{sabun}
+        where sc.contract_id = #{contract_id}
     </select>
     
     <!-- 해당 연월의 근태 마감된 인원 조회 -->

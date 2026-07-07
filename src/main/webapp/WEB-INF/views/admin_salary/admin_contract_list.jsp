@@ -78,7 +78,7 @@
                                 <tr>
                                     <td><strong>${contract.sabun}</strong></td>
                                     <td>
-                                        <a class="link-emp-name" onclick="openContractDetail('${contract.sabun}')">
+                                        <a class="link-emp-name" onclick="openContractDetail('${contract.contract_id}', '${contract.sabun}', '${contract.saname}')">
                                             ${contract.saname}
                                         </a>
                                     </td>
@@ -100,10 +100,10 @@
                                                 <span class="badge badge-signed">✓ 서명 완료</span>
                                             </c:when>
                                             <c:when test="${empty contract.contract_id || contract.contract_id eq 0}">
-                                                <span class="badge badge-none" style="color: #64748B; background-color: #F1F5F9;">⚠️ 계약서 미발행</span>
+                                                <span class="badge badge-none" style="color: #64748B; background-color: #F1F5F9;">계약서 미발행</span>
                                             </c:when>
                                             <c:otherwise>
-                                                <span class="badge badge-unsigned">⏳ 서명 전</span>
+                                                <span class="badge badge-unsigned">서명 전</span>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
@@ -134,7 +134,7 @@
                     <div class="grid-item"><label>소속 부서</label><span id="mdDname">-</span></div>
                     <div class="grid-item"><label>현재 계약 상태</label><span id="mdStatus">-</span></div>
                     <div class="grid-item" style="grid-column: span 2;"><label>계약 기간</label><span id="mdPeriod">-</span></div>
-                    <div class="grid-item" style="grid-column: span 2;"><label>체결 연봉액 또는 주요 특약사항</label><span id="mdSalary">시스템 연동액 기준 준수</span></div>
+                    <div class="grid-item" style="grid-column: span 2;"><label>체결 연봉액 또는 주요 특약사항</label><span id="mdSalary">-</span></div>
                 </div>
                 
                 <div style="margin-top: 24px; display: flex; justify-content: flex-end;">
@@ -207,24 +207,30 @@
         }
 
         /* 🌟 비동기 데이터 뷰 바인딩 및 상세 모달 오픈 */
-        function openContractDetail(sabun) {
+        function openContractDetail(contract_id, sabun, saname) {
 
-            fetch('/admin/admin_contract_detail?sabun=' + sabun)
+            fetch('/admin/admin_contract_detail?contract_id='+contract_id)
             .then(res => res.json())
             .then(data => {
-                document.getElementById('mdSabun').innerText = data.contract.sabun;
-                document.getElementById('mdSaname').innerText = data.contract.saname;
-                document.getElementById('mdDname').innerText = data.contract.dname;
-                document.getElementById('mdStatus').innerText = data.contract.signed_at !== null ? '✓ 서명 완료' : '⏳ 서명 전 대기';
-                document.getElementById('mdPeriod').innerText = data.contract.start_date + ' ~ ' + (data.contract.end_date ? data.contract.end_date : '기간 제한 없음(정직원)');
+
+                if( data.contract != null ){
+                    document.getElementById('mdSabun').innerText = data.contract.sabun;
+                    document.getElementById('mdSaname').innerText = data.contract.saname;
+                    document.getElementById('mdDname').innerText = data.contract.dname;
+                    document.getElementById('mdStatus').innerText = data.contract.signed_at !== null ? '✓ 서명 완료' : '서명 대기중';
+                    document.getElementById('mdPeriod').innerText = data.contract.start_date + ' ~ ' + (data.contract.end_date ? data.contract.end_date : '기간 제한 없음(정직원)');
+                    document.getElementById('mdSalary').innerText = data.contract.base_salary;
+                }else{
+                    document.getElementById('mdSabun').innerText = sabun;
+                    document.getElementById('mdSaname').innerText = saname;
+                    document.getElementById('mdDname').innerText = "";
+                    document.getElementById('mdStatus').innerText = '계약서 미발행';
+                    document.getElementById('mdPeriod').innerText = "";
+                    document.getElementById('mdSalary').innerText = "";
+                }
                 document.getElementById('contractDetailModal').style.display = 'flex';
             })
-            .catch(err => {
-                // 단건 조회가 아직 없는 초기 개발단계용 모달 테스트용 폴백 코드
-                document.getElementById('mdSabun').innerText = sabun;
-                document.getElementById('mdSaname').innerText = "임시 사원명";
-                document.getElementById('contractDetailModal').style.display = 'flex';
-            });
+            
         }
 
         function closeContractModal() {

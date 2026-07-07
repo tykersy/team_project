@@ -60,12 +60,31 @@ public class SawonController {
     //전체 사원 목록
     @GetMapping("/admin/sawon_list")
     public String sawonList( Model model ) {
-        
+        //전체 사원 목록
         List<SawonVO> list = sawonDao.sawonList();
         model.addAttribute("list", list);
+
+        //전체 부서 목록
+        List<DeptVO> deptList = deptDao.selectAll();
+        model.addAttribute("deptList", deptList);
+
         return "sawon/sawon_list";
     }
 
+    //부서별 사원 리스트 반환
+    @PostMapping("/admin/dept_sawon_list")
+    @ResponseBody
+    public Map<String, Object> sawonListByDept( int deptno ){
+
+        Map<String, Object> map = new HashMap<>();
+
+        List<SawonVO> deptSawonList = sawonDao.getDeptSawonList(deptno);
+        map.put("deptSawonList", deptSawonList);
+
+        System.out.println(deptSawonList);
+
+        return map;
+    }
 
     //사원 추가 폼
     @GetMapping("/admin/sawon_add")
@@ -74,6 +93,10 @@ public class SawonController {
         //부서 번호조회를 위해 부서 전체
         List<DeptVO> dept = deptDao.selectAll();
         model.addAttribute("dept", dept);
+
+        //사번 자동 부여를 위해 마지막으로 insert된 사번 조회
+        int newSabun = sawonDao.getLastSabun() + 1;
+        model.addAttribute("newSabun", newSabun);
 
         return "sawon/sawon_add";
     }
@@ -100,7 +123,6 @@ public class SawonController {
 
         return map;
     }
-
 
     @GetMapping("/dcal_insert.do")
     public String dcalendarForm( Model model){
@@ -161,6 +183,7 @@ public class SawonController {
         return map;
     }
 
+    //사원 정보 수정 폼
     @GetMapping("/admin/sawon_modify")
     public String sawonModify( Model model , int sabun){
 
