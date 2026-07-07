@@ -84,7 +84,7 @@
                             setTimeout(() => {
                                 document.querySelectorAll(".dept-box, .member-card")
                                     .forEach(el => el.classList.remove("focused"));
-                            }, 2000);
+                            }, 4000);
 
                         }
 

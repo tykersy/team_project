@@ -177,7 +177,7 @@
                                     <c:if test="${empty scheduleList}">
                                         <p
                                             style="color: #94a3b8; text-align: center; margin-top: 40px; font-size: 0.95rem;">
-                                            📢 예정된 부서 일정이 없습니다.</p>
+                                            예정된 부서 일정이 없습니다.</p>
                                     </c:if>
                                 </div>
                             </div>

@@ -26,10 +26,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <select id="selectDcalByDeptno"
                 parameterType="map"
                 resultType="dcal">
-                SELECT * FROM dcalendar
-                WHERE deptno = #{deptno}
-                AND start_date &lt;= #{monthEnd}
-                AND end_date &gt;= #{monthStart}
+            SELECT c.*,
+                    d.dname
+            FROM dcalendar c
+            Join dept d ON c.deptno = d.deptno
+            WHERE c.deptno = #{deptno}
+            AND c.start_date &lt;= #{monthEnd}
+            AND c.end_date &gt;= #{monthStart}
+        </select>
+        
+        <select id="selectDcalAllByMonth"
+                parameterType="map"
+                resultType="dcal">
+            SELECT c.*,
+                    d.dname
+            FROM dcalendar c
+            Join dept d ON c.deptno = d.deptno
+            WHERE c.start_date &lt;= #{monthEnd}
+            AND c.end_date &gt;= #{monthStart}
         </select>
 
         <select id="selectScalBySabun"

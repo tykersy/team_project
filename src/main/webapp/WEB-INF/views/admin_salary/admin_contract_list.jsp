@@ -27,7 +27,7 @@
                 <div class="contract-status-wrapper" id="contractStatusWrapper">
                     <div class="contract-card card-pending" onclick="filterBySummary('PENDING')">
                         <span class="card-label">서명 대기 중 문서</span>
-                        <span class="card-value">${pending_count != null ? pending_count : 0} <span>건</span></span>
+                        <span class="card-value" style="color: #F59E0B;">${pending_count != null ? pending_count : 0} <span>건</span></span>
                     </div>
                     <div class="contract-card card-renewal" onclick="filterBySummary('RENEWAL')">
                         <span class="card-label">연봉 재계약 대상자 (1년 경과)</span>
@@ -65,12 +65,12 @@
                     <table class="erp-table">
                         <thead>
                             <tr>
-                                <th>사원번호(사번)</th>
-                                <th>사원명</th>
-                                <th>부서</th> 
-                                <th>계약 시작일</th>
-                                <th>계약 만료일</th>
-                                <th>계약 상태</th>
+                                <th style="width: 15%;">사원번호(사번)</th>
+                                <th style="width: 13%;">사원명</th>
+                                <th style="width: 12%;">부서</th> 
+                                <th style="width: 18%;">계약 시작일</th>
+                                <th style="width: 22%;">계약 만료일</th>
+                                <th style="width: 20%;">계약 상태</th>
                             </tr>
                         </thead>
                         <tbody>

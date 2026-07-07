@@ -126,7 +126,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         WHERE s.sastatus = '재직'
     </select>
 
-    <!-- 해당 년월의 사원들의 출근 일수 조회하기 -->
+    <!-- 해당 년월의 사원들의 출근 일수 조회하기(퇴사하거나 근태가 마감된 사람은 제외) -->
     <select id="getAllMonthlyTA"
             parameterType="String"
             resultType="salaryclosed">

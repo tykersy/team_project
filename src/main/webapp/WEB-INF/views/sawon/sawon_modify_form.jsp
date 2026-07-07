@@ -9,6 +9,8 @@
         <link rel="stylesheet" href="/css/admin/sawon_modify_form.css"/>
         <link rel="stylesheet" href="/css/admin/sidebar.css" />
 
+        <!-- 카카오 도로명 검색을 위한 API 호출 -->
+        <script src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
         <script>
 
             window.onload = function(){
@@ -39,6 +41,22 @@
                     }
                 }
 
+            }
+
+            function addr(){
+                new kakao.Postcode({
+                    oncomplete: function(data) {
+                        // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+
+                        //도로명 주소
+                        let addr = document.getElementById("saaddr");
+                        //우편 번호
+                        let sazipcode = document.getElementById("sazipcode");
+                        
+                        sazipcode.value = data.zonecode;
+                        addr.value = data.roadAddress;
+                    }
+                }).open();
             }
 
             function modify(f){
@@ -238,16 +256,21 @@
 
                         <div class="form-group">
                             <label for="zipCode">우편번호
-                                <span id="error_sazipcode" class="error-msg"></span>
+                                <span id="error_sazipcode" class="error-msg" ></span>
                             </label>
-                            <input id="zipCode" name="sazipcode" class="form-control" value="${sawon.sazipcode}">
+                            <div class="zipcode-wrapper">
+                                <input id="sazipcode" name="sazipcode" class="form-control" 
+                                        readonly="readonly" value="${sawon.sazipcode}">
+                                <input type="button" value="주소검색" class="btn-zipcode-search" onclick="addr()"/>
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label for="address">주소
                                 <span id="error_saaddr" class="error-msg"></span>
                             </label>
-                            <input id="address" name="saaddr" class="form-control" value="${sawon.saaddr}">
+                            <input id="saaddr" name="saaddr" class="form-control"
+                                    readonly="readonly" value="${sawon.saaddr}">
                         </div>
 
                         <div class="form-btn-group">

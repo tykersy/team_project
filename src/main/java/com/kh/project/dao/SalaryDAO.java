@@ -3,6 +3,7 @@ package com.kh.project.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.project.vo.SalaryClosedVO;
 import com.kh.project.vo.SalaryContractVO;
 import com.kh.project.vo.SalaryLedgerVO;
 
@@ -49,4 +50,7 @@ public interface SalaryDAO {
 
     //서명 대기중인 계약서 조회
     SalaryContractVO getPendingContract(int sabun);
+
+    //마감된 근태List 조회
+    List<SalaryClosedVO> getConfirmedList(String ym);
 }

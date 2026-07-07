@@ -189,4 +189,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from salary_closed_attendance
         where closed_ym = #{ym} and status = '완료'
     </select>
+
+    <!-- 마감된 근태 리스트 조회-->
+    <select id="getConfirmedList"
+            parameterType="String"
+            resultType="salaryclosed">
+        select sc.*, d.dname, s.saname
+        from salary_closed_attendance sc
+        join sawon s on sc.sabun = s.sabun
+        join dept d on s.deptno = d.deptno
+        where closed_ym = #{ym} and status = '완료'
+    </select>
 </mapper>

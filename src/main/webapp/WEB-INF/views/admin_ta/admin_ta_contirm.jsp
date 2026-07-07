@@ -26,11 +26,12 @@
 
             // 조회 폼 제출 시 fetch로 비동기 조회 (기존 /admin/ta_confirm 매핑 재사용)
             function handleSearchSubmit(event) {
-                event.preventDefault();
-                reloadTAConfirm();
+                event.preventDefault(); //서브밋방지
+                reloadTAConfirm(); //선택된 ym에 따른 결과 조회 및 폼 설정
                 return false;
             }
 
+            //조회버튼 누를 경우 선택한 조건을 다시 로드
             function reloadTAConfirm() {
                 const ym = document.getElementById('target_ym').value;
 
@@ -106,6 +107,26 @@
                 location.href="/admin/today_ta/view?sabun="+sabun;
 
             }
+
+            // 마감 대기 목록 보기
+            function showWaitList() {
+                document.getElementById("waitListBody").style.display = "";
+                document.getElementById("completeListBody").style.display = "none";
+                
+                // 타이틀 텍스트 변경
+                const selectedYm = document.getElementById('target_ym').value;
+                document.getElementById("tableTitle").innerText = selectedYm + " 근태 정산 대상자 (대기) 목록";
+            }
+
+            // 마감 완료 목록 보기
+            function showCompleteList() {
+                document.getElementById("waitListBody").style.display = "none";
+                document.getElementById("completeListBody").style.display = "";
+                
+                // 타이틀 텍스트 변경
+                const selectedYm = document.getElementById('target_ym').value;
+                document.getElementById("tableTitle").innerText = selectedYm + " 근태 마감 완료자 목록";
+            }
         </script>
     </head>
 
@@ -129,13 +150,16 @@
                 </div>
 
                 <div class="status-card-wrapper" id="statusCardWrapper">
-                    <div class="status-card pending">
-                        <h3>마감 대기 대상</h3>
-                        <p class="count">${waitCnt}명</p>
+                    <!-- 마감 대기 대상 카드 (주황 포인트) -->
+                    <div class="dashboard-card card-amber" onclick="showWaitList()">
+                        <span class="card-label">마감 대기 대상</span>
+                        <span class="card-value">${waitCnt != null ? waitCnt : 0} <span>명</span></span>
                     </div>
-                    <div class="status-card approved">
-                        <h3>마감 완료 인원</h3>
-                        <p class="count">${completeCnt}명</p>
+                    
+                    <!-- 마감 완료 인원 카드 (초록 포인트) -->
+                    <div class="dashboard-card card-emerald" onclick="showCompleteList()">
+                        <span class="card-label">마감 완료 인원</span>
+                        <span class="card-value">${completeCnt != null ? completeCnt : 0} <span>명</span></span>
                     </div>
                 </div>
 
@@ -144,18 +168,18 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>사원번호</th>
-                                <th>이름</th>
-                                <th>부서</th>
-                                <th>총 평일(기준)</th>
-                                <th>실제 출근일</th>
-                                <th>결근(무급)</th>
-                                <th>연차 사용</th>
-                                <th>연장근무(시간)</th>
-                                <th>마감 상태</th>
+                                <th style="width: 10%;">사원번호</th>
+                                <th style="width: 9%;">이름</th>
+                                <th style="width: 10%;">부서</th>
+                                <th style="width: 11%;">총 평일(기준)</th>
+                                <th style="width: 11%;">실제 출근일</th>
+                                <th style="width: 11%;">결근(무급)</th>
+                                <th style="width: 10%;">연차 사용</th>
+                                <th style="width: 12%;">연장근무(시간)</th>
+                                <th style="width: 16%;">마감 상태</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="waitListBody">
                             <c:choose>
                                 <c:when test="${empty attendanceList}">
                                     <tr>
@@ -191,6 +215,36 @@
                                                         </button>
                                                     </c:otherwise>
                                                 </c:choose>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:otherwise>
+                            </c:choose>
+                        </tbody>
+
+                        <tbody id="completeListBody" style="display: none;">
+                            <c:choose>
+                                <c:when test="${empty confirmedTAList}">
+                                    <tr>
+                                        <td colspan="9" style="text-align: center; padding: 30px; color: #999;">
+                                            해당 월에 마감 완료된 인원이 없습니다.
+                                        </td>
+                                    </tr>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:forEach var="emp" items="${confirmedTAList}">
+                                        <tr>
+                                            <td>${emp.sabun}</td>
+                                            <td><strong>${emp.saname}</strong></td>
+                                            <td>${emp.dname}</td>
+                                            <td>${emp.standard_days}일</td>
+                                            <td><span style="color:#2563eb; font-weight:bold;">${emp.worked_days}일</span></td>
+                                            <td><span style="color:#dc2626; font-weight:bold;">${emp.absence_days}일</span></td>
+                                            <td>${emp.leave_days}일</td>
+                                            <td>${emp.overtime_hours}시간</td>
+                                            <td>
+                                                <!-- 이미 마감 완료된 상태이므로 배지만 표시 -->
+                                                <span class="badge-complete">마감 완료</span>
                                             </td>
                                         </tr>
                                     </c:forEach>

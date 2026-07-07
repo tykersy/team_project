@@ -158,7 +158,7 @@
                         <input type="button" value="추가"
                                onclick="send(this.form)"/>
                     </td>
-                </tr>
+                </tr> 
             </table>
         </form>
     </body>

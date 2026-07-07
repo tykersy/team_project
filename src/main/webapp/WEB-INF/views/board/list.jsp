@@ -68,7 +68,7 @@
                         </form>
 
                         <%-- 작성 버튼 --%>
-                        <c:if test="${loginMember.sajob == '팀장' || loginMember.sabun == 1}">
+                        <c:if test="${isAuthorized}">
                             <div style="position: absolute; right: 0;">
                                 <a href="/board/write" class="btn-custom btn-primary" style="font-size: 16px; padding: 0 30px;">작성</a>
                             </div>

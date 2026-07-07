@@ -7,7 +7,7 @@
             <title>[Linked : 캘린더]</title>
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar/calendar_main.css" />
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
-            <link rel="stylesheet" href="/css/dashboard.css"> 
+            <link rel="stylesheet" href="/css/dashboard.css">
         </head>
 
         <body>
@@ -20,7 +20,8 @@
                         <div>
                             <div class="calendar-header">
                                 <a href="calendar_calendarmain?year=${prevYear}&month=${prevMonth}">◀</a>
-                                <a href="javascript:void(0)" class="head-ym" onclick="openDateBox()" style="font-weight: bold;">${year}.${month}</a>
+                                <a href="javascript:void(0)" class="head-ym" onclick="openDateBox()"
+                                    style="font-weight: bold;">${year}.${month}</a>
                                 <a href="calendar_calendarmain?year=${nextYear}&month=${nextMonth}">▶</a>
                             </div>
                             <!--일정 추가-->
@@ -41,7 +42,7 @@
                                         ☰ </button>
                                 </div>
                             </div>
-                            
+
                         </div>
                         <div class="calendar-legend">
                             <div class="legend-item">
@@ -107,14 +108,12 @@
                                                     <c:if test="${day >= dvo.viewStartDay &&
                                                 day <= dvo.viewEndDay}">
 
-                                                        <div class="dcal-item" onclick="openDcalDetail(
-                                                '${dvo.dcal_idx}',
-                                                '${dvo.title}',
-                                                '${dvo.start_date}',
-                                                '${dvo.end_date}',
-                                                '${dvo.content}',
-                                                '${dvo.sabun}'
-                                            )">
+                                                        <div class="dcal-item" data-idx="${dvo.dcal_idx}"
+                                                            data-dname = "${dvo.dname}"
+                                                            data-title="${dvo.title}" data-start="${dvo.start_date}"
+                                                            data-end="${dvo.end_date}" data-content="${dvo.content}"
+                                                            data-writer="${dvo.sabun}"
+                                                            onclick="openDcalDetailByEl(this)">
                                                             ${dvo.title}
                                                         </div>
 
@@ -128,14 +127,11 @@
                                                     <c:if test="${day >= svo.viewStartDay &&
                                                 day <= svo.viewEndDay}">
 
-                                                        <div class="scal-item" onclick="openScalDetail(
-                                                '${svo.scal_idx}',
-                                                '${svo.title}',
-                                                '${svo.start_date}',
-                                                '${svo.end_date}',
-                                                '${svo.content}',
-                                                '${svo.sabun}'
-                                            )">
+                                                        <div class="scal-item" data-idx="${svo.scal_idx}"
+                                                            data-title="${svo.title}" data-start="${svo.start_date}"
+                                                            data-end="${svo.end_date}" data-content="${svo.content}"
+                                                            data-writer="${svo.sabun}"
+                                                            onclick="openScalDetailByEl(this)">
                                                             ${svo.title}
                                                         </div>
 
@@ -162,7 +158,7 @@
                             </table>
                         </div>
 
-                        
+
                     </div>
 
                     <jsp:include page="/WEB-INF/views/calendar/calendar_date_modal.jsp" />
@@ -172,7 +168,7 @@
             </div>
 
             <script>
-                const loginSabun = ${sabun};
+                const loginSabun = ${ sabun };
             </script>
 
             <script src="${pageContext.request.contextPath}/js/calendar/calendar_main.js"></script>

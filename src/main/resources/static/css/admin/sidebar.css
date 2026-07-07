@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+html {
+    overflow-y: scroll;
+}
+
 body {
     background: #F8FAFC;
     font-family: Pretendard, sans-serif;
@@ -38,6 +42,9 @@ body {
     font-weight: 700;
     color: #ffffff;
     margin-bottom: 40px;
+    position: relative; /* 레이어 순서 지정을 위해 필요 */
+    z-index: 999;       /* 다른 요소보다 무조건 위로 올림 */
+    cursor: pointer;    /* 마우스를 올렸을 때 손가락 모양으로 변경 */
 }
 
 .sidebar-menu {
