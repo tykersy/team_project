@@ -7,8 +7,8 @@
 <head>
     <meta charset="UTF-8">
     <title>[Linked : 공지사항]</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/sidebar.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/dashboard.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/board.css">
     <style>
         /* AI 결과창을 위한 스타일 추가 */
