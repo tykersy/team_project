@@ -6,8 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <title>[Linked : 직원 관리]</title>
-    <link rel="stylesheet" href="/css/admin/sawon_list.css"/>
-    <link rel="stylesheet" href="/css/admin/sidebar.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sawon_list.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebar.css" />
 
     <script>
         // 사원 퇴사 처리

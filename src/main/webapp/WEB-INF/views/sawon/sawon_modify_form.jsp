@@ -6,8 +6,8 @@
 
     <head>
         <title>[Linked : ${sawon.saname} 사원 정보 수정]</title>
-        <link rel="stylesheet" href="/css/admin/sawon_modify_form.css"/>
-        <link rel="stylesheet" href="/css/admin/sidebar.css" />
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sawon_modify_form.css"/>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebar.css" />
 
         <!-- 카카오 도로명 검색을 위한 API 호출 -->
         <script src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
