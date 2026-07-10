@@ -112,6 +112,8 @@
             function showWaitList() {
                 document.getElementById("waitListBody").style.display = "";
                 document.getElementById("completeListBody").style.display = "none";
+                document.getElementById("section-title").style.display="";
+                document.getElementById("section-title-sec").style.display = "none";
                 
                 // 타이틀 텍스트 변경
                 const selectedYm = document.getElementById('target_ym').value;
@@ -122,6 +124,8 @@
             function showCompleteList() {
                 document.getElementById("waitListBody").style.display = "none";
                 document.getElementById("completeListBody").style.display = "";
+                document.getElementById("section-title").style.display="none";
+                document.getElementById("section-title-sec").style.display = "";
                 
                 // 타이틀 텍스트 변경
                 const selectedYm = document.getElementById('target_ym').value;
@@ -164,7 +168,8 @@
                 </div>
 
                 <div class="section-container" id="sectionContainer">
-                    <div class="section-title">${selectedYm} 근태 정산 대상자 목록</div>
+                    <div id="section-title" class="section-title">${selectedYm} 근태 정산 대상자 목록</div>
+                    <div id="section-title-sec" class="section-title">${selectedYm} 근태 정산 완료자 목록</div>
                     <table class="data-table">
                         <thead>
                             <tr>
