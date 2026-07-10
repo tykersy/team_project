@@ -11,10 +11,10 @@
 <head>
     <meta charset="UTF-8">
     <title>[Linked : 공지사항 작성]</title>
-    <link rel="stylesheet" href="/css/admin/sidebar.css">
-    <link rel="stylesheet" href="/css/dashboard.css">
-    <link rel="stylesheet" href="/css/board.css">
-    <link rel="stylesheet" href="/css/admin/board-editor.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/sidebar.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/board.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/board-editor.css">
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
