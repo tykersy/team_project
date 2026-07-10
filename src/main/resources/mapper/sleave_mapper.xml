@@ -63,6 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM sleave_log l
         JOIN sawon s ON l.sabun = s.sabun
         JOIN dept d ON s.deptno = d.deptno
+        WHERE approve = 1
         ORDER BY l.created_at DESC
         LIMIT 5
     </select>
