@@ -74,3 +74,6 @@ Linked는 사내 인사, 근태, 일정, 메신저 기능을 하나로 통합한
 - Spring Boot 기반 백엔드 서버
 - MySQL 기반 통합 DB
 - 인사, 근태, 급여, 캘린더, 메신저 모듈 분리
+
+## PPT
+- https://www.tooldi.com/preview/MjU3MzM3MjcxNzA=#1
