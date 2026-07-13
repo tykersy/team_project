@@ -18,15 +18,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="checkIn" 
             parameterType="int">
         insert into ta(sabun, day, checkin)
-        values(#{sabun}, CURDATE(), now())
+        values (
+            #{sabun},
+            DATE(DATE_ADD(NOW(), INTERVAL 9 HOUR)),
+            DATE_ADD(NOW(), INTERVAL 9 HOUR)
+        )
     </insert>
 
     <update id="checkOut" 
             parameterType="int">
         update ta
-        set checkout = now()
+        set checkout = DATE_ADD(NOW(), INTERVAL 9 HOUR)
         where sabun = #{sabun}
-        and date(day) = curdate()
+        and date(day) = DATE(DATE_ADD(NOW(), INTERVAL 9 HOUR))
     </update>
 
     <select id="selectList" parameterType="int" resultType="ta">
