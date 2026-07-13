@@ -38,6 +38,9 @@
                     useDetailPopup: false, //스케쥴 디테일을 볼 수 있는 팝업
                     gridSelection: true,
                     isReadOnly: false,
+                     month: {
+                        isAlways6Weeks: false
+                    },
                     calendars: [ //부서별로 색깔 다르게 표시
                         {
                             id: 1,
