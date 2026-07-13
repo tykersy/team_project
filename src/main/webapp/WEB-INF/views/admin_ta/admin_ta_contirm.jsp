@@ -169,7 +169,7 @@
 
                 <div class="section-container" id="sectionContainer">
                     <div id="section-title" class="section-title">${selectedYm} 근태 정산 대상자 목록</div>
-                    <div id="section-title-sec" class="section-title">${selectedYm} 근태 정산 완료자 목록</div>
+                    <div id="section-title-sec" class="section-title" style="display: none;">${selectedYm} 근태 정산 완료자 목록</div>
                     <table class="data-table">
                         <thead>
                             <tr>
