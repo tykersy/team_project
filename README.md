@@ -75,5 +75,13 @@ Linked는 사내 인사, 근태, 일정, 메신저 기능을 하나로 통합한
 - MySQL 기반 통합 DB
 - 인사, 근태, 급여, 캘린더, 메신저 모듈 분리
 
-## PPT
-- https://www.tooldi.com/preview/MjU3MzM3MjcxNzA=#1
+## 🖥️ 프로젝트 발표 자료
+- PPT: https://www.tooldi.com/preview/MjU3MzM3MjcxNzA=#1
+
+## 📚 Project Documentation
+
+프로젝트 기획, 기능 정의, 일정 관리, 회의 기록, 화면 설계, 진행 과정은 아래 Notion 문서에서 확인할 수 있습니다.
+
+- Notion: https://www.notion.so/260522-Linked-368c2a380dc880119b54c405762a5aa9
+
+해당 문서에는 프로젝트 일정, 역할 분담, 기능 명세, 화면 설계, 회의 기록, 진행 현황 등이 포함되어 있습니다.
